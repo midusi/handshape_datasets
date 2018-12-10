@@ -1,7 +1,7 @@
 # handshape_datasets
 A single library to load all sign language handshape datasets.
 
-[handshape](http://facundoq.github.io/unlp/lsa16/files/dataset/1_1_1.png) [handshape](http://facundoq.github.io/unlp/lsa16/files/dataset/2_1_1.png)
+[handshape](http://facundoq.github.io/unlp/lsa16/files/dataset/1_1_1.png "sample handshape") [handshape](http://facundoq.github.io/unlp/lsa16/files/dataset/2_1_1.png "sample handshape")
 
 There are [various handshape datasets](http://facundoq.github.io/unlp/sign_language_datasets/) for Sign Language. 
 However, each has its own mapping of handshapes to classes. 
