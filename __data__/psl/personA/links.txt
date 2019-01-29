@@ -14,4 +14,3 @@ t,http://vision.kia.prz.edu.pl/ijars/statictof/a/t.7z
 u,http://vision.kia.prz.edu.pl/ijars/statictof/a/u.7z
 w,http://vision.kia.prz.edu.pl/ijars/statictof/a/w.7z
 y,http://vision.kia.prz.edu.pl/ijars/statictof/a/y.7z
-
