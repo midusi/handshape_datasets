@@ -1,0 +1,17 @@
+a,http://vision.kia.prz.edu.pl/ijars/statictof/c/a.7z
+b,http://vision.kia.prz.edu.pl/ijars/statictof/c/b.7z
+c,http://vision.kia.prz.edu.pl/ijars/statictof/c/c.7z
+e,http://vision.kia.prz.edu.pl/ijars/statictof/c/e.7z
+i,http://vision.kia.prz.edu.pl/ijars/statictof/c/i.7z
+l,http://vision.kia.prz.edu.pl/ijars/statictof/c/l.7z
+m,http://vision.kia.prz.edu.pl/ijars/statictof/c/m.7z
+n,http://vision.kia.prz.edu.pl/ijars/statictof/c/n.7z
+o,http://vision.kia.prz.edu.pl/ijars/statictof/c/o.7z
+p,http://vision.kia.prz.edu.pl/ijars/statictof/c/p.7z
+r,http://vision.kia.prz.edu.pl/ijars/statictof/c/r.7z
+s,http://vision.kia.prz.edu.pl/ijars/statictof/c/s.7z
+t,http://vision.kia.prz.edu.pl/ijars/statictof/c/t.7z
+u,http://vision.kia.prz.edu.pl/ijars/statictof/c/u.7z
+w,http://vision.kia.prz.edu.pl/ijars/statictof/c/w.7z
+y,http://vision.kia.prz.edu.pl/ijars/statictof/c/y.7z
+
