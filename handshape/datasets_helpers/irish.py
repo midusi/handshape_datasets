@@ -19,6 +19,25 @@ def download_file(url, filepath):
         with open(filepath, 'wb') as f:
             shutil.copyfileobj(r.raw, f)
 
+def download_and_extract(folderpath, images_folderpath):
+    if not os.path.exists(folderpath):
+        print("Creating folder %s..." % folderpath)
+        os.mkdir(folderpath)
+        print("Creating folder %s..." % images_folderpath)
+        os.mkdir(images_folderpath)
+
+    print("Downloading Irish Sign Language dataset to folder %s ..." % folderpath)
+    for filename in filenames:
+        zip_filepath = os.path.join(folderpath, filename)
+
+        if not os.path.exists(zip_filepath):
+            origin = url + filename+"?raw=true"
+            print("Downloading: %s ..." % origin)
+            download_file(origin, zip_filepath)
+
+            with zipfile.ZipFile(zip_filepath, "r") as zip_ref:
+                print("Extracting images to %s..." % images_folderpath)
+                zip_ref.extractall(images_folderpath)
 
 def crop_to_hand(image, pad=10):
     h, w = image.shape
@@ -117,25 +136,6 @@ def list_diff(a, b):
     return [x for x in a if x not in s]
 
 
-def download_and_extract(folderpath, images_folderpath):
-    if not os.path.exists(folderpath):
-        print("Creating folder %s..." % folderpath)
-        os.mkdir(folderpath)
-        print("Creating folder %s..." % images_folderpath)
-        os.mkdir(images_folderpath)
-
-    print("Downloading Irish Sign Language dataset to folder %s ..." % folderpath)
-    for filename in filenames:
-        zip_filepath = os.path.join(folderpath, filename)
-
-        if not os.path.exists(zip_filepath):
-            origin = url + filename+"?raw=true"
-            print("Downloading: %s ..." % origin)
-            download_file(origin, zip_filepath)
-
-            with zipfile.ZipFile(zip_filepath, "r") as zip_ref:
-                print("Extracting images to %s..." % images_folderpath)
-                zip_ref.extractall(images_folderpath)
 
 #
 
