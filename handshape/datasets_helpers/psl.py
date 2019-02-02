@@ -57,10 +57,3 @@ def download_and_extract(folderpath, images_folderpath):
                 Aborting the download to avoid the overwriting of files""" % folder_name)
 
         os.chdir(actual_wd)
-
-    # proceed to extract all the zips
-
-
-folderpath = os.path.join(os.getenv('HOME'), 'Descargas', 'Zips')
-images_folderpath = os.path.join(os.getenv('HOME'), 'Descargas', 'Imágenes')
-download_and_extract(folderpath, images_folderpath)
