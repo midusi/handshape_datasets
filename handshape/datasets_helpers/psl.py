@@ -59,12 +59,13 @@ def download_and_extract(folderpath, images_folderpath):
             for url in zip(urls_list, ['personA', 'personB', 'personC']):
                 filename = "%s.7z" % (url[1])
                 download_file(url[0], filename)
-                # Archive(os.path.join(zips_path, filename)
-                #         ).extractall(imagefolder_path)
-                # print("Extracting {} to {}".format(
-                #     filename, imagefolder_path))
-                # print("DONE ᕦ(ò_óˇ)ᕤ")
-                # print("--------------------------------")
+                zip_path = os.path.join(imagefolder_path, url[1])
+                Archive(filename=os.path.join(zips_path,filename)
+                        ).extractall(zip_path,True)
+                print("Extracting {} to {}".format(
+                    filename, zip_path))
+                print("DONE ᕦ(ò_óˇ)ᕤ")
+                print("--------------------------------")
 
         except FileExistsError:
             print(
@@ -76,6 +77,6 @@ def download_and_extract(folderpath, images_folderpath):
     # proceed to extract all the zips
 
 
-folderpath = '/home/brian/Descargas'
-images_folderpath = '/home/brian/Descargas/Imágenes'
+folderpath = os.path.join(os.getenv('HOME'), 'Descargas', 'Zips')
+images_folderpath = os.path.join(os.getenv('HOME'), 'Descargas', 'Imágenes')
 download_and_extract(folderpath, images_folderpath)
