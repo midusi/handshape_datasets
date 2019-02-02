@@ -1,4 +1,5 @@
 from multiprocessing import Pool
+from __utils__ import download_file
 from os.path import expanduser
 from skimage import io
 from skimage import color
@@ -13,11 +14,6 @@ import tarfile
 import skimage
 import string
 
-
-def download_file(url, filepath):
-    with requests.get(url, stream=True) as r:
-        with open(filepath, 'wb') as f:
-            shutil.copyfileobj(r.raw, f)
 
 def download_and_extract(folderpath, images_folderpath):
     if not os.path.exists(folderpath):
@@ -38,6 +34,7 @@ def download_and_extract(folderpath, images_folderpath):
             with zipfile.ZipFile(zip_filepath, "r") as zip_ref:
                 print("Extracting images to %s..." % images_folderpath)
                 zip_ref.extractall(images_folderpath)
+
 
 def crop_to_hand(image, pad=10):
     h, w = image.shape
@@ -134,7 +131,6 @@ def load_images(images_folderpath):
 def list_diff(a, b):
     s = set(b)
     return [x for x in a if x not in s]
-
 
 
 #

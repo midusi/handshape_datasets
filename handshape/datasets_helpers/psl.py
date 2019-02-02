@@ -1,32 +1,16 @@
-from __utils__ import get_project_root
-from pyunpack import Archive
-
-import numpy as np
-import os
 import zipfile
-import requests
-import shutil
-
-
-def download_file(url, filepath):
-    with requests.get(url, stream=True) as r:
-        print("Downloading {} dataset from {}".format(filepath, url))
-        with open(filepath, 'wb') as f:
-            shutil.copyfileobj(r.raw, f)
-    print("Done ƪ(˘⌣˘)ʃ")
+import os
+import numpy as np
+from pyunpack import Archive
+from __utils__ import get_project_root,download_file,check_folder_existence
 
 
 def download_and_extract(folderpath, images_folderpath):
     actual_wd = os.getcwd()
 
-    if not os.path.exists(folderpath):
-        print("Creating folder %s..." % folderpath)
-        os.mkdir(folderpath)
+    check_folder_existence(folderpath)
+    check_folder_existence(images_folderpath)
 
-    if not os.path.exists(images_folderpath):
-        print("Creating folder %s ..." %
-              images_folderpath)
-        os.mkdir(images_folderpath)
     print("Downloading Polish Sign Language dataset to folder %s ..." % folderpath)
 
     # temporal store for the urls readed from file
@@ -60,8 +44,8 @@ def download_and_extract(folderpath, images_folderpath):
                 filename = "%s.7z" % (url[1])
                 download_file(url[0], filename)
                 zip_path = os.path.join(imagefolder_path, url[1])
-                Archive(filename=os.path.join(zips_path,filename)
-                        ).extractall(zip_path,True)
+                Archive(filename=os.path.join(zips_path, filename)
+                        ).extractall(zip_path, True)
                 print("Extracting {} to {}".format(
                     filename, zip_path))
                 print("DONE ᕦ(ò_óˇ)ᕤ")
