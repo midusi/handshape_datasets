@@ -14,3 +14,7 @@ def download_and_extract(folderpath, images_folderpath):
 
     extracted_path = os.path.join(images_folderpath, 'ciarp')
     __utils__.extract_zip(zip_path,extracted_path)
+
+folderpath = os.path.join(os.getenv('HOME'),'Descargas')
+images_folderpath = os.path.join(folderpath, 'Datasets')
+download_and_extract(folderpath,images_folderpath)
