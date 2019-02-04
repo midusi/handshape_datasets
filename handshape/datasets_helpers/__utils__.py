@@ -3,6 +3,7 @@ from requests import get
 from shutil import copyfileobj
 
 import os
+import zipfile
 
 
 def get_project_root() -> Path:
@@ -27,3 +28,10 @@ def check_folder_existence(folder):
     if not os.path.exists(folder):
         print("Creating folder %s..." % folder)
         os.mkdir(folder)
+
+def extract_zip(zip_path,extracted_path):
+    with zipfile.ZipFile(file=zip_path,
+                         mode="r") as zip_ref:
+        print("Extracting jsl.zip to {}".format(extracted_path))
+        zip_ref.extractall(path=extracted_path)
+        print("DONE ᕦ(ò_óˇ)ᕤ")
