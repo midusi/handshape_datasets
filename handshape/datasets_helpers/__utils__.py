@@ -15,7 +15,7 @@ def get_project_root() -> Path:
 
 
 def __humansize__(nbytes):
-    return size(nbytes)
+    return size(int(nbytes))
 
 
 def download_file(url, filepath):
