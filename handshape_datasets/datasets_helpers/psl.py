@@ -4,7 +4,13 @@ import os
 import __utils__
 
 
-def download_and_extract(folderpath, images_folderpath):
+def download_and_extract(folderpath, images_folderpath,download):
+    """
+    Download the dataset in the folderpath and extract it to images_folderpath.
+    Both routes may not exist and in that case they are created.
+        :folderpath (str): The path where the zip wi'll be downloaded 
+        :images_folderpath (str): The path where the zip wi'll be extracted
+    """
     actual_wd = os.getcwd()
 
     __utils__.check_folder_existence(folderpath)

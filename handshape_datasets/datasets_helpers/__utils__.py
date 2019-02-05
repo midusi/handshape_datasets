@@ -25,6 +25,8 @@ def download_file(url, filepath):
         :param filepath:
     """
     with get(url, stream=True) as r:
+        # with stream in true the file doen't save in memory inmediately
+        # it doesn't dowload the content just the headers and the conection keep open
         print("The file size is {}".format(
             __humansize__(r.headers['Content-length'])))
         print("Downloading {} dataset from {}".format(filepath, url))

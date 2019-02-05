@@ -2,7 +2,7 @@ import __utils__
 import os
 
 
-def download_and_extract(folderpath, images_folderpath):
+def download_and_extract(folderpath, images_folderpath,download):
 
     __utils__.check_folder_existence(folderpath)
     __utils__.check_folder_existence(images_folderpath)
