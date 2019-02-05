@@ -20,7 +20,7 @@ def __humansize__(nbytes):
 
 def download_file(url, filepath):
     """
-        download a zip from an url and stores it in filepath
+        download a file from an url and stores it in filepath
         :param url:
         :param filepath:
     """
@@ -32,6 +32,24 @@ def download_file(url, filepath):
         print("Downloading {} dataset from {}".format(filepath, url))
         with open(filepath, 'wb') as f:
             copyfileobj(r.raw, f)
+    print("Done ƪ(˘⌣˘)ʃ")
+
+def download_bigger_file(url, filepath):
+    """
+        download a file from an url and stores it in filepath
+        :param url:
+        :param filepath:
+    """
+    with get(url, stream=True) as r:
+        # with stream in true the file doen't save in memory inmediately
+        # it doesn't dowload the content just the headers and the conection keep open
+        print("The file size is {}".format(
+            __humansize__(r.headers['Content-length'])))
+        print("Downloading {} dataset from {}".format(filepath, url))
+        with open(filepath, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=1024):
+                if chunk:
+                    f.write(chunk.raw)
     print("Done ƪ(˘⌣˘)ʃ")
 
 
