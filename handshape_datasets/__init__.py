@@ -1,25 +1,25 @@
-import datasets_helpers as datasets
+from .datasets_helpers import *
 import os
 
+
 options = {
-    'aslA': datasets.aslA.download_and_extract,
-    'aslB': datasets.aslB.download_and_extract,
-    'ciarp': datasets.ciarp.download_and_extract,
-    # 'indian_kinect': datasets.indian.download_and_extract,
-    'isl': datasets.jsl.download_and_extract,
-    'jsl': datasets.aslA.download_and_extract,
-    'lsa16': datasets.aslA.download_and_extract,
-    'nus_1': datasets.aslA.download_and_extract,
-    'nus_2': datasets.aslA.download_and_extract,
-    'psl': datasets.aslA.download_and_extract,
-    'pugeault': datasets.aslA.download_and_extract,
-    'rwth-phoenix': datasets.aslA.download_and_extract,
+    'aslA': aslA.download_and_extract,
+    'aslB': aslB.download_and_extract,
+    'ciarp': ciarp.download_and_extract,
+    # 'indian_kinect': indian.download_and_extract,
+    'isl': irish.download_and_extract,
+    'jsl': jsl.download_and_extract,
+    'lsa16': lsa.download_and_extract,
+    'nus_1': nus_1.download_and_extract,
+    'nus_2': nus_2.download_and_extract,
+    'psl': psl.download_and_extract,
+    'pugeault': pugeault.download_and_extract,
+    'rwth-phoenix': rwth-phoenix.download_and_extract
 }
-
 HOME_PATH_HANDSHAPE = os.path.join(os.getenv('HOME'),
-                                   '.handshape_datasets')
+                                   '.handshape_datasets_helpers')
 
-for option in options.keys():
+for option in options:
     os.mkdir(os.path.join(HOME_PATH_HANDSHAPE, 'zips', option))
 
 

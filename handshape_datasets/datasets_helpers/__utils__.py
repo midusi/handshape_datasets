@@ -2,20 +2,18 @@ from pathlib import Path
 from requests import get
 from shutil import copyfileobj
 from hurry.filesize import size
+from ftplib import FTP
 
 import os
 import zipfile
 import tarfile
+import gdown
 
 
-def get_project_root() -> Path:
-    """Returns project root folder."""
-
-    return Path(__file__).parent.parent.parent
-
-
-def __humansize__(nbytes):
-    return size(int(nbytes))
+def check_folder_existence(folder):
+    if not os.path.exists(folder):
+        print("Creating folder %s..." % folder)
+        os.mkdir(folder)
 
 
 def download_file(url, filepath):
@@ -27,12 +25,27 @@ def download_file(url, filepath):
     with get(url, stream=True) as r:
         # with stream in true the file doen't save in memory inmediately
         # it doesn't dowload the content just the headers and the conection keep open
-        print("The file size is {}".format(
-            __humansize__(r.headers['Content-length'])))
         print("Downloading {} dataset from {}".format(filepath, url))
         with open(filepath, 'wb') as f:
             copyfileobj(r.raw, f)
     print("Done ƪ(˘⌣˘)ʃ")
+
+
+def download_from_drive(url, filepath):
+    print("Downloading {} dataset from {}".format(filepath, url))
+    gdown.download(url, filepath, quiet=True)
+    print("Done ƪ(˘⌣˘)ʃ")
+
+
+def download_file_over_ftp(ftp_url, ftp_relative_file_path, ftp_filename, filepath):
+    ftp = FTP(ftp_url)
+    ftp.login()
+    ftp.cwd(ftp_relative_file_path)
+    with open(filepath, 'wb') as f:
+        print("Downloading the dataset...")
+        ftp.retrbinary('RETR {}'.format(ftp_filename), f.write)
+        print("Done ƪ(˘⌣˘)ʃ")
+
 
 def download_bigger_file(url, filepath):
     """
@@ -43,20 +56,12 @@ def download_bigger_file(url, filepath):
     with get(url, stream=True) as r:
         # with stream in true the file doen't save in memory inmediately
         # it doesn't dowload the content just the headers and the conection keep open
-        print("The file size is {}".format(
-            __humansize__(r.headers['Content-length'])))
         print("Downloading {} dataset from {}".format(filepath, url))
         with open(filepath, 'wb') as f:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
                     f.write(chunk.raw)
     print("Done ƪ(˘⌣˘)ʃ")
-
-
-def check_folder_existence(folder):
-    if not os.path.exists(folder):
-        print("Creating folder %s..." % folder)
-        os.mkdir(folder)
 
 
 def extract_zip(zip_path, extracted_path):
@@ -76,3 +81,9 @@ def extract_tar(tarfile_path, extracted_path):
         with tarfile.open(tarfile_path, "r:") as tar:
             tar.extractall(path=extracted_path)
     print("DONE ᕦ(ò_óˇ)ᕤ")
+
+
+def get_project_root() -> Path:
+    """Returns project root folder."""
+
+    return Path(__file__).parent.parent.parent

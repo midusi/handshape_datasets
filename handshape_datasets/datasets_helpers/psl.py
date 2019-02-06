@@ -13,7 +13,7 @@ def download_and_extract(folderpath, images_folderpath,download):
     """
     actual_wd = os.getcwd()
 
-    __utils__.check_folder_existence(folderpath)
+    __utils__.check_folder_existe        nce(folderpath)
     __utils__.check_folder_existence(images_folderpath)
 
     print("Downloading Polish Sign Language dataset to folder %s ..." % folderpath)
