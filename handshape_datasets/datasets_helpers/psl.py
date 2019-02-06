@@ -4,7 +4,7 @@ import os
 import __utils__
 
 
-def download_and_extract(folderpath, images_folderpath,download):
+def download_and_extract(folderpath, images_folderpath, download):
     """
     Download the dataset in the folderpath and extract it to images_folderpath.
     Both routes may not exist and in that case they are created.
@@ -13,7 +13,7 @@ def download_and_extract(folderpath, images_folderpath,download):
     """
     actual_wd = os.getcwd()
 
-    __utils__.check_folder_existe        nce(folderpath)
+    __utils__.check_folder_existence(folderpath)
     __utils__.check_folder_existence(images_folderpath)
 
     print("Downloading Polish Sign Language dataset to folder %s ..." % folderpath)
