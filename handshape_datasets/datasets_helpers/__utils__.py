@@ -1,7 +1,7 @@
 from pathlib import Path
 from requests import get
 from shutil import copyfileobj
-from hurry.filesize import size
+#from hurry.filesize import size
 from ftplib import FTP
 
 import os
