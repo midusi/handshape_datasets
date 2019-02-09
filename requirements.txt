@@ -1,0 +1,13 @@
+# processing
+numpy
+scikit-image
+scipy
+
+# downloading
+hurry
+requests
+patool
+gdown
+
+# (un)zipping
+pyunpack

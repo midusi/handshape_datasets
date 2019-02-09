@@ -1,7 +1,7 @@
 from pyunpack import Archive
 
 import os
-import __utils__
+from . import __utils__
 
 
 def download_and_extract(folderpath, images_folderpath, download):

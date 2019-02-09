@@ -1,4 +1,4 @@
-import __utils__
+from . import __utils__
 
 import os
 import zipfile

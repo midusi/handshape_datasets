@@ -1,5 +1,6 @@
 from multiprocessing import Pool
-from __utils__ import download_file
+
+from .__utils__ import download_file
 from os.path import expanduser
 from skimage import io
 from skimage import color
