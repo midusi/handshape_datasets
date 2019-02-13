@@ -16,6 +16,19 @@ def check_folder_existence(folder):
         os.mkdir(folder)
 
 
+def create_download_complete_file(filepath, dataset_name):
+    open(filepath, 'a').close()
+    print("The download of the dataset {} was successfully completed.".format(dataset_name))
+
+
+def download_detector_found(folderpath, file_name):
+    try:
+        open(os.path.join(folderpath, file_name), 'r').close()
+        return True
+    except FileNotFoundError:
+        return False
+
+
 def download_file(url, filepath):
     """
         download a file from an url and stores it in filepath
@@ -28,7 +41,7 @@ def download_file(url, filepath):
         print("Downloading {} dataset from {}".format(filepath, url))
         with open(filepath, 'wb') as f:
             copyfileobj(r.raw, f)
-    print("Done ƪ(˘⌣˘)ʃ")
+    print("Download Complete ƪ(˘⌣˘)ʃ")
 
 
 def download_from_drive(url, filepath):
@@ -65,11 +78,14 @@ def download_bigger_file(url, filepath):
 
 
 def extract_zip(zip_path, extracted_path):
-    with zipfile.ZipFile(file=zip_path,
-                         mode="r") as zip_ref:
-        print("Extracting {} to {}".format(zip_path, extracted_path))
-        zip_ref.extractall(path=extracted_path)
-        print("DONE ᕦ(ò_óˇ)ᕤ")
+    try:
+        with zipfile.ZipFile(file=zip_path,
+                             mode="r") as zip_ref:
+            print("Extracting {} to {}".format(zip_path, extracted_path))
+            zip_ref.extractall(path=extracted_path)
+            print("DONE ᕦ(ò_óˇ)ᕤ")
+    except FileExistsError:
+        print("The folder already exists.")
 
 
 def extract_tar(tarfile_path, extracted_path):
