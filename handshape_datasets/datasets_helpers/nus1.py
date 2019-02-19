@@ -1,15 +1,36 @@
-from . import __utils__
+from ._utils import check_folder_existence, extract_zip
+from .dataset_loader import DatasetLoader
+
 import os
+import zipfile
 
 
-def download_and_extract(folderpath, images_folderpath,download):
+class Nus1(DatasetLoader):
+    def __init__(self):
+        super().__init__("nus1")
+        self.url = 'https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet/NUS-Hand-Posture-Dataset-I.zip'
 
-    __utils__.check_folder_existence(folderpath)
-    __utils__.check_folder_existence(images_folderpath)
+    def urls(self):
+        return self.url
 
-    zip_path = os.path.join(folderpath, 'jsl.zip')
-    __utils__.download_file(url='https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet/NUS-Hand-Posture-Dataset-I.zip',
-                  filepath=zip_path)
+    def download_and_extract(self, folderpath, images_folderpath=None):
+        # if it doenst receives the images_folderpath arg creates into folderpath
+        images_folderpath = os.path.join(
+            folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
+        check_folder_existence(images_folderpath)
+        ZIP_PATH = os.path.join(folderpath, 'nus1.zip')
 
-    extracted_path = os.path.join(images_folderpath, 'nus1_images')
-    __utils__.extract_zip(zip_path, extracted_path)
+        # check if the dataset is downloaded
+        file_exists = self.get_downloaded_flag(folderpath)
+        if file_exists is False:
+            self.download_file(self.urls(), ZIP_PATH)
+            # set the exit flag
+            self.set_downloaded(folderpath)
+        # extract the zip into the images path
+        extract_zip(ZIP_PATH, images_folderpath)
+
+    def load(self, path):
+        return True
+
+    def preprocess(self, path):
+        pass

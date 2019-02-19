@@ -1,16 +1,36 @@
+from .dataset_loader import DatasetLoader
+from ._utils import check_folder_existence, extract_zip
+
 import tarfile
-from . import __utils__
 import os
 
-def download_and_extract(folderpath, images_folderpath,download):
-    
-    # if the folder doenst exist is created
-    __utils__.check_folder_existence(folderpath)
-    __utils__.check_folder_existence(images_folderpath)
 
-    tarfile_path = os.path.join(folderpath, 'aslB.tar.gz')
-    __utils__.download_file(url='http://www.cvssp.org/FingerSpellingKinect2011/dataset9-depth.tar.gz',
-                            filepath=tarfile_path)
+class AslB(DatasetLoader):
+    def __init__(self):
+        super().__init__("aslb")
+        self.url = 'http://www.cvssp.org/FingerSpellingKinect2011/dataset9-depth.tar.gz'
 
-    extracted_path = os.path.join(images_folderpath, 'aslB')
-    __utils__.extract_tar(tarfile_path,extracted_path)
+    def urls(self):
+        return self.url
+
+    def download_and_extract(self, folderpath, images_folderpath=None):
+        # if it doenst receives the images_folderpath arg creates into folderpath
+        images_folderpath = os.path.join(
+            folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
+        check_folder_existence(images_folderpath)
+        TARFILE_PATH = os.path.join(folderpath, 'aslB.tar.gz')
+
+        # check if the dataset is downloaded
+        file_exists = self.get_downloaded_flag(folderpath)
+        if file_exists is False:
+            self.download_bigger_file(self.urls(), TARFILE_PATH)
+            # set the exit flag
+            self.set_downloaded(folderpath)
+        # extract the zip into the images path
+        extract_zip(TARFILE_PATH, images_folderpath)
+
+    def load(self, path):
+        return None
+
+    def preprocess(self, path):
+        pass

@@ -1,23 +1,23 @@
 # no better way to do it since each is a submodule, not a function
 # ,pugeault,rwth,lsa16
-from .datasets_helpers import aslA, aslB, ciarp, irish, jsl, nus1, nus2, psl
+from .datasets_helpers import aslA, aslB, ciarp, irish, indian_training, jsl, nus1, nus2, psl, rwth
 
 import os
 
 
 options = {
-    'aslA': aslA.download_and_extract,
-    'aslB': aslB.download_and_extract,
-    'ciarp': ciarp.download_and_extract,
-    # 'indian_kinect': indian.download_and_extract,
+    'aslA': aslA.AslA,
+    'aslB': aslB.AslB,
+    'ciarp': ciarp.Ciarp,
+    # 'indian_kinect': indian_training.download_and_extract,
     # 'isl': irish.download_and_extract,
-    'jsl': jsl.download_and_extract,
+    'jsl': jsl.Jsl,
     # 'lsa16': lsa16.download_and_extract,
-    'nus_1': nus1.download_and_extract,
-    'nus_2': nus2.download_and_extract,
-    'psl': psl.download_and_extract,
+    'nus_1': nus1.Nus1,
+    'nus_2': nus2.Nus2,
+    # 'psl': psl.download_and_extract,
     # 'pugeault': pugeault.download_and_extract,
-    # 'rwth-phoenix': rwth.download_and_extract
+    'rwth-phoenix': rwth.Rwth
 }
 names = options.keys()
 
@@ -30,14 +30,16 @@ except FileExistsError:
 
 
 def get(selected_dataset,
-        folderpath=os.path.join(HOME_PATH_HANDSHAPE, 'files'),
-        images_folderpath=os.path.join(HOME_PATH_HANDSHAPE, 'images'),
-        download=True):
-    if download is False:
-        pass
+        folderpath=HOME_PATH_HANDSHAPE,
+        images_folderpath=None):
+
+    images_folderpath = os.path.join(HOME_PATH_HANDSHAPE, "{}_images".format(
+        selected_dataset)) if images_folderpath is None else images_folderpath
     try:
-        options[selected_dataset](folderpath, images_folderpath, download)
+        dataset = options[selected_dataset]()  # instance the class
+        return dataset.get(folderpath, images_folderpath)
+
     except KeyError:
         print("The option {} isn't valid. The valid options are")
         for key, position in enumerate(options.keys()):
-            print('{}. {}'.format(position, key))
+            print('{}. {}'.format(position,     key))

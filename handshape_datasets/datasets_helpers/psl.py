@@ -1,7 +1,7 @@
 from pyunpack import Archive
 
 import os
-from . import __utils__
+from . import _utils
 
 
 def download_and_extract(folderpath, images_folderpath, download):
@@ -13,8 +13,8 @@ def download_and_extract(folderpath, images_folderpath, download):
     """
     actual_wd = os.getcwd()
 
-    __utils__.check_folder_existence(folderpath)
-    __utils__.check_folder_existence(images_folderpath)
+    _utils.check_folder_existence(folderpath)
+    _utils.check_folder_existence(images_folderpath)
 
     print("Downloading Polish Sign Language dataset to folder %s ..." % folderpath)
 
@@ -24,7 +24,7 @@ def download_and_extract(folderpath, images_folderpath, download):
         'm': [], 'n': [], 'o': [], 'p': [], 'r': [], 's': [],
         't': [], 'u': [], 'w': [], 'y': []}
 
-    path = os.path.join(__utils__.get_project_root(), '__data__/psl')
+    path = os.path.join(_utils.get_project_root(), '__data__/psl')
 
     for person_name in 'ABC':
         folder_name = 'person%s' % person_name
@@ -47,7 +47,7 @@ def download_and_extract(folderpath, images_folderpath, download):
 
             for url in zip(urls_list, ['personA', 'personB', 'personC']):
                 filename = "%s.7z" % (url[1])
-                __utils__.download_file(url[0], filename)
+                _utils.download_file(url[0], filename)
                 zip_path = os.path.join(imagefolder_path, url[1])
                 Archive(filename=os.path.join(zips_path, filename)
                         ).extractall(zip_path, True)

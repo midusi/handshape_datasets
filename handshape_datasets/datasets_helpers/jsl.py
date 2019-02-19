@@ -1,28 +1,36 @@
-from . import __utils__
+from ._utils import check_folder_existence, extract_zip
+from .dataset_loader import DatasetLoader
 
 import os
 import zipfile
 
 
-def download_and_extract(folderpath, images_folderpath, download):
-    __utils__.check_folder_existence(folderpath)
-    __utils__.check_folder_existence(images_folderpath)
-    zip_path = os.path.join(folderpath, 'jsl.zip')
-    success_filename = "jsl_download_complete"
+class Jsl(DatasetLoader):
+    def __init__(self):
+        super().__init__("jsl")
+        self.url = 'http://home.agh.edu.pl/~bkw/research/data/mva/jsl.zip'
 
-    if download is True:
-        "Downloading Dataset. A download_complete file will be created in the folderpath when download is done"
-        try:
-            __utils__.download_file(url='http://home.agh.edu.pl/~bkw/research/data/mva/jsl.zip',
-                                    filepath=zip_path)
-        except FileExistsError:
-            exit("The file already exists.")
-        __utils__.create_download_complete_file(
-            os.path.join(folderpath, success_filename), 'jsl')
-    else:
-        if __utils__.download_detector_found(folderpath, success_filename) is False:
-            print(
-                "The success file doesn't exists. Try again with the arg download in false")
+    def urls(self):
+        return self.url
 
-    extracted_path = os.path.join(images_folderpath, 'jsl_images')
-    __utils__.extract_zip(zip_path, extracted_path)
+    def download_and_extract(self, folderpath, images_folderpath=None):
+        # if it doenst receives the images_folderpath arg creates into folderpath
+        images_folderpath = os.path.join(
+            folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
+        check_folder_existence(images_folderpath)
+        ZIP_PATH = os.path.join(folderpath, 'jsl.zip')
+
+        # check if the dataset is downloaded
+        file_exists = self.get_downloaded_flag(folderpath)
+        if file_exists is False:
+            self.download_file(self.urls(), ZIP_PATH)
+            # set the exit flag
+            self.set_downloaded(folderpath)
+        # extract the zip into the images path
+        extract_zip(ZIP_PATH, images_folderpath)
+
+    def load(self, path):
+        return True
+
+    def preprocess(self, path):
+        pass

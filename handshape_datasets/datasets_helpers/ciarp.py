@@ -1,22 +1,36 @@
+from ._utils import check_folder_existence, extract_zip
+from .dataset_loader import DatasetLoader
+
 import os
-from . import __utils__
+import zipfile
 
 
-def download_and_extract(folderpath, images_folderpath,download):
-    """
-    Download the dataset in the folderpath and extract it to images_folderpath.
-    Both routes may not exist and in that case they are created.
-        :folderpath (str): The path where the zip wi'll be downloaded 
-        :images_folderpath (str): The path where the zip wi'll be extracted
-    """
-    # if the folder doenst exist is created
-    __utils__.check_folder_existence(folderpath)
-    __utils__.check_folder_existence(images_folderpath)
+class Ciarp(DatasetLoader):
+    def __init__(self):
+        super().__init__("ciarp")
+        self.url = 'http://home.agh.edu.pl/~bkw/code/ciarp2017/ciarp.zip'
 
-    ZIP_PATH = os.path.join(folderpath, 'jsl.zip')
-    __utils__.download_file(url='http://home.agh.edu.pl/~bkw/code/ciarp2017/ciarp.zip',
-                            filepath=ZIP_PATH)
+    def urls(self):
+        return self.url
 
-    EXTRACTED_PATH = os.path.join(images_folderpath, 'ciarp')
-    __utils__.extract_zip(ZIP_PATH, EXTRACTED_PATH)
+    def download_and_extract(self, folderpath, images_folderpath=None):
+        # if it doenst receives the images_folderpath arg creates into folderpath
+        images_folderpath = os.path.join(
+            folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
+        check_folder_existence(images_folderpath)
+        ZIP_PATH = os.path.join(folderpath, 'ciarp.zip')
 
+        # check if the dataset is downloaded
+        file_exists = self.get_downloaded_flag(folderpath)
+        if file_exists is False:
+            self.download_file(self.urls(), ZIP_PATH)
+            # set the exit flag
+            self.set_downloaded(folderpath)
+        # extract the zip into the images path
+        extract_zip(ZIP_PATH, images_folderpath)
+
+    def load(self, path):
+        return True
+
+    def preprocess(self, path):
+        pass

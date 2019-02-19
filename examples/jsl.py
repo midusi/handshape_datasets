@@ -2,8 +2,7 @@
 import handshape_datasets as hd
 
 
-dataset_name = "jsl"
+DATASET_NAME = "jsl"
 
-hd.get(dataset_name, images_folderpath='/home/en73r/Descargas', download=False)
-
+hd.get(DATASET_NAME)
 # TODO print dataset statistics, show some images

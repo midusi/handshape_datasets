@@ -155,7 +155,7 @@
 #         deltaW = h / t_image_aspect_ratio - w
 #         extra = int(round(deltaW//2))
 #         new_image = (h, w+extra*2)
-#         padded_image = np.ones(new_image, dtype=image.dtype)
+#         padded_im_utilsage = np.ones(new_image, dtype=image.dtype)
 #         padded_image *= color
 #         padded_image[:, extra:extra+w] = image
 #     elif t_image_aspect_ratio > image_aspect_ratio:

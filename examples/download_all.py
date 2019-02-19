@@ -1,4 +1,4 @@
 import handshape_datasets as hd
 
 for name in hd.names:
-    dataset=hd.get(name)
+    dataset = hd.get(name)
