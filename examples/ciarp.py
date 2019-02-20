@@ -14,5 +14,5 @@ question = input(
 if question.lower() == 'y':
     for position, folder in enumerate(ciarp.keys()):
         print("The folder {} has {} images".format(folder, len(ciarp[folder])))
-        plt.imshow(ciarp[folder][1])
+        plt.imshow(ciarp[folder][1], cmap='gray')
         plt.show()
