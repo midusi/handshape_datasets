@@ -33,7 +33,7 @@ def get(selected_dataset,
         folderpath=HOME_PATH_HANDSHAPE,
         images_folderpath=None):
 
-    images_folderpath = os.path.join(HOME_PATH_HANDSHAPE, "{}_images".format(
+    images_folderpath = os.path.join(HOME_PATH_HANDSHAPE, selected_dataset, "{}_images".format(
         selected_dataset)) if images_folderpath is None else images_folderpath
     try:
         dataset = options[selected_dataset]()  # instance the class

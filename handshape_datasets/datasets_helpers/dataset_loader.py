@@ -80,7 +80,7 @@ class DatasetLoader(ABC):
             logging.warning(f"Preprocessing {self._name}...")
             self.preprocess(path)
             logging.warning("Done")
-        return self.load(path)
+        return self.load(images_folderpath)
 
     def get_downloaded_flag(self, path):
         return self.get_status_flag(path, "{}_downloaded".format(self._name))

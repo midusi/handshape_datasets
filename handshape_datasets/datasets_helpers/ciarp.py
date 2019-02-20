@@ -1,6 +1,9 @@
 from ._utils import check_folder_existence, extract_zip
 from .dataset_loader import DatasetLoader
+from logging import warning
+from skimage import io
 
+import glob
 import os
 import zipfile
 
@@ -29,8 +32,30 @@ class Ciarp(DatasetLoader):
         # extract the zip into the images path
         extract_zip(ZIP_PATH, images_folderpath)
 
-    def load(self, path):
-        return True
+    def load(self, extracted_images_folderpath):
+        dataset_folder = extracted_images_folderpath+'/ciarp'
+        if os.path.exists(dataset_folder):
+            folders = {}
+            folders_names = list(
+                filter(lambda x: ".txt" not in x, os.listdir(dataset_folder)))
+            # start the load
+            images_loaded = 0
+            for folder in folders_names:
+                warning(f"Loading images from {folder}")
+                folders[folder] = []
+                os.chdir(dataset_folder+'/{}'.format(folder))
+                images = os.listdir(os.getcwd())
+                images_loaded += len(images)
+                for image in images:
+                    folders[folder].append(io.imread(image))
+                os.chdir("..")
+            warning(f"Dataset Loaded. {images_loaded} images were loaded")
+            warning(
+                "You can access to the diferents categories using: var_name[folder_name][image_index]\nThe options available are:")
+            for position, folder in enumerate(folders_names):
+                warning('{}. {}'.format(position, folder))
+
+        return folders if folders is not None else None
 
     def preprocess(self, path):
         pass
