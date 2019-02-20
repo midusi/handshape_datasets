@@ -11,7 +11,7 @@ import tarfile
 import zipfile
 
 
-def check_folder_existence(folder):
+def mkdir_unless_exists(folder):
     if not os.path.exists(folder):
         logging.info(f"Creating folder {folder}...")
         os.mkdir(folder)

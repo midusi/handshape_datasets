@@ -19,7 +19,7 @@ options = {
     # 'pugeault': pugeault.download_and_extract,
     'rwth-phoenix': rwth.Rwth
 }
-names = options.keys()
+
 
 HOME_PATH_HANDSHAPE = os.path.join(os.getenv('HOME'),
                                    '.handshape_datasets')
@@ -33,10 +33,10 @@ def get(selected_dataset,
         folderpath=HOME_PATH_HANDSHAPE,
         images_folderpath=None):
 
-    images_folderpath = os.path.join(HOME_PATH_HANDSHAPE, selected_dataset, "{}_images".format(
-        selected_dataset)) if images_folderpath is None else images_folderpath
+    images_folderpath = os.path.join(HOME_PATH_HANDSHAPE, selected_dataset, f"{selected_dataset}_images") if images_folderpath is None else images_folderpath
     try:
-        dataset = options[selected_dataset]()  # instance the class
+        dataset_class = options[selected_dataset]  # get downloader class for dataset
+        dataset=dataset_class() # instance the class
         return dataset.get(folderpath, images_folderpath)
 
     except KeyError:

@@ -13,8 +13,8 @@ def download_and_extract(folderpath, images_folderpath, download):
     """
     actual_wd = os.getcwd()
 
-    _utils.check_folder_existence(folderpath)
-    _utils.check_folder_existence(images_folderpath)
+    _utils.mkdir_unless_exists(folderpath)
+    _utils.mkdir_unless_exists(images_folderpath)
     success_filename = "indian_download_complete"
     if download is True:
         print("Downloading Indian Sign Language dataset to folder %s ..." % folderpath)
