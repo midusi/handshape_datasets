@@ -39,13 +39,13 @@ class Ciarp(DatasetLoader):
             folders_names = list(
                 filter(lambda x: ".txt" not in x, os.listdir(dataset_folder)))
             # start the load
-            images_loaded = 0
+            images_loaded_counter = 0
             for folder in folders_names:
                 warning(f"Loading images from {folder}")
                 folders[folder] = []
                 os.chdir(dataset_folder+'/{}'.format(folder))
                 images = os.listdir(os.getcwd())
-                images_loaded += len(images)
+                images_loaded_counter += len(images)
                 for image in images:
                     folders[folder].append(io.imread(image))
                 os.chdir("..")
