@@ -22,7 +22,7 @@ VERSION = 0.1
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'numpy', 'requests', 'patool', 'scipy','hurry','gdown',"scikit-image",'pyunpack'
+    'numpy', 'requests', 'patool', 'scipy', 'hurry', 'gdown', "scikit-image", 'pyunpack', 'tkinter'
 ]
 
 # What packages are optional?

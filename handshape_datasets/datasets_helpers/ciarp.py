@@ -47,9 +47,10 @@ class Ciarp(DatasetLoader):
                 images = os.listdir(os.getcwd())
                 images_loaded_counter += len(images)
                 for image in images:
-                    folders[folder].append(io.imread(image))
+                    folders[folder].append(io.imread(image, as_gray=True))
                 os.chdir("..")
-            warning(f"Dataset Loaded. {images_loaded} images were loaded")
+            warning(
+                f"Dataset Loaded (´・ω・)っ. {images_loaded_counter} images were loaded")
             warning(
                 "You can access to the diferents categories using: var_name[folder_name][image_index]\nThe options available are:")
             for position, folder in enumerate(folders_names):
