@@ -32,12 +32,15 @@ class Ciarp(DatasetLoader):
         if os.path.exists(dataset_folder):
             folders = {}
             folders_names = list(
+                # just the folders
                 filter(lambda x: ".txt" not in x, os.listdir(dataset_folder)))
             # start the load
             images_loaded_counter = 0
+            # each image is stored in the key corresponding to its subset
             for folder in folders_names:
                 warning(f"Loading images from {folder}")
                 folders[folder] = []
+                # cd subset folder
                 os.chdir(dataset_folder+'/{}'.format(folder))
                 images = os.listdir(os.getcwd())
                 images_loaded_counter += len(images)

@@ -117,10 +117,10 @@ def show_images(images, cols=1, titles=None):
     n_images = len(images)
     if titles is None:  # doenst receive any title
         titles = ['Image (%d)' % i for i in range(1, n_images + 1)]
-    fig = plt.figure()
+    fig = plt.figure()  # the container plot
     for n, (image, title) in enumerate(zip(images, titles)):
         a = fig.add_subplot(cols, np.ceil(n_images/float(cols)), n + 1)
-        if image.ndim == 2:
+        if image.ndim == 2:  # if isn't rgb else show the colors by default
             plt.gray()
         plt.imshow(image)
         a.set_title(title)
