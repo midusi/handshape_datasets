@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 from urllib.parse import urlparse
-from shutil import copyfileobj
-from requests import get as get_file
-from ftplib import FTP
+
 
 import os
 import logging
@@ -20,53 +18,8 @@ class DatasetLoader(ABC):
         pass
 
     @abstractmethod
-    def download_and_extract(self, path, images_folderpath):
+    def download_dataset(self, path):
         pass
-
-    def download_file(self, url, filepath):
-        """
-        download a file from an url and stores it in filepath
-        :param url:
-        :param filepath:
-        """
-        with get_file(url, stream=True) as r:
-            # with stream in true the file doen't save in memory inmediately
-            # it doesn't dowload the content just the headers and the conection keep open
-            logging.warning(
-                f"Downloading {filepath} from {url}")
-            with open(filepath, 'wb') as f:
-                copyfileobj(r.raw, f)
-        logging.warning("Download Complete ƪ(˘⌣˘)ʃ")
-
-    def download_from_drive(self, url, filepath):
-        logging.warning("Downloading {} dataset from {}".format(filepath, url))
-        gdown.download(url, filepath, quiet=True)
-        logging.warning("Done ƪ(˘⌣˘)ʃ")
-
-    def download_file_over_ftp(self, ftp_url, ftp_relative_file_path, ftp_filename, filepath):
-        ftp = FTP(ftp_url)
-        ftp.login()
-        ftp.cwd(ftp_relative_file_path)
-        with open(filepath, 'wb') as f:
-            logging.warning("Downloading the dataset...")
-            ftp.retrbinary('RETR {}'.format(ftp_filename), f.write)
-            logging.warning("Done ƪ(˘⌣˘)ʃ")
-
-    def download_bigger_file(self, url, filepath):
-        """
-            download a file from an url and stores it in filepath
-            :param url:
-            :param filepath:
-        """
-        with get_file(url, stream=True) as r:
-            # with stream in true the file doen't save in memory inmediately
-            # it doesn't dowload the content just the headers and the conection keep open
-            logging.warning(f"Downloading {filepath} dataset from {url}")
-            with open(filepath, 'wb') as f:
-                for chunk in r.iter_content(chunk_size=512 * 1024):
-                    if chunk:
-                        f.write(chunk)
-        logging.warning("Done ƪ(˘⌣˘)ʃ")
 
     def get(self, filepath, images_folderpath, **kwargs):
         path = os.path.join(filepath, self._name)
@@ -75,10 +28,10 @@ class DatasetLoader(ABC):
                 f"Creating folder {path} for the dataset {self._name}")
             os.mkdir(path)
         if not self.get_downloaded_flag(path):
-            self.download_and_extract(path, images_folderpath)
+            self.download_dataset(path)
         if not self.get_preprocessed_flag(path):
             logging.warning(f"Preprocessing {self._name}...")
-            self.preprocess(path)
+            self.preprocess(path, images_folderpath)
             logging.warning("Done")
         return self.load(images_folderpath)
 
@@ -97,7 +50,7 @@ class DatasetLoader(ABC):
         pass
 
     @abstractmethod
-    def preprocess(self, path):
+    def preprocess(self, path, images_folderpath):
         pass
 
     def set_downloaded(self, path):

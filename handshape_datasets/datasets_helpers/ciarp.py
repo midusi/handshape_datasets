@@ -1,5 +1,6 @@
-from ._utils import check_folder_existence, extract_zip
+from ._utils import check_folder_existence, extract_zip, download_file
 from .dataset_loader import DatasetLoader
+from .dataset import Dataset
 from logging import warning
 from skimage import io
 
@@ -16,24 +17,18 @@ class Ciarp(DatasetLoader):
     def urls(self):
         return self.url
 
-    def download_and_extract(self, folderpath, images_folderpath=None):
-        # if it doenst receives the images_folderpath arg creates into folderpath
-        images_folderpath = os.path.join(
-            folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
-        check_folder_existence(images_folderpath)
+    def download_dataset(self, folderpath):
         ZIP_PATH = os.path.join(folderpath, 'ciarp.zip')
 
         # check if the dataset is downloaded
         file_exists = self.get_downloaded_flag(folderpath)
         if file_exists is False:
-            self.download_file(self.urls(), ZIP_PATH)
+            download_file(url=self.urls(), filepath=ZIP_PATH)
             # set the exit flag
             self.set_downloaded(folderpath)
-        # extract the zip into the images path
-        extract_zip(ZIP_PATH, images_folderpath)
 
     def load(self, extracted_images_folderpath):
-        dataset_folder = extracted_images_folderpath+'/ciarp'
+        dataset_folder = os.path.join(extracted_images_folderpath, 'ciarp')
         if os.path.exists(dataset_folder):
             folders = {}
             folders_names = list(
@@ -51,12 +46,15 @@ class Ciarp(DatasetLoader):
                 os.chdir("..")
             warning(
                 f"Dataset Loaded (´・ω・)っ. {images_loaded_counter} images were loaded")
-            warning(
-                "You can access to the diferents categories using: var_name[folder_name][image_index]\nThe options available are:")
-            for position, folder in enumerate(folders_names):
-                warning('{}. {}'.format(position, folder))
 
-        return folders if folders is not None else None
+        ciarp = Dataset('ciarp', folders)
+        return ciarp if folders is not None else None
 
-    def preprocess(self, path):
-        pass
+    def preprocess(self, folderpath, images_folderpath=None):
+        # if it doenst receives the images_folderpath arg creates into folderpath
+        images_folderpath = os.path.join(
+            folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
+        ZIP_PATH = os.path.join(folderpath, 'ciarp.zip')
+        check_folder_existence(images_folderpath)
+        # extract the zip into the images path
+        extract_zip(ZIP_PATH, images_folderpath)
