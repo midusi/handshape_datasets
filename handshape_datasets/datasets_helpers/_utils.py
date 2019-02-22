@@ -14,12 +14,6 @@ import tarfile
 import zipfile
 
 
-def check_folder_existence(folder):
-    if not os.path.exists(folder):
-        logging.info(f"Creating folder {folder}...")
-        os.mkdir(folder)
-
-
 def download_file(url, filepath):
     """
     download a file from an url and stores it in filepath
@@ -66,9 +60,7 @@ def download_bigger_file(url, filepath):
             for chunk in r.iter_content(chunk_size=512 * 1024):
                 if chunk:
                     f.write(chunk)
-
-
-logging.warning("Done ƪ(˘⌣˘)ʃ")
+    logging.warning("Done ƪ(˘⌣˘)ʃ")
 
 
 def extract_zip(zip_path, extracted_path):
@@ -100,6 +92,12 @@ def get_project_root() -> Path:
     """Returns project root folder."""
 
     return Path(__file__).parent.parent.parent
+
+
+def mkdir_unless_exists(folder):
+    if not os.path.exists(folder):
+        logging.info(f"Creating folder {folder}...")
+        os.mkdir(folder)
 
 
 def show_images(images, cols=1, titles=None):

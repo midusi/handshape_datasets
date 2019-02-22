@@ -1,6 +1,6 @@
-from ._utils import check_folder_existence, extract_zip, download_file
-from .dataset_loader import DatasetLoader
+from ._utils import mkdir_unless_exists, extract_zip, download_file
 from .dataset import Dataset
+from .dataset_loader import DatasetLoader
 from logging import warning
 from skimage import io
 
@@ -55,6 +55,6 @@ class Ciarp(DatasetLoader):
         images_folderpath = os.path.join(
             folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
         ZIP_PATH = os.path.join(folderpath, 'ciarp.zip')
-        check_folder_existence(images_folderpath)
+        mkdir_unless_exists(images_folderpath)
         # extract the zip into the images path
         extract_zip(ZIP_PATH, images_folderpath)
