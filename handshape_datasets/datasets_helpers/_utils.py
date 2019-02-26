@@ -97,7 +97,7 @@ def get_project_root() -> Path:
 
 def mkdir_unless_exists(folder):
     if not os.path.exists(folder):
-        warning(f"Creating folder {folder}...")
+        warning(f"Creating folder {folder} ...")
         # FIXME Why crashs with nus_1 (?
         os.mkdir(folder)
 
