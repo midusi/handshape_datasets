@@ -1,8 +1,6 @@
 from logging import warning
 from math import ceil
-from ._utils import show_images
-
-import random
+from ._utils import show_subsets
 
 
 class Dataset(object):
@@ -12,19 +10,12 @@ class Dataset(object):
 
     def show_info(self):
         warning("The dataset has {} subsets.".format(len(self.subsets.keys())))
-        images_to_show = []
-        names = []
-        for name in self.subsets.keys():
-            images_to_show.append(
-                self.subsets[name][random.randint(0, len(self.subsets[name]))])
-            names.append(name)
-        columns_quantity = ceil(len(names)/4)  # 4 images per column. Rounds up
+        show_subsets(self.subsets, images_number=16)
 
-        show_images(images_to_show, columns_quantity, names)
-
-    def subsets_quantity(self):
+    def subsets_number(self):
+        """Returns the number of subsets"""
         return len(self.subsets.keys())
 
     def subsets_names(self):
-        for subset in self.subsets.keys():
-            print('-' + subset)
+        """Returns a list with the subsets names"""
+        return list(self.subsets.keys())

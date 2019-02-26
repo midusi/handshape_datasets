@@ -33,13 +33,15 @@ def get(selected_dataset,
         folderpath=HOME_PATH_HANDSHAPE,
         images_folderpath=None):
 
-    images_folderpath = os.path.join(HOME_PATH_HANDSHAPE, selected_dataset, f"{selected_dataset}_images") if images_folderpath is None else images_folderpath
+    images_folderpath = os.path.join(HOME_PATH_HANDSHAPE, selected_dataset,
+                                     f"{selected_dataset}_images") if images_folderpath is None else images_folderpath
     try:
-        dataset_class = options[selected_dataset]  # get downloader class for dataset
-        dataset=dataset_class() # instance the class
+        # get downloader class for dataset
+        dataset_class = options[selected_dataset]
+        dataset = dataset_class()  # instance the class
         return dataset.get(folderpath, images_folderpath)
 
     except KeyError:
         print("The option {} isn't valid. The valid options are")
-        for key, position in enumerate(options.keys()):
-            print('{}. {}'.format(position,     key))
+        for position, key in enumerate(options.keys()):
+            print('{}. {}'.format(position, key))

@@ -57,7 +57,7 @@ class DatasetLoader(ABC):
         self._set_status_flag(path, "{}_downloaded".format(self._name))
 
     def set_preprocessed_flag(self, path):
-        self._set_status_flag(path, "preprocessed")
+        self._set_status_flag(path, "{}_preprocessed".format(self._name))
 
     def _set_status_flag(self, path, status, value=True):
         status_path = os.path.join(path, status)

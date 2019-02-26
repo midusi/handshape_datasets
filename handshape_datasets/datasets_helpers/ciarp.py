@@ -54,10 +54,14 @@ class Ciarp(DatasetLoader):
         return ciarp if folders is not None else None
 
     def preprocess(self, folderpath, images_folderpath=None):
-        # if it doenst receives the images_folderpath arg creates into folderpath
-        images_folderpath = os.path.join(
-            folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
-        ZIP_PATH = os.path.join(folderpath, 'ciarp.zip')
-        mkdir_unless_exists(images_folderpath)
-        # extract the zip into the images path
-        extract_zip(ZIP_PATH, images_folderpath)
+        preprocess_flag = "{}_preprocessed".format(self._name)
+        if self.get_status_flag(folderpath, preprocess_flag) is False:
+            # if it doenst receives the images_folderpath arg creates into folderpath
+            images_folderpath = os.path.join(
+                folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
+            mkdir_unless_exists(images_folderpath)
+            ZIP_PATH = os.path.join(folderpath, 'ciarp.zip')
+            # extract the zip into the images path
+            extract_zip(ZIP_PATH, images_folderpath)
+            self.set_preprocessed_flag(folderpath)
+        # if its already extracted doesnt do anything

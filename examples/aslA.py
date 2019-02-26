@@ -2,7 +2,7 @@
 import handshape_datasets as hd
 
 
-dataset_name = "aslA"
+dataset_name = "nus_1"
 
 hd.get(dataset_name)
 
