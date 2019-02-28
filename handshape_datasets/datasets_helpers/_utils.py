@@ -15,7 +15,7 @@ import tarfile
 import zipfile
 
 
-def download_file(url, filepath):
+def download_file(url, filepath, filename='File'):
     """
     download a file from an url and stores it in filepath
     :param url:
@@ -25,7 +25,7 @@ def download_file(url, filepath):
         # with stream in true the file doen't save in memory inmediately
         # it doesn't dowload the content just the headers and the conection keep open
         warning(
-            f"Downloading {filepath} from {url}")
+            f"Downloading {filename} from {url}")
         with open(filepath, 'wb') as f:
             copyfileobj(r.raw, f)
             warning("Download Complete ƪ(˘⌣˘)ʃ")
@@ -37,7 +37,7 @@ def download_from_drive(url, filepath):
     warning("Done ƪ(˘⌣˘)ʃ")
 
 
-def download_file_over_ftp(ftp_url, ftp_relative_file_path, ftp_filename, filepath):
+def download_file_over_ftp(ftp_url, ftp_relative_file_path, ftp_filename, filepath, filename):
     ftp = FTP(ftp_url)
     ftp.login()
     ftp.cwd(ftp_relative_file_path)
@@ -99,7 +99,7 @@ def mkdir_unless_exists(folder):
     if not os.path.exists(folder):
         warning(f"Creating folder {folder} ...")
         # FIXME Why crashs with nus_1 (?
-        os.mkdir(folder)
+        os.makedirs(folder)
 
 
 def show_images(plot_title, images, cols=1, titles=None):
@@ -120,7 +120,7 @@ def show_images(plot_title, images, cols=1, titles=None):
     if titles is None:  # doenst receive any title
         titles = ['Image (%d)' % i for i in range(1, n_images + 1)]
     fig = plt.figure()  # the container plot
-    fig.suptitle(plot_title)
+    fig.suptitle("%s Subset" % plot_title)
     for n, (image, title) in enumerate(zip(images, titles)):
         a = fig.add_subplot(cols, np.ceil(n_images/float(cols)), n + 1)
         if image.ndim == 2:  # if isn't rgb else show the colors by default

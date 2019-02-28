@@ -10,6 +10,7 @@ class Dataset(object):
 
     def show_info(self):
         warning("The dataset has {} subsets.".format(len(self.subsets.keys())))
+        warning(f"The subset/s is/are {'-'.join(self.subsets_names())}")
         show_subsets(self.subsets, images_number=16)
 
     def subsets_number(self):

@@ -2,8 +2,7 @@
 import handshape_datasets as hd
 
 
-dataset_name = "nus_1"
+dataset_name = "rwth-phoenix"
 
-hd.get(dataset_name)
-
-# TODO print dataset statistics, show some images
+rwth = hd.get(dataset_name)
+rwth.show_info()

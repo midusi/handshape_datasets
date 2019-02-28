@@ -13,17 +13,19 @@ class Ciarp(DatasetLoader):
     def __init__(self):
         super().__init__("ciarp")
         self.url = 'http://home.agh.edu.pl/~bkw/code/ciarp2017/ciarp.zip'
+        self._FILENAME = self._name + '.zip'
 
     def urls(self):
         return self.url
 
     def download_dataset(self, folderpath):
-        ZIP_PATH = os.path.join(folderpath, 'ciarp.zip')
+        ZIP_PATH = os.path.join(folderpath, self._FILENAME)
 
         # check if the dataset is downloaded
         file_exists = self.get_downloaded_flag(folderpath)
         if file_exists is False:
-            download_file(url=self.urls(), filepath=ZIP_PATH)
+            download_file(url=self.urls(), filepath=ZIP_PATH,
+                          filename=self._FILENAME)
             # set the exit flag
             self.set_downloaded(folderpath)
 
@@ -54,13 +56,12 @@ class Ciarp(DatasetLoader):
         return ciarp if folders is not None else None
 
     def preprocess(self, folderpath, images_folderpath=None):
-        preprocess_flag = "{}_preprocessed".format(self._name)
-        if self.get_status_flag(folderpath, preprocess_flag) is False:
+        if self.get_preprocessed_flag(folderpath) is False:
             # if it doenst receives the images_folderpath arg creates into folderpath
             images_folderpath = os.path.join(
                 folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
             mkdir_unless_exists(images_folderpath)
-            ZIP_PATH = os.path.join(folderpath, 'ciarp.zip')
+            ZIP_PATH = os.path.join(folderpath, self._FILENAME)
             # extract the zip into the images path
             extract_zip(ZIP_PATH, images_folderpath)
             self.set_preprocessed_flag(folderpath)

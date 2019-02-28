@@ -6,8 +6,8 @@ import os
 
 
 options = {
-    'aslA': aslA.AslA,
-    'aslB': aslB.AslB,
+    #'aslA': aslA.AslA,
+    #'aslB': aslB.AslB,
     'ciarp': ciarp.Ciarp,
     # 'indian_kinect': indian_training.download_and_extract,
     # 'isl': irish.download_and_extract,
