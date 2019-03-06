@@ -5,7 +5,7 @@ from pathlib import Path
 from requests import get
 from shutil import copyfileobj
 from requests import get as get_file
-
+import math
 import gdown
 import matplotlib.pyplot as plt
 import numpy as np
@@ -102,7 +102,7 @@ def mkdir_unless_exists(folder):
         os.makedirs(folder)
 
 
-def show_images(plot_title, images, cols=1, titles=None):
+def show_images(plot_title, images, cols, titles=None):
     """Display a list of images in a single figure with matplotlib.
 
     Parameters
@@ -120,7 +120,7 @@ def show_images(plot_title, images, cols=1, titles=None):
     if titles is None:  # doenst receive any title
         titles = ['Image (%d)' % i for i in range(1, n_images + 1)]
     fig = plt.figure()  # the container plot
-    fig.suptitle("%s Subset" % plot_title)
+    fig.suptitle(plot_title)
     for n, (image, title) in enumerate(zip(images, titles)):
         a = fig.add_subplot(cols, np.ceil(n_images/float(cols)), n + 1)
         if image.ndim == 2:  # if isn't rgb else show the colors by default
@@ -130,7 +130,7 @@ def show_images(plot_title, images, cols=1, titles=None):
         if n_images <= 16:
             a.set_title(title)
 
-    fig.set_size_inches(np.array(fig.get_size_inches()) * n_images)
+    #fig.set_size_inches(np.array(fig.get_size_inches()) * n_images)
     if n_images <= 16:
         plt.subplots_adjust(left=0.13, bottom=0.15, right=0.9,
                             top=0.89, wspace=0, hspace=0.32)
@@ -140,15 +140,27 @@ def show_images(plot_title, images, cols=1, titles=None):
     plt.show()
 
 
-def show_subsets(subsets, images_number):
-    for name in subsets.keys():
-        images_to_show = []
-        names = []
-        for i in range(0, images_number):
-            random_image_id = random.randint(0, len(subsets[name])-1)
-            images_to_show.append(
-                subsets[name][random_image_id])
-            names.append("Id {}".format(random_image_id))
-        # 4 images per column. Rounds up
-        columns_quantity = ceil(len(names)/4)
-        show_images(name, images_to_show, columns_quantity, names)
+def show_subset(dataset, subset_name, samples=32,cols=None):
+    subset = dataset.subsets[subset_name]
+
+    if isinstance(samples, int):
+        # select a random subset of samples
+        sample_indices=np.random.permutation(len(subset))[:samples]
+    elif isinstance(samples, list):
+        sample_indices=samples
+    else:
+        raise ValueError(f"Invalid samples: {samples}. Must be int or list of ints")
+
+    images_to_show = [subset[i] for i in sample_indices]
+    names=[f"Id {i}" for i in sample_indices]
+    if cols==None:
+        wide_aspect_ratio=1080/1920
+        cols = ceil(math.sqrt(len(names)*wide_aspect_ratio))
+
+    show_images(f"Subset {subset_name}:",images_to_show,cols,titles=names)
+
+def show_dataset(dataset,subset_names=None, samples=32):
+    if subset_names==None:
+        subset_names=dataset.subsets.keys()
+    for name in subset_names:
+        show_subset(dataset,name,samples)

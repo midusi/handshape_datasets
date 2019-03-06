@@ -1,6 +1,6 @@
 from logging import warning
 from math import ceil
-from ._utils import show_subsets
+from ._utils import show_dataset
 
 
 class Dataset(object):
@@ -8,15 +8,20 @@ class Dataset(object):
         self.name = name
         self.subsets = data
 
-    def show_info(self):
-        warning("The dataset has {} subsets.".format(len(self.subsets.keys())))
-        warning(f"The subset/s is/are {'-'.join(self.subsets_names())}")
-        show_subsets(self.subsets, images_number=16)
+    def summary(self):
+        subset_names=""
+        for i,item in enumerate(self.subsets.items()):
+            name,subset=item
+            subset_names+="\t"+f"{i+1}) {name}: {len(subset)} samples"+"\n"
+        n_subsets=len(self.subsets)
+        result=f"Dataset {self.name}\n" \
+            f"{n_subsets} subsets:\n" \
+            f"{subset_names}"
 
-    def subsets_number(self):
-        """Returns the number of subsets"""
-        return len(self.subsets.keys())
+        return result
 
-    def subsets_names(self):
-        """Returns a list with the subsets names"""
-        return list(self.subsets.keys())
+    def show_dataset(self, subsets=None, samples=32):
+        if subsets==None:
+            subsets=self.subsets.keys()
+
+        show_dataset(self, subsets, samples)
