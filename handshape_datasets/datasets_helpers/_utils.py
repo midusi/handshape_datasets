@@ -14,6 +14,9 @@ import random
 import tarfile
 import zipfile
 
+def download_file_content_as_text(url):
+    with get_file(url, stream=True) as r:
+        return r.text
 
 def download_file(url, filepath, filename='File'):
     """
@@ -140,27 +143,33 @@ def show_images(plot_title, images, cols, titles=None):
     plt.show()
 
 
-def show_subset(dataset, subset_name, samples=32,cols=None):
+def show_subset(dataset, subset_name, samples=32, cols=None):
     subset = dataset.subsets[subset_name]
 
     if isinstance(samples, int):
         # select a random subset of samples
-        sample_indices=np.random.permutation(len(subset))[:samples]
+        sample_indices = np.random.permutation(len(subset))[:samples]
     elif isinstance(samples, list):
-        sample_indices=samples
+        sample_indices = samples
     else:
-        raise ValueError(f"Invalid samples: {samples}. Must be int or list of ints")
+        raise ValueError(
+            f"Invalid samples: {samples}. Must be int or list of ints")
 
     images_to_show = [subset[i] for i in sample_indices]
-    names=[f"Id {i}" for i in sample_indices]
-    if cols==None:
-        wide_aspect_ratio=1080/1920
+    names = [f"Id {i}" for i in sample_indices]
+    if cols == None:
+        wide_aspect_ratio = 1080/1920
         cols = ceil(math.sqrt(len(names)*wide_aspect_ratio))
 
-    show_images(f"Subset {subset_name}:",images_to_show,cols,titles=names)
+    show_images(f"Subset {subset_name}:", images_to_show, cols, titles=names)
 
-def show_dataset(dataset,subset_names=None, samples=32):
-    if subset_names==None:
-        subset_names=dataset.subsets.keys()
+
+def show_dataset(dataset, subset_names=None, samples=32):
+    if subset_names == None:
+        subset_names = dataset.subsets.keys()
     for name in subset_names:
-        show_subset(dataset,name,samples)
+        show_subset(dataset, name, samples)
+
+
+print(download_file_content_as_text(
+    'https://drive.google.com/uc?export=download&id=1VjRZHI0EcY0e0vSG9AuvbqysTYdcIKek'))
