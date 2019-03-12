@@ -2,14 +2,14 @@
 import handshape_datasets as hd
 
 
-DATASET_NAME = "ciarp"
+DATASET_NAME = "psl"
 
 ciarp = hd.load(DATASET_NAME)
 
-print(ciarp.summary())
+# print(ciarp.summary())
 
-ciarp.show_dataset()
+# ciarp.show_dataset()
 
-ciarp.show_dataset(subsets=["test_Kinect_WithGabor"],samples=128)
+# ciarp.show_dataset(subsets=["test_Kinect_WithGabor"],samples=128)
 
-ciarp.show_dataset(subsets=["test_Kinect_WithGabor"],samples=[1,2,3,0,15,1,200])
+# ciarp.show_dataset(subsets=["test_Kinect_WithGabor"],samples=[1,2,3,0,15,1,200])

@@ -169,7 +169,3 @@ def show_dataset(dataset, subset_names=None, samples=32):
         subset_names = dataset.subsets.keys()
     for name in subset_names:
         show_subset(dataset, name, samples)
-
-
-print(download_file_content_as_text(
-    'https://drive.google.com/uc?export=download&id=1VjRZHI0EcY0e0vSG9AuvbqysTYdcIKek'))
