@@ -2,51 +2,27 @@
 # ,pugeault,rwth,lsa16
 
 
-from .datasets_helpers import (aslA as _aslA,
-                               aslB as _aslB,
-                               ciarp as _ciarp,
-                               irish as _irish,
-                               indian_training as _indian_training,
-                               jsl as _jsl,
-                               nus1 as _nus1,
-                               nus2 as _nus2,
-                               psl as _psl,
-                               rwth as _rwth)
-
 import os as _os
+from .datasets_helpers.config import options as _options
 
 
-_options = {
-    #'aslA': aslA.AslA,
-    #'aslB': aslB.AslB,
-    'ciarp': _ciarp.Ciarp,
-    # 'indian_kinect': indian_training.download_and_extract,
-    # 'isl': irish.download_and_extract,
-    'jsl': _jsl.Jsl,
-    # 'lsa16': lsa16.download_and_extract,
-    'nus1': _nus1.Nus1,
-    'nus2': _nus2.Nus2,
-    # 'psl': psl.download_and_extract,
-    # 'pugeault': pugeault.download_and_extract,
-    'rwth-phoenix': _rwth.Rwth
-}
 
 names=list(_options.keys())
 
-HOME_PATH_HANDSHAPE = _os.path.join(_os.getenv('HOME'),
+_HOME_PATH_HANDSHAPE = _os.path.join(_os.getenv('HOME'),
                                    '.handshape_datasets')
 try:
-    _os.mkdir(HOME_PATH_HANDSHAPE)  # default folder for creation
+    _os.mkdir(_HOME_PATH_HANDSHAPE)  # default folder for creation
 except FileExistsError:
     pass
 
 
 def load(selected_dataset,
-        folderpath=HOME_PATH_HANDSHAPE,
-        images_folderpath=None):
+         folderpath=_HOME_PATH_HANDSHAPE,
+         images_folderpath=None):
 
-    images_folderpath = _os.path.join(HOME_PATH_HANDSHAPE, selected_dataset,
-                                     f"{selected_dataset}_images") if images_folderpath is None else images_folderpath
+    images_folderpath = _os.path.join(_HOME_PATH_HANDSHAPE, selected_dataset,
+                                      f"{selected_dataset}_images") if images_folderpath is None else images_folderpath
     try:
         # get downloader class for dataset
         dataset_class = _options[selected_dataset]
