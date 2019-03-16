@@ -13,7 +13,7 @@ import io
 
 # Package meta-data.
 NAME = 'handshape_datasets'
-DESCRIPTION = 'A single library to (down)load all existing sign language handshape datasets.'
+DESCRIPTION = 'A single library to (down)load all existing sign language handshape datasets. This library allows you to automatically download and load various sign language handshape datasets. Currently supporting 13 different datasets.'
 URL = 'https://github.com/midusi/handshape_datasets'
 EMAIL = 'brianrey3@protonmail.com-facundoq@gmail.com'
 AUTHOR = 'Brian Rey-Facundo Quiroga'

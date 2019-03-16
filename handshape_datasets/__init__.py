@@ -1,45 +1,41 @@
-# no better way to do it since each is a submodule, not a function
-# ,pugeault,rwth,lsa16
-from .datasets_helpers import aslA, aslB, ciarp, irish, indian_training, jsl, nus1, nus2, psl, rwth
+import os as _os
+from .datasets_helpers.config import options as _options
 
-import os
+names=list(_options.keys())
 
-
-options = {
-    'aslA': aslA.AslA,
-    'aslB': aslB.AslB,
-    'ciarp': ciarp.Ciarp,
-    # 'indian_kinect': indian_training.download_and_extract,
-    # 'isl': irish.download_and_extract,
-    'jsl': jsl.Jsl,
-    # 'lsa16': lsa16.download_and_extract,
-    'nus_1': nus1.Nus1,
-    'nus_2': nus2.Nus2,
-    # 'psl': psl.download_and_extract,
-    # 'pugeault': pugeault.download_and_extract,
-    'rwth-phoenix': rwth.Rwth
-}
-
-
-HOME_PATH_HANDSHAPE = os.path.join(os.getenv('HOME'),
+_HOME_PATH_HANDSHAPE = _os.path.join(_os.getenv('HOME'),
                                    '.handshape_datasets')
 try:
-    os.mkdir(HOME_PATH_HANDSHAPE)  # default folder for creation
+    _os.mkdir(_HOME_PATH_HANDSHAPE)  # default folder for creation
 except FileExistsError:
     pass
 
 
-def get(selected_dataset,
-        folderpath=HOME_PATH_HANDSHAPE,
-        images_folderpath=None):
+def load(selected_dataset,
+         folderpath=_HOME_PATH_HANDSHAPE,
+         images_folderpath=None):
 
-    images_folderpath = os.path.join(HOME_PATH_HANDSHAPE, selected_dataset, f"{selected_dataset}_images") if images_folderpath is None else images_folderpath
+    images_folderpath = _os.path.join(_HOME_PATH_HANDSHAPE, selected_dataset,
+                                      f"{selected_dataset}_images") if images_folderpath is None else images_folderpath
     try:
-        dataset_class = options[selected_dataset]  # get downloader class for dataset
-        dataset=dataset_class() # instance the class
+        # get downloader class for dataset
+        dataset_class = _options[selected_dataset]
+        # instance the class
+        dataset = dataset_class()
+        # load and return the dataset
         return dataset.get(folderpath, images_folderpath)
 
     except KeyError:
         print("The option {} isn't valid. The valid options are")
-        for key, position in enumerate(options.keys()):
-            print('{}. {}'.format(position,     key))
+        for position, key in enumerate(_options.keys()):
+            print('{}. {}'.format(position, key))
+
+
+def help():
+    message=f"""To load a dataset, call get('dataset'), where the supported datasets are:\n{", ".join(_options.keys())}\n\
+        Examples:\n\
+        import handshape_datasets\n\
+        dataset=handshape_datasets.load('ciarp')\
+        print(dataset.summary)
+        """
+    print(message)

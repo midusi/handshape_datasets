@@ -1,5 +1,5 @@
 from .dataset_loader import DatasetLoader
-from ._utils import mkdir_unless_exists, extract_zip, download_bigger_file
+from ._utils import mkdir_unless_exists, extract_tar, download_bigger_file
 
 import tarfile
 import os
@@ -13,8 +13,7 @@ class AslA(DatasetLoader):
     def urls(self):
         return self.url
 
-    def download_dataset(self, folderpath):
-        # if it doenst receives the images_folderpath arg creates into folderpath
+    def download_dataset(self, folderpath, images_folderpath=None):
         TARFILE_PATH = os.path.join(folderpath, 'aslA.tar.gz')
         
 
@@ -30,8 +29,14 @@ class AslA(DatasetLoader):
         return True
 
     def preprocess(self, folderpath, images_folderpath=None):
-        images_folderpath = os.path.join(
-            folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
-        mkdir_unless_exists(images_folderpath)
-        TARFILE_PATH = os.path.join(folderpath, 'aslA.tar.gz')
-        extract_zip(TARFILE_PATH, images_folderpath)
+        preprocess_flag = "{}_preprocessed".format(self._name)
+        if self.get_status_flag(folderpath, preprocess_flag) is False:
+            # if it doenst receives the images_folderpath arg creates into folderpath
+            images_folderpath = os.path.join(
+                folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
+            mkdir_unless_exists(images_folderpath)
+            TARFILE_PATH = os.path.join(folderpath, 'aslA.tar.gz')
+            # extract the zip into the images path
+            extract_tar(TARFILE_PATH, images_folderpath)
+            self.set_preprocessed_flag(folderpath)
+        # if its already extracted doesnt do anything
