@@ -61,3 +61,4 @@ class Ciarp(DatasetLoader):
         mkdir_unless_exists(images_folderpath)
         # extract the zip into the images path
         extract_zip(ZIP_PATH, images_folderpath)
+        self.set_preprocessed_flag(folderpath)

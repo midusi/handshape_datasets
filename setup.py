@@ -15,10 +15,10 @@ import io
 NAME = 'handshape_datasets'
 DESCRIPTION = 'A single library to (down)load all existing sign language handshape datasets.'
 URL = 'https://github.com/midusi/handshape_datasets'
-EMAIL = 'facundoq@gmail.com-brianrey3@protonmail.com'
-AUTHOR = 'Facundo Quiroga-Brian Rey'
+EMAIL = 'brianrey3@protonmail.com-facundoq@gmail.com'
+AUTHOR = 'Brian Rey-Facundo Quiroga'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = 0.1
+VERSION = 0.2
 
 # What packages are required for this module to be executed?
 REQUIRED = [
