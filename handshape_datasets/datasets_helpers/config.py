@@ -1,19 +1,19 @@
 
 from . import (aslA as _aslA,
-                               aslB as _aslB,
-                               ciarp as _ciarp,
-                               irish as _irish,
-                               indian_training as _indian_training,
-                               jsl as _jsl,
-                               nus1 as _nus1,
-                               nus2 as _nus2,
-                               psl as _psl,
-                               rwth as _rwth)
+               aslB as _aslB,
+               ciarp as _ciarp,
+               irish as _irish,
+               indian_training as _indian_training,
+               jsl as _jsl,
+               nus1 as _nus1,
+               nus2 as _nus2,
+               psl as _psl,
+               rwth as _rwth)
 
 
 options = {
-    #'aslA': aslA.AslA,
-    #'aslB': aslB.AslB,
+    # 'aslA': aslA.AslA,
+    # 'aslB': aslB.AslB,
     'ciarp': _ciarp.Ciarp,
     # 'indian_kinect': indian_training.download_and_extract,
     # 'isl': irish.download_and_extract,

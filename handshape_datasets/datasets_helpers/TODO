@@ -13,7 +13,7 @@ Nus_1 dataset:
         ☐ Create the metadata optional array.
 
 DatasetLoader Class:
-    ☐ Method clear("dataset",path="/home/.handshape_datasets")
+    ☐ Method clear with docstring("dataset",path="/home/.handshape_datasets") @started(19-03-16 11:43)
     ☐ Method clear_all(path="/home/.handshape_datasets)
 
 Document all the functions:
