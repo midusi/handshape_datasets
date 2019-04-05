@@ -1,11 +1,11 @@
-from .datasets_helpers.config import options as _options
 from shutil import rmtree
 from os.path import join as create_path
 from logging import warning
+from .datasets_helpers.config import options as _options
 
 import os as _os
 
-names = list(_options.keys())
+NAMES = list(_options.keys())
 
 _HOME_PATH_HANDSHAPE = _os.path.join(_os.getenv('HOME'),
                                      '.handshape_datasets')
@@ -18,8 +18,23 @@ except FileExistsError:
 def load(selected_dataset,
          folderpath=_HOME_PATH_HANDSHAPE,
          images_folderpath=None):
+    """Downloads, preprocesses and load in memory a dataset.
 
-    images_folderpath = create_path(_HOME_PATH_HANDSHAPE, selected_dataset,
+    Args:
+        selected_dataset (str): The dataset to download
+        folderpath (str, optional): Defaults to /home/.handshape-datasets.
+        \tWhere the dataset files will be downloaded
+        images_folderpath (str, optional): Defaults to None.
+        \tThe path where the images will be extracted
+
+    Raises:
+        KeyError: If the selected dataset is not a valid option
+
+    Returns:
+        An Dataset object instance
+    """
+
+    images_folderpath = create_path(folderpath, selected_dataset,
                                     f"{selected_dataset}_images") if images_folderpath is None else images_folderpath
     try:
         # get downloader class for dataset
@@ -55,8 +70,11 @@ def clear(dataset,
                 are: \n {}""".format(dataset, "\n".join(_options.keys())))
 
 
+# def clear_all(path=_os.path.join(_os.getenv("HOME"), ".handshape_datasets")):
+
 def help():
-    message = f"""To load a dataset, call load('dataset'), where the supported datasets are:\n{", ".join(_options.keys())}\n\
+    message = f"""To load a dataset, call load('dataset'),
+    where the supported datasets are:\n{", ".join(_options.keys())}\n\
 Example:\n\
     import handshape_datasets\n\
     dataset=handshape_datasets.load('ciarp')\n\

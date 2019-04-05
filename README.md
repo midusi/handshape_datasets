@@ -1,4 +1,5 @@
-# handshape_datasets
+1handshape_datasets
+
 A single library to (down)load all existing sign language handshape datasets.
 
 ![handshape](http://facundoq.github.io/unlp/lsa16/files/dataset/1_1_1.png "sample handshape") 
@@ -18,7 +19,20 @@ If you wish to add a dataset you can make a push request, file an issue, or writ
 
 This library is a *work in progress*. Contributions are welcome.
 
+## 						Working with images
 
+- **<u>Identifiying Hand Classes</u>**
 
-
+| Letter | Class ID |
+| :----: | :------: |
+|   a    |    1     |
+|   b    |    2     |
+|   c    |    3     |
+|   d    |    4     |
+|   e    |    5     |
+|   f    |    6     |
+|   g    |    7     |
+|   h    |    8     |
+|   i    |    9     |
+|   j    |    10    |
 

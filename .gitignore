@@ -90,7 +90,7 @@ ENV/
 env.bak/
 venv.bak/
 handsh/
-
+.vscode/
 # Spyder project settings
 .spyderproject
 .spyproject

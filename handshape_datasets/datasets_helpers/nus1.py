@@ -9,6 +9,7 @@ import os
 
 class Nus1(DatasetLoader):
     def __init__(self):
+        self.__doc__ += super.__doc__
         super().__init__("nus_1")
         self.url = 'https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet/NUS-Hand-Posture-Dataset-I.zip'
         self._FILENAME = self._name + '.zip'

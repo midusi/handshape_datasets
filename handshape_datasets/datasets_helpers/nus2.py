@@ -5,6 +5,7 @@ from logging import warning
 from skimage import io
 
 import os
+import numpy as np
 
 
 class Nus2(DatasetLoader):
@@ -12,6 +13,10 @@ class Nus2(DatasetLoader):
         super().__init__("nus_2")
         self.url = 'https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet/NUS-Hand-Posture-Dataset-II.zip'
         self._FILENAME = self._name + '.zip'
+        self._CLASSES_IDS = {
+            'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5,
+            'f': 6, 'g': 7, 'h': 8, 'i': 9, 'j': 10,
+        }
 
     def urls(self):
         return self.url
@@ -31,34 +36,69 @@ class Nus2(DatasetLoader):
         subsets_folder = os.path.join(extracted_images_folderpath,
                                       'NUS Hand Posture dataset-II')
         if os.path.exists(subsets_folder):
-            os.chdir(subsets_folder)
-            folders = {}
-            folders_names = list(
-                # just the folders
-                filter(lambda x: ".txt" not in x and "Backgrounds" not in x,
-                       os.listdir(os.getcwd())))
+            subsets = {}
+            subsets_names = list(
+                # just the subsets folders
+                filter(lambda x: "Hand" in x,
+                       os.listdir(subsets_folder)))
             # start the load
             images_loaded_counter = 0
             # each image is stored in the key corresponding to its subset
-            for folder in folders_names:
-                warning(f"Loading images from {folder}")
-                folders[folder] = []
-                # cd subset folder
-                os.chdir(subsets_folder+'/{}'.format(folder))
+            for subset in subsets_names:
+                warning(f"Loading images from {subset}")
+
+                # the data variable of the dataset class
+                subsets[subset] = {}
+                # where the subset images are stored
+                subset_images_path = os.path.join(subsets_folder, subset)
+                # Drops the Thumbs.db file
                 images = list(
                     filter(
-                        lambda x: ".db" not in x, os.listdir(os.getcwd())))
-                images_loaded_counter += len(images)
-                for image in images:
-                    folders[folder].append(
-                        # if the images are in color, doenst show in gray
-                        io.imread(image, as_gray=(folder == 'Color')))
-                os.chdir("..")
+                        lambda x: ".db" not in x,
+                        os.listdir(subset_images_path)
+                    )
+                )
+
+                NUMBER_OF_IMAGES = len(images)
+                images_loaded_counter += NUMBER_OF_IMAGES
+
+                IMAGE_HEIGHT = 120
+                IMAGE_WIDTH = 160
+                IMAGE_COLORS = 3
+
+                subsets[subset]["x"] = np.zeros(shape=(NUMBER_OF_IMAGES,
+                                                       IMAGE_HEIGHT,
+                                                       IMAGE_WIDTH,
+                                                       IMAGE_COLORS),
+                                                dtype="uint8")
+
+                subsets[subset]["y"] = np.zeros(shape=n)
+                x = subsets[subset]["x"]
+                y = subsets[subset]["y"]
+                for position, image_name in enumerate(images):
+                    # loads the image
+                    x[position] = io.imread(image_name)
+                    # loads the image klass in the array
+                    y[position] = self.get_klass_for_filename(
+                        image_name)
+
             warning(
                 f"Dataset Loaded (´・ω・)っ. {images_loaded_counter} images were loaded")
 
-            nus_2 = Dataset('nus_2', folders)
-            return nus_2 if folders is not None else None
+            nus_2 = Dataset('nus_2', subsets)
+            return nus_2 if subsets is not None else None
+
+    def get_klass_id_for_filename(self, filename):
+        """Returns the class corresponding to the image
+
+        Args:
+            filename (str): The name of the file to be parsed
+
+        Returns:
+            int: The class id of the hand. In this dataset the class
+            \tis the first char from filename
+        """
+        return self._CLASSES_IDS[filename[0]]
 
     def preprocess(self, folderpath, images_folderpath=None):
         if self.get_preprocessed_flag(folderpath) is False:
