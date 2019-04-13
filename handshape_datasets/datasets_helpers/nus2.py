@@ -72,7 +72,7 @@ class Nus2(DatasetLoader):
                                                        IMAGE_COLORS),
                                                 dtype="uint8")
 
-                subsets[subset]["y"] = np.zeros(shape=n)
+                subsets[subset]["y"] = np.zeros(shape=NUMBER_OF_IMAGES)
                 x = subsets[subset]["x"]
                 y = subsets[subset]["y"]
                 for position, image_name in enumerate(images):
