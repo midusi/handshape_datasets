@@ -7,6 +7,7 @@ from . import (aslA as _aslA,
                jsl as _jsl,
                nus1 as _nus1,
                nus2 as _nus2,
+               lsa16,
                psl as _psl,
                rwth as _rwth)
 
@@ -18,7 +19,7 @@ options = {
     # 'indian_kinect': indian_training.download_and_extract,
     # 'isl': irish.download_and_extract,
     'jsl': _jsl.Jsl,
-    # 'lsa16': lsa16.download_and_extract,
+    'lsa16': lsa16.LSA16,
     'nus1': _nus1.Nus1,
     'nus2': _nus2.Nus2,
     # 'psl': psl.download_and_extract,

@@ -101,18 +101,6 @@ class DatasetLoader(ABC):
         """
         pass
 
-    @abstractmethod
-    def get_klass_id_for_filename(self, filename):
-        """
-        Parses the filename and returns it's id according to the implementation
-
-        Args:
-            filename(str) : The image filename
-
-        Returns:
-            str: The id for the image filename received
-        """
-        pass
 
     @abstractmethod
     def preprocess(self, path, images_folderpath=None):
