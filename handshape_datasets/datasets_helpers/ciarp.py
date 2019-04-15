@@ -43,8 +43,8 @@ class Ciarp(DatasetLoader):
                 warning(f"Loading images from {folder}")
                 folders[folder] = []
                 # cd subset folder
-                os.chdir(dataset_folder+'/{}'.format(folder))
-                images = os.listdir(os.getcwd())
+                new_dir = os.path.join(dataset_folder, '{}'.format(folder))
+                images = os.listdir(new_dir)
                 images_loaded_counter += len(images)
                 for image in images:
                     folders[folder].append(io.imread(image, as_gray=True))
