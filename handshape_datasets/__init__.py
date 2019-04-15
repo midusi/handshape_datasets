@@ -17,7 +17,7 @@ except FileExistsError:
 
 def load(selected_dataset,
          folderpath=_HOME_PATH_HANDSHAPE,
-         images_folderpath=None):
+         images_folderpath=None,**kwargs):
     """Downloads, preprocesses and load in memory a dataset.
 
     Args:
@@ -42,7 +42,7 @@ def load(selected_dataset,
         # instance the class
         dataset = dataset_class()
         # load and return the dataset
-        return dataset.get(folderpath, images_folderpath)
+        return dataset.get(folderpath, images_folderpath,**kwargs)
 
     except KeyError:
         print("The option {} isn't valid. The valid options are")
