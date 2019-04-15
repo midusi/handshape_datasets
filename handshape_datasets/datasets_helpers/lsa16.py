@@ -1,55 +1,11 @@
 from ._utils import mkdir_unless_exists, extract_zip, download_file
-from .dataset import Dataset
 from .dataset_loader import DatasetLoader
-from logging import warning
 import numpy as np
 import os
 
-#from scipy import ndimage
 from skimage import io
-from skimage import color
-from skimage import transform
-import zipfile
 
 
-
-
-
-# def download_and_extract(version, folderpath, images_folderpath):
-#     if not os.path.exists(folderpath):
-#         print("Creating folder %s..." % folderpath)
-#         os.mkdir(folderpath)
-#         os.mkdir(images_folderpath)
-#
-#     filename = version + ".zip"
-#     zip_filepath = os.path.join(folderpath, filename)
-#     if not os.path.exists(zip_filepath):
-#         print("Downloading lsa16 version=%s to folder %s ..." %
-#               (version, zip_filepath))
-#         base_url = "http://facundoq.github.io/unlp/lsa16/data/"
-#         origin = base_url + filename
-#         get_file(zip_filepath, origin=origin)
-#     if not os.listdir(images_folderpath):
-#         print("Extracting images...")
-#         with zipfile.ZipFile(zip_filepath, "r") as zip_ref:
-#             zip_ref.extractall(images_folderpath)
-#
-#
-# def load_data(folderpath,):
-#     if not os.path.exists(folderpath):
-#         print("Creating folder %s..." % folderpath)
-#         os.makedirs(folderpath, exist_ok=True)
-#     # get folder where the dataset is / will be downloaded
-#     folderpath = os.path.join(folderpath, version)
-#     images_folderpath = os.path.join(folderpath, "images")
-#     # download dataset (if necessary)
-#     download_and_extract(version, folderpath, images_folderpath)
-#     print("Loading images from %s" % images_folderpath)
-#
-#     # load images
-#     x, y, subjects = load_images(images_folderpath)
-#
-#     return x,y,subjects
 
 
 class LSA16(DatasetLoader):
