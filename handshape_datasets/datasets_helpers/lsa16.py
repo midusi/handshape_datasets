@@ -64,8 +64,7 @@ def download_and_extract(version, folderpath, images_folderpath):
             zip_ref.extractall(images_folderpath)
 
 
-def load_data(version="lsa32x32_nr_rgb_black_background", test_subjects=[9], folderpath=os.path.join(expanduser("~"), ".keras",
-                                                                                                     "datasets", "lsa16")):
+def load_data(folderpath,version="lsa32x32_nr_rgb_black_background",):
     if not os.path.exists(folderpath):
         print("Creating folder %s..." % folderpath)
         os.makedirs(folderpath, exist_ok=True)
@@ -79,13 +78,4 @@ def load_data(version="lsa32x32_nr_rgb_black_background", test_subjects=[9], fol
     # load images
     x, y, subjects = load_images(images_folderpath)
 
-    # split in train/test datasets
-    test_indices = np.isin(subjects, test_subjects)
-    train_indices = np.invert(test_indices)
-    x_test = x[test_indices, :, :, :]
-    y_test = y[test_indices]
-    x_train = x[train_indices, :, :, :]
-    y_train = y[train_indices]
-
-    img_channels, img_rows, img_cols = 3, 32, 32
-    return x_train, x_test, y_train, y_test, img_channels, img_rows, img_cols
+    return x,y,subjects
