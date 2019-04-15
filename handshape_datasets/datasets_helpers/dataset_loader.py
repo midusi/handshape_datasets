@@ -135,7 +135,7 @@ class DatasetLoader(ABC):
         """
         self._set_status_flag(path, "{}_preprocessed".format(self._name))
 
-    def _set_status_flag(self, path, status, value=True):
+    def _set_status_flag(self, path, status):
         """
         Flags are used as a way to control that a stage ended successfully.
         This method creates a file used for that control process.

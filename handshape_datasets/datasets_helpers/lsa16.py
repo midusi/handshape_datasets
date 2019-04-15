@@ -113,5 +113,6 @@ class LSA16(DatasetLoader):
             # Get class and subject id for image
             y[i] = int(filename.split("_")[0]) - 1
             subjects[i] = int(filename.split("_")[1]) - 1
-        return x, y, subjects
+        metadata={"y":y,"subjects":subjects}
+        return x, metadata
 
