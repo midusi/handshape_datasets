@@ -14,11 +14,13 @@ import random
 import tarfile
 import zipfile
 
+
 def download_file_content_as_text(url):
     with get_file(url, stream=True) as r:
         return r.text
 
-def download_file(url, filepath, filename='File'):
+
+def download_file(url: str, filepath: str, filename: str = None) -> None:
     """
     download a file from an url and stores it in filepath
     :param url:
@@ -29,6 +31,9 @@ def download_file(url, filepath, filename='File'):
         # it doesn't dowload the content just the headers and the conection keep open
         warning(
             f"Downloading {filename} from {url}")
+        # if filename exists
+        if filename is not None:
+            filepath = os.path.join(filepath, filename) #descargas/archivo.zip
         with open(filepath, 'wb') as f:
             copyfileobj(r.raw, f)
             warning("Download Complete ƪ(˘⌣˘)ʃ")
@@ -118,14 +123,14 @@ def show_images(plot_title, images, cols, titles=None):
     titles: List of titles corresponding to each image. Must have
             the same length as titles.
     """
-    assert((titles is None)or (len(images) == len(titles)))
+    assert ((titles is None) or (len(images) == len(titles)))
     n_images = len(images)
     if titles is None:  # doenst receive any title
         titles = ['Image (%d)' % i for i in range(1, n_images + 1)]
     fig = plt.figure()  # the container plot
     fig.suptitle(plot_title)
     for n, (image, title) in enumerate(zip(images, titles)):
-        a = fig.add_subplot(cols, np.ceil(n_images/float(cols)), n + 1)
+        a = fig.add_subplot(cols, np.ceil(n_images / float(cols)), n + 1)
         if image.ndim == 2:  # if isn't rgb else show the colors by default
             plt.gray()
         plt.imshow(image)
@@ -133,7 +138,7 @@ def show_images(plot_title, images, cols, titles=None):
         if n_images <= 16:
             a.set_title(title)
 
-    #fig.set_size_inches(np.array(fig.get_size_inches()) * n_images)
+    # fig.set_size_inches(np.array(fig.get_size_inches()) * n_images)
     if n_images <= 16:
         plt.subplots_adjust(left=0.13, bottom=0.15, right=0.9,
                             top=0.89, wspace=0, hspace=0.32)
@@ -158,8 +163,8 @@ def show_subset(dataset, subset_name, samples=32, cols=None):
     images_to_show = [subset[i] for i in sample_indices]
     names = [f"Id {i}" for i in sample_indices]
     if cols == None:
-        wide_aspect_ratio = 1080/1920
-        cols = ceil(math.sqrt(len(names)*wide_aspect_ratio))
+        wide_aspect_ratio = 1080 / 1920
+        cols = ceil(math.sqrt(len(names) * wide_aspect_ratio))
 
     show_images(f"Subset {subset_name}:", images_to_show, cols, titles=names)
 

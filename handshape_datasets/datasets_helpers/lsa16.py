@@ -17,9 +17,6 @@ class LSA16(DatasetLoader):
         self.shape= (32,32) # TODO get from version
         self.classes = 16
 
-
-
-
     def urls(self):
         return self.url
 
@@ -47,8 +44,6 @@ class LSA16(DatasetLoader):
             self.set_preprocessed_flag(folderpath)
         # if its already extracted doesnt do anything
 
-
-
     def load(self,path_images):
         # get image file names
         files = sorted(os.listdir(path_images))
@@ -71,4 +66,3 @@ class LSA16(DatasetLoader):
             subjects[i] = int(filename.split("_")[1]) - 1
         metadata={"y":y,"subjects":subjects}
         return x, metadata
-
