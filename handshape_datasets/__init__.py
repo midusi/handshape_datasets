@@ -1,6 +1,7 @@
-from shutil import rmtree
-from os.path import join as create_path
-from logging import warning
+from shutil import rmtree as _rmtree
+
+
+from logging import warning as _warning
 from .datasets_helpers.config import options as _options
 
 import os as _os
@@ -9,10 +10,6 @@ NAMES = list(_options.keys())
 
 _HOME_PATH_HANDSHAPE = _os.path.join(_os.getenv('HOME'),
                                      '.handshape_datasets')
-try:
-    _os.mkdir(_HOME_PATH_HANDSHAPE)  # default folder for creation
-except FileExistsError:
-    pass
 
 
 def load(selected_dataset,
@@ -33,9 +30,16 @@ def load(selected_dataset,
     Returns:
         An Dataset object instance
     """
+    try:
+        _os.mkdir(folderpath)  # default folder for creation
+    except FileExistsError:
+        pass
 
-    images_folderpath = create_path(folderpath, selected_dataset,
-                                    f"{selected_dataset}_images") if images_folderpath is None else images_folderpath
+    if images_folderpath is None:
+        images_folderpath=f"{selected_dataset}_images"
+
+    images_folderpath = _os.path.join(folderpath, selected_dataset,images_folderpath)
+
     try:
         # get downloader class for dataset
         dataset_class = _options[selected_dataset]
@@ -61,12 +65,12 @@ def clear(dataset,
     """
     # BUG Why doesnt work with nus1?
     try:
-        warning(f"Removing the dataset {dataset}")
+        _warning(f"Removing the dataset {dataset}")
         # removes the directory recursively
-        rmtree(_os.path.join(path, dataset))
-        warning("Success \(•◡•)/")
+        _rmtree(_os.path.join(path, dataset))
+        _warning("Success \(•◡•)/")
     except FileNotFoundError:
-        warning("""The dataset {} doesn't exist (ಥ﹏ಥ). The options available
+        _warning("""The dataset {} doesn't exist (ಥ﹏ಥ). The options available
                 are: \n {}""".format(dataset, "\n".join(_options.keys())))
 
 
