@@ -1,4 +1,4 @@
-from ._utils import mkdir_unless_exists, extract_zip, download_file
+from .utils import mkdir_unless_exists, extract_zip, download_file
 from .dataset_loader import DatasetLoader
 import numpy as np
 import os
@@ -33,12 +33,15 @@ class LSA16(DatasetLoader):
             # set the exit flag
             self.set_downloaded(folderpath)
 
-    def preprocess(self, folderpath, images_folderpath=None):
+    def images_folderpath(self,folderpath):
+        return os.path.join(folderpath, "%s_images" % self.name)
+
+    def preprocess(self, folderpath):
+
         zip_filepath = os.path.join(folderpath, self.filename)
         if self.get_preprocessed_flag(folderpath) is False:
             # if it doenst receives the images_folderpath arg creates into folderpath
-            images_folderpath = os.path.join(
-                folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
+            images_folderpath = self.images_folderpath(folderpath)
             mkdir_unless_exists(images_folderpath)
 
             # extract the zip into the images path
@@ -46,9 +49,10 @@ class LSA16(DatasetLoader):
             self.set_preprocessed_flag(folderpath)
         # if its already extracted doesnt do anything
 
-    def load(self,path_images):
+    def load(self,folderpath):
+        images_folderpath = self.images_folderpath(folderpath)
         # get image file names
-        files = sorted(os.listdir(path_images))
+        files = sorted(os.listdir(images_folderpath ))
         files = list(filter(lambda f: os.path.splitext(f)[1].endswith("jpg")
                             or os.path.splitext(f)[1].endswith("png")
                             or os.path.splitext(f)[1].endswith("jpeg"), files))
@@ -61,7 +65,7 @@ class LSA16(DatasetLoader):
         # Load images with labels
         for (i, filename) in enumerate(files):
             # load image
-            image = io.imread(os.path.join(path_images, filename))
+            image = io.imread(os.path.join(images_folderpath, filename))
             x[i, :, :, :] = image
             # Get class and subject id for image
             y[i] = int(filename.split("_")[0]) - 1

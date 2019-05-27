@@ -13,16 +13,13 @@ _HOME_PATH_HANDSHAPE = _os.path.join(_os.getenv('HOME'),
 
 
 def load(selected_dataset,
-         folderpath=_HOME_PATH_HANDSHAPE,
-         images_folderpath=None,**kwargs):
+         folderpath=_HOME_PATH_HANDSHAPE,**kwargs):
     """Downloads, preprocesses and load in memory a dataset.
 
     Args:
         selected_dataset (str): The dataset to download
         folderpath (str, optional): Defaults to /home/.handshape-datasets.
         \tWhere the dataset files will be downloaded
-        images_folderpath (str, optional): Defaults to None.
-        \tThe path where the images will be extracted
 
     Raises:
         KeyError: If the selected dataset is not a valid option
@@ -35,18 +32,13 @@ def load(selected_dataset,
     except FileExistsError:
         pass
 
-    if images_folderpath is None:
-        images_folderpath=f"{selected_dataset}_images"
-
-    images_folderpath = _os.path.join(folderpath, selected_dataset,images_folderpath)
-
     try:
         # get downloader class for dataset
         dataset_class = _options[selected_dataset]
         # instance the class
         dataset = dataset_class()
         # load and return the dataset
-        return dataset.get(folderpath, images_folderpath,**kwargs)
+        return dataset.get(folderpath, **kwargs)
 
     except KeyError:
         print("The option {} isn't valid. The valid options are")
@@ -55,7 +47,7 @@ def load(selected_dataset,
 
 
 def clear(dataset,
-          path=_os.path.join(_os.getenv("HOME"), ".handshape_datasets")):
+          folderpath=_HOME_PATH_HANDSHAPE):
     """Removes a dataset folder from the specified path
     Args:
         dataset (str): the dataset to delete
@@ -67,7 +59,7 @@ def clear(dataset,
     try:
         _warning(f"Removing the dataset {dataset}")
         # removes the directory recursively
-        _rmtree(_os.path.join(path, dataset))
+        _rmtree(_os.path.join(folderpath, dataset))
         _warning("Success \(•◡•)/")
     except FileNotFoundError:
         _warning("""The dataset {} doesn't exist (ಥ﹏ಥ). The options available

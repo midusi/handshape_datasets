@@ -1,4 +1,4 @@
-from ._utils import mkdir_unless_exists, extract_zip, download_file
+from .utils import mkdir_unless_exists, extract_zip, download_file
 from .dataset import Dataset
 from .dataset_loader import DatasetLoader
 from logging import warning
@@ -12,7 +12,7 @@ class Nus1(DatasetLoader):
         self.__doc__ += super.__doc__
         super().__init__("nus_1")
         self.url = 'https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet/NUS-Hand-Posture-Dataset-I.zip'
-        self._FILENAME = self._name + '.zip'
+        self._FILENAME = self.name + '.zip'
 
     def urls(self):
         return self.url
@@ -26,8 +26,9 @@ class Nus1(DatasetLoader):
             # set the exit flag
             self.set_downloaded(folderpath)
 
-    def load(self, extracted_images_folderpath):
-        subsets_folder = os.path.join(extracted_images_folderpath,
+    def load(self, folderpath):
+        images_folderpath = self.images_folderpath(folderpath)
+        subsets_folder = os.path.join(images_folderpath,
                                       'NUS Hand Posture Dataset')
         if os.path.exists(subsets_folder):
             os.chdir(subsets_folder)
@@ -58,14 +59,11 @@ class Nus1(DatasetLoader):
             nus1 = Dataset('nus1', folders)
             return nus1 if folders is not None else None
 
-    def preprocess(self, folderpath, images_folderpath=None):
-        if self.get_preprocessed_flag(folderpath) is False:
-            # if it doenst receives the images_folderpath arg creates into folderpath
-            images_folderpath = os.path.join(
-                folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
-            mkdir_unless_exists(images_folderpath)
-            ZIP_PATH = os.path.join(folderpath, self._FILENAME)
-            # extract the zip into the images path
-            extract_zip(ZIP_PATH, images_folderpath)
-            self.set_preprocessed_flag(folderpath)
-        # if its already extracted doesnt do anything
+    def preprocess(self, folderpath):
+
+        images_folderpath = self.images_folderpath(folderpath)
+        mkdir_unless_exists(images_folderpath)
+        ZIP_PATH = os.path.join(folderpath, self._FILENAME)
+        # extract the zip into the images path
+        extract_zip(ZIP_PATH, images_folderpath)
+        self.set_preprocessed_flag(folderpath)

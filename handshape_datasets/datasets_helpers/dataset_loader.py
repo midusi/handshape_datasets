@@ -10,7 +10,7 @@ import gdown
 class DatasetLoader(ABC):
 
     def __init__(self, name):
-        self._name = name
+        self.name = name
 
     @property
     @abstractmethod
@@ -30,7 +30,7 @@ class DatasetLoader(ABC):
         """
         pass
 
-    def get(self, filepath, images_folderpath, **kwargs):
+    def get(self, filepath, **kwargs):
         """The methods take care of download the dataset,
         preprocess it and load it in memory
 
@@ -41,18 +41,21 @@ class DatasetLoader(ABC):
         Returns:
             [type]: [description]
         """
-        path = os.path.join(filepath, self._name)
+        path = os.path.join(filepath, self.name)
         if not os.path.exists(path):
             logging.warning(
-                f"Creating folder {path} for the dataset {self._name}")
+                f"Creating folder {path} for the dataset {self.name}")
             os.mkdir(path)
         if not self.get_downloaded_flag(path):
             self.download_dataset(path)
         if not self.get_preprocessed_flag(path):
-            logging.warning(f"Preprocessing {self._name}...")
-            self.preprocess(path, images_folderpath)
+            logging.warning(f"Preprocessing {self.name}...")
+            self.preprocess(path)
             logging.warning("Done")
-        return self.load(images_folderpath)
+        return self.load(path)
+
+    def images_folderpath(self,folderpath):
+        return os.path.join(folderpath, f"{self.name}_images")
 
     def get_downloaded_flag(self, path):
         """
@@ -61,7 +64,7 @@ class DatasetLoader(ABC):
         Args:
             path(str): The route where to look for the downloaded flag
         """
-        return self.get_status_flag(path, "{}_downloaded".format(self._name))
+        return self.get_status_flag(path, "{}_downloaded".format(self.name))
 
     def get_preprocessed_flag(self, path):
         """
@@ -70,7 +73,7 @@ class DatasetLoader(ABC):
         Args:
             path(str): The route where to look for the preprocessed flag
         """
-        return self.get_status_flag(path, "{}_preprocessed".format(self._name))
+        return self.get_status_flag(path, "{}_preprocessed".format(self.name))
 
     def get_status_flag(self, path, status):
         """
@@ -103,7 +106,7 @@ class DatasetLoader(ABC):
 
 
     @abstractmethod
-    def preprocess(self, path, images_folderpath=None):
+    def preprocess(self, path):
         """
         The process in which the dataset files are extracted and moved to a uniform folder received as argument
 
@@ -124,7 +127,7 @@ class DatasetLoader(ABC):
         Args:
             path(str) : The path where the flag file will be setted
         """
-        self._set_status_flag(path, "{}_downloaded".format(self._name))
+        self._set_status_flag(path, "{}_downloaded".format(self.name))
 
     def set_preprocessed_flag(self, path):
         """
@@ -133,7 +136,7 @@ class DatasetLoader(ABC):
         Args:
             path(str) : The path where the flag file will be setted
         """
-        self._set_status_flag(path, "{}_preprocessed".format(self._name))
+        self._set_status_flag(path, "{}_preprocessed".format(self.name))
 
     def _set_status_flag(self, path, status):
         """

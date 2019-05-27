@@ -7,7 +7,7 @@ from string import ascii_uppercase
 
 from .dataset import Dataset
 from .dataset_loader import DatasetLoader
-from ._utils import mkdir_unless_exists, download_file, extract_zip
+from .utils import mkdir_unless_exists, download_file, extract_zip
 
 
 class Irish(DatasetLoader):
@@ -40,12 +40,12 @@ class Irish(DatasetLoader):
     def preprocess(self, folderpath, images_folderpath=None):
         # FALTA AGREGAR EL PREPROCESADO PARA CADA IMAGEN. HABRÍA QUE SOBRESCRIBIR LAS IMÁGENES??
 
-        preprocess_flag = "{}_preprocessed".format(self._name)
+        preprocess_flag = "{}_preprocessed".format(self.name)
 
         if self.get_status_flag(folderpath, preprocess_flag) is False:
             mkdir_unless_exists(images_folderpath)
             images_folderpath = path.join(
-                folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
+                folderpath, "%s_images" % self.name) if images_folderpath is None else images_folderpath
             folder_names = self.urls.keys()
 
             datasets = list(

@@ -1,7 +1,7 @@
 from pyunpack import Archive
 
 import os
-from . import _utils
+from . import utils
 
 
 def download_and_extract(folderpath, images_folderpath, download):
@@ -13,8 +13,8 @@ def download_and_extract(folderpath, images_folderpath, download):
     """
     actual_wd = os.getcwd()
 
-    _utils.mkdir_unless_exists(folderpath)
-    _utils.mkdir_unless_exists(images_folderpath)
+    utils.mkdir_unless_exists(folderpath)
+    utils.mkdir_unless_exists(images_folderpath)
     success_filename = "indian_download_complete"
     if download is True:
         print("Downloading Indian Sign Language dataset to folder %s ..." % folderpath)
@@ -25,7 +25,7 @@ def download_and_extract(folderpath, images_folderpath, download):
             "rgb": []
         }
 
-        path = os.path.join(_utils.get_project_root(), '__data__/indian')
+        path = os.path.join(utils.get_project_root(), '__data__/indian')
 
         for folder in urls:
             with open('%s/links.txt' % (os.path.join(path, folder)), 'r') as links:
@@ -43,17 +43,17 @@ def download_and_extract(folderpath, images_folderpath, download):
                 os.mkdir(zips_path)
                 for url in urls[folder_name]:
                     filename = "%s.tar.gz" % (url[0])
-                    _utils.download_from_drive(url[1], filename)
+                    utils.download_from_drive(url[1], filename)
 
                 os.chdir("..")
             except FileExistsError:
                 print(
                     """Already exists a folder with the name %s.
                     Aborting the download""" % folder_name)
-        _utils.create_download_complete_file(
+        utils.create_download_complete_file(
             os.path.join(folderpath, success_filename), 'jsl')
     else:
-        if _utils.download_detector_found(folderpath, success_filename) is False:
+        if utils.download_detector_found(folderpath, success_filename) is False:
             exit(
                 "The success file doesn't exists. Try again with the arg download in false")
 
@@ -67,7 +67,7 @@ def download_and_extract(folderpath, images_folderpath, download):
         extracted_path = os.path.join(images_folderpath, folder_name)
         for url in urls[folder_name]:
             filename = "%s.tar.gz" % (url[0])
-            _utils.extract_tar(os.path.join(
+            utils.extract_tar(os.path.join(
                 tarfile_path, filename), extracted_path)
             print("--------------------------------")
 

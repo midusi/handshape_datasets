@@ -86,12 +86,18 @@ def extract_zip(zip_path, extracted_path):
 def extract_tar(tarfile_path, extracted_path):
     try:
         warning(f"Extracting {tarfile_path} to {extracted_path}")
+
         if (tarfile_path.endswith("tar.gz")):
-            with tarfile.open(tarfile_path, "r:gz") as tar:
-                tar.extractall(path=extracted_path)
+            mode ="r:gz"
         elif (tarfile_path.endswith("tar")):
-            with tarfile.open(tarfile_path, "r:") as tar:
-                tar.extractall(path=extracted_path)
+            mode = "r:"
+        elif tarfile_path.endswith(".tar.bz2"):
+            mode = "r:bz2"
+        else:
+            raise ValueError(f"Unsupported file extension for file {tarfile_path}")
+
+        with tarfile.open(tarfile_path, mode) as tar:
+            tar.extractall(path=extracted_path)
         warning("DONE ᕦ(ò_óˇ)ᕤ")
     except FileExistsError:
         error("The folder already exists.")

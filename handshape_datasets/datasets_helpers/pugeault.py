@@ -1,6 +1,5 @@
 import numpy as np
 import os
-from keras.utils.data_utils import get_file
 from os.path import expanduser
 
 from skimage import io
@@ -8,62 +7,10 @@ from skimage import color
 from skimage import transform
 
 import tarfile
+from .dataset_loader import DatasetLoader
 
 
 
-def load_subject(subject_path,image_size,skip):
-    
-    folders= sorted(os.listdir(subject_path))
-    # definir variables vacías, luego crecen
-    data= np.zeros((0,image_size[0],image_size[1], 3),dtype='uint8')
-    labels= np.array(())
-    
-    # cargar cada folder con sus labels
-    for (i, folderName) in enumerate(folders):
-        label_i= ord(folderName) - 97  # convierte el caracter en un índice de A=0 en adelante
-        files= sorted(os.listdir(os.path.join(subject_path,folderName)))
-        files = [f for f in files if f.startswith("color")]
-        files=files[::skip]
-        # por cada archivo dentro del folder
-        folder_data=np.zeros((len(files), image_size[0], image_size[1], 3),dtype='uint8')
-        for (j, filename) in enumerate(files):
-            image_filepath=os.path.join(subject_path, folderName,filename)
-            image=io.imread(image_filepath)
-            image = transform.resize(image, (image_size[0], image_size[1]), preserve_range=True)
-            # actualizar matriz de datos y de labels
-            labels= np.append(labels, label_i)
-            folder_data[j,:,:,:]=image
-        data= np.vstack((data, folder_data))
-    return data, labels               
-
-from multiprocessing import Pool
-
-def list_diff(a,b):
-    s = set(b)
-    return [x for x in a if x not in s]
-
-def load_images(folder_path,image_size,skip,test_subjects):
-    # se considera datos para training los sujetos A, B, C, D
-    # y datos para testing al sujeto E
-
-    # cargar sujetos train y test
-    train_subjects=list_diff(["A","B","C","D","E"],test_subjects)
-    # p = Pool(len(subjects))
-
-    def f(subject): return load_subject(os.path.join(folder_path,subject),image_size,skip)
-
-    train_subject_data=map(f, train_subjects)
-    x_train,y_train=zip(*train_subject_data)
-
-    x_train = np.vstack(x_train)
-    y_train = np.hstack(y_train)
-
-    test_subject_data = map(f, test_subjects)
-    x_test, y_test = zip(*test_subject_data)
-    x_test = np.vstack(x_test)
-    y_test = np.hstack(y_test)
-
-    return x_train, x_test, y_train, y_test
 
 
 def download_and_extract(folderpath):

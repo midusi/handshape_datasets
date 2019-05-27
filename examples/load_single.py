@@ -2,7 +2,7 @@
 import handshape_datasets as hd
 
 
-DATASET_NAME = "nus_1"
+DATASET_NAME = "lsa16"
 
 ciarp = hd.load(DATASET_NAME)
 

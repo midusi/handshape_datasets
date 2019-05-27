@@ -1,6 +1,6 @@
 from logging import warning
 from math import ceil
-from ._utils import show_dataset
+from .utils import show_dataset
 
 
 class Dataset(object):

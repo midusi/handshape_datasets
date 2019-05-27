@@ -1,5 +1,5 @@
 from .dataset_loader import DatasetLoader
-from . import _utils
+from . import utils
 from pyunpack import Archive
 from logging import warning
 
@@ -20,7 +20,7 @@ class Psl(DatasetLoader):
         urls = {person: {} for person in self.url.keys()}
         # fill the urls dictionary
         for person, url in self.url.items():
-            links = _utils.download_file_content_as_text(url)
+            links = utils.download_file_content_as_text(url)
             links = links.split('\n')[:-1]  # the last is an empty line
             links = [url.split(',')
                      for url in links]  # [['a','url'],['b','url']]
@@ -32,7 +32,7 @@ class Psl(DatasetLoader):
     def download_dataset(self, folderpath, images_folderpath=None):
         file_exists = self.get_downloaded_flag(folderpath)
         if file_exists is False:
-            _utils.mkdir_unless_exists(folderpath)
+            utils.mkdir_unless_exists(folderpath)
             os.chdir(folderpath)  # change to the received route
             folders = self.imagesurls.keys()  # ['person_a','person_b','person_c']
             for folder_name in folders:
@@ -43,7 +43,7 @@ class Psl(DatasetLoader):
                     # iter over the dict with the url
                     for imageClass in self.imagesurls[folder_name]:
                         filename = "%s/%s.7z" % (ZIPS_PATH, imageClass)
-                        _utils.download_file(
+                        utils.download_file(
                             self.imagesurls[folder_name][imageClass], filename)
 
                 except FileExistsError:
@@ -56,11 +56,11 @@ class Psl(DatasetLoader):
         return True
 
     def preprocess(self, folderpath, images_folderpath=None):
-        preprocess_flag = "{}_preprocessed".format(self._name)
+        preprocess_flag = "{}_preprocessed".format(self.name)
         if self.get_status_flag(folderpath, preprocess_flag) is False:
-            _utils.mkdir_unless_exists(images_folderpath)
+            utils.mkdir_unless_exists(images_folderpath)
             images_folderpath = os.path.join(
-                folderpath, "%s_images" % self._name) if images_folderpath is None else images_folderpath
+                folderpath, "%s_images" % self.name) if images_folderpath is None else images_folderpath
             os.chdir(images_folderpath)
             for image_class in self.url.keys():
                 images_class_foldername = os.path.join(

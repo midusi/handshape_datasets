@@ -1,4 +1,4 @@
-from . import _utils
+from . import utils
 from skimage import io
 from skimage import transform
 from skimage import morphology
