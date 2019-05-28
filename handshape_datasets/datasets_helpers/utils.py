@@ -15,12 +15,12 @@ import tarfile
 import zipfile
 
 
-def download_file_content_as_text(url):
+def download_file_content_as_text(url:str):
     with get_file(url, stream=True) as r:
         return r.text
 
 
-def download_file(url: str, filepath: str, filename: str = None) -> None:
+def download_file(url: str, filepath: str) -> None:
     """
     download a file from an url and stores it in filepath
     :param url:
@@ -30,22 +30,20 @@ def download_file(url: str, filepath: str, filename: str = None) -> None:
         # with stream in true the file doen't save in memory inmediately
         # it doesn't dowload the content just the headers and the conection keep open
         warning(
-            f"Downloading {filename} from {url}")
+            f"Downloading {url} to {filepath}")
         # if filename exists
-        if filename is not None:
-            filepath = os.path.join(filepath, filename) #descargas/archivo.zip
         with open(filepath, 'wb') as f:
             copyfileobj(r.raw, f)
             warning("Download Complete ƪ(˘⌣˘)ʃ")
 
 
-def download_from_drive(url, filepath):
+def download_from_drive(url:str, filepath:str):
     warning("Downloading {} dataset from {}".format(filepath, url))
     gdown.download(url, filepath, quiet=True)
     warning("Done ƪ(˘⌣˘)ʃ")
 
 
-def download_file_over_ftp(ftp_url, ftp_relative_file_path, ftp_filename, filepath, filename):
+def download_file_over_ftp(ftp_url:str, ftp_relative_file_path:str, ftp_filename:str, filepath:str):
     ftp = FTP(ftp_url)
     ftp.login()
     ftp.cwd(ftp_relative_file_path)
@@ -55,7 +53,7 @@ def download_file_over_ftp(ftp_url, ftp_relative_file_path, ftp_filename, filepa
         warning("Done ƪ(˘⌣˘)ʃ")
 
 
-def download_bigger_file(url, filepath):
+def download_bigger_file(url:str, filepath:str):
     """
                     download a file from an url and stores it in filepath
                     :param url:
