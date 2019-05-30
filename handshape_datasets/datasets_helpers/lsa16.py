@@ -27,8 +27,7 @@ class LSA16(DatasetLoader):
         # check if the dataset is downloaded
         file_exists = self.get_downloaded_flag(folderpath)
         if file_exists is False:
-            download_file(url=self.urls(), filepath=folderpath,
-                          filename=self.filename)
+            download_file(url=self.urls(), filepath=folderpath)
 
             # set the exit flag
             self.set_downloaded(folderpath)
