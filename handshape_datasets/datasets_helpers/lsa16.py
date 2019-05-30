@@ -22,12 +22,12 @@ class LSA16(DatasetLoader):
 
     def download_dataset(self, folderpath):
 
-        #zip_filepath= os.path.join(folderpath, self.filename)
+        zip_filepath= os.path.join(folderpath, self.filename)
 
         # check if the dataset is downloaded
         file_exists = self.get_downloaded_flag(folderpath)
         if file_exists is False:
-            download_file(url=self.urls(), filepath=folderpath+self.filename)
+            download_file(url=self.urls(), filepath=zip_filepath)
 
             # set the exit flag
             self.set_downloaded(folderpath)
