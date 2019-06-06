@@ -76,7 +76,7 @@ class RWTH(DatasetLoader):
     def preprocess(self, folderpath):
         TARFILE_PATH = os.path.join(folderpath, self.FILENAME)
         # extract the tar into the images path
-        #extract_tar(TARFILE_PATH, folderpath)
+        extract_tar(TARFILE_PATH, folderpath)
         x,y=self.load_images(folderpath)
         npz_filepath=os.path.join(folderpath,self.npz_filename)
         np.savez(npz_filepath, x=x,y=y)
