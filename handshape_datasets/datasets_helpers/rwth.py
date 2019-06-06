@@ -22,8 +22,7 @@ class RWTH(DatasetLoader):
         download_file_over_ftp(ftp_url='wasserstoff.informatik.rwth-aachen.de',
                                ftp_relative_file_path='pub/rwth-phoenix/2016',
                                ftp_filename='ph2014-dev-set-handshape-annotations.tar.gz',
-                               filepath=TARFILE_PATH,
-                               filename=self.FILENAME)
+                               filepath=TARFILE_PATH)
         # set the success flag
         self.set_downloaded(folderpath)
         
