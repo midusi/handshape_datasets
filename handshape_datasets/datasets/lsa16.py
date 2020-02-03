@@ -1,14 +1,18 @@
-from .utils import mkdir_unless_exists, extract_zip, download_file
-from .dataset_loader import DatasetLoader
-import numpy as np
-import os
+from .common import *
+labels=["Five","Four","Horns","Curve","Fingers together","Double","Hook","Index","L","Flat Hand","Mitten","Beak","Thumb","Fist","Telephone","V"]
 
-from skimage import io
-
-
-
+class LSA16Info(ClassificationDatasetInfo):
+    def __init__(self):
+        description="""
+        \n LSA16
+        \n Argentinian Sign Language Handshapes dataset 
+        \nMore details can be found at http://facundoq.github.io/unlp/lsa16/"""
+        super().__init__("lsa16",(32,32,3),{"y":"classes"},description,labels)
+    def get_loader(self) ->DatasetLoader:
+        return LSA16()
 
 class LSA16(DatasetLoader):
+
     def __init__(self,version="lsa32x32_nr_rgb_black_background"):
         #TODO generate URL from options
         super().__init__("lsa16")
@@ -33,7 +37,7 @@ class LSA16(DatasetLoader):
             self.set_downloaded(folderpath)
 
     def images_folderpath(self,folderpath):
-        return os.path.join(folderpath, "%s_images" % self.name)
+        return folderpath / f"{self.name}_images"
 
     def preprocess(self, folderpath):
 
@@ -41,7 +45,7 @@ class LSA16(DatasetLoader):
         if self.get_preprocessed_flag(folderpath) is False:
             # if it doenst receives the images_folderpath arg creates into folderpath
             images_folderpath = self.images_folderpath(folderpath)
-            mkdir_unless_exists(images_folderpath)
+            images_folderpath.mkdir(exist_ok=True)
 
             # extract the zip into the images path
             extract_zip(zip_filepath, images_folderpath)
@@ -51,10 +55,8 @@ class LSA16(DatasetLoader):
     def load(self,folderpath):
         images_folderpath = self.images_folderpath(folderpath)
         # get image file names
-        files = sorted(os.listdir(images_folderpath ))
-        files = list(filter(lambda f: os.path.splitext(f)[1].endswith("jpg")
-                            or os.path.splitext(f)[1].endswith("png")
-                            or os.path.splitext(f)[1].endswith("jpeg"), files))
+        files = sorted(images_folderpath.iterdir())
+        files = list(filter(lambda f: f.suffix in [".jpg",".png",".jpeg"], files))
         n = len(files)
         # pre-generate matrices
         x = np.zeros((n, self.shape[0], self.shape[1], 3), dtype='uint8')
@@ -62,11 +64,13 @@ class LSA16(DatasetLoader):
         subjects = np.zeros(n)
 
         # Load images with labels
-        for (i, filename) in enumerate(files):
+        for (i, filepath) in enumerate(files):
             # load image
-            image = io.imread(os.path.join(images_folderpath, filename))
+            # print(filepath)
+            image = io.imread(filepath)
             x[i, :, :, :] = image
             # Get class and subject id for image
+            filename=filepath.stem
             y[i] = int(filename.split("_")[0]) - 1
             subjects[i] = int(filename.split("_")[1]) - 1
         metadata={"y":y,"subjects":subjects}

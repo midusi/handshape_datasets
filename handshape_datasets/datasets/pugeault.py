@@ -2,15 +2,7 @@ import numpy as np
 import os
 from os.path import expanduser
 
-from skimage import io
-from skimage import color
-from skimage import transform
-
 import tarfile
-from .dataset_loader import DatasetLoader
-
-
-
 
 
 def download_and_extract(folderpath):

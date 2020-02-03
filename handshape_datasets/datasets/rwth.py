@@ -1,10 +1,17 @@
-from .utils import mkdir_unless_exists, extract_tar, download_file_over_ftp
-from .dataset_loader import DatasetLoader
-from logging import warning
-from skimage import io
-import os
-import numpy as np
-import logging
+from .common import *
+
+labels = ['1', '2', '3', '3_hook', '4', '5', 'a', 'ae', 'b', 'b_nothumb', 'b_thumb', 'by', 'c', 'cbaby', 'd', 'e', 'f', 'f_open', 'fly', 'fly_nothumb', 'g', 'h', 'h_hook', 'h_thumb', 'i', 'index', 'index_flex', 'index_hook', 'ital', 'ital_nothumb', 'ital_open', 'ital_thumb', 'jesus', 'k', 'l_hook', 'o', 'obaby', 'pincet', 'r', 's', 'v', 'v_flex', 'w', 'write', 'y']
+
+class RWTHInfo(ClassificationDatasetInfo):
+    def __init__(self):
+        description="""
+            \n RWTH
+        \n German Sign Language Handshapes dataset 
+        \nMore details can be found at https://www-i6.informatik.rwth-aachen.de/~koller/1miohands-data/"""
+        super().__init__("rwth",(132,92,3),{"y":"Class labels"},description,labels)
+    def get_loader(self):
+        return RWTH()
+
 
 class RWTH(DatasetLoader):
     def __init__(self):
@@ -36,9 +43,8 @@ class RWTH(DatasetLoader):
 
         return x, metadata
 
-    def images_folderpath(self,folderpath):
-        return os.path.join(
-            folderpath, "%s_images" % self.name)
+    def images_folderpath(self,folderpath:Path)-> Path:
+        return folderpath / f"{self.name}_images"
 
     def load_images(self,folderpath):
         extracted_folderpath=os.path.join(folderpath,"ph2014-dev-set-handshape-annotations")
@@ -54,6 +60,8 @@ class RWTH(DatasetLoader):
         images_class_names = [x[1] for x in lines]
 
         classes = sorted(list(set(images_class_names)))
+        print(classes)
+        print("','".join(classes))
         y = np.array([classes.index(name) for name in images_class_names])
         # print(self.y)
         # print(self.classes)

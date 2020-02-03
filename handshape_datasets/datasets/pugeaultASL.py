@@ -1,4 +1,4 @@
-from .dataset_loader import DatasetLoader
+from handshape_datasets.dataset_loader import DatasetLoader
 from .utils import mkdir_unless_exists, extract_tar, download_bigger_file
 import logging
 
@@ -6,7 +6,6 @@ import os
 import numpy as np
 
 from skimage import io
-from skimage import color
 from skimage import transform
 
 

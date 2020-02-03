@@ -1,4 +1,4 @@
-from .dataset_loader import DatasetLoader
+from handshape_datasets.dataset_loader import DatasetLoader
 from . import utils
 from pyunpack import Archive
 from logging import warning

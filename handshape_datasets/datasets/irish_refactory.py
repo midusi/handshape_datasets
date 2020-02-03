@@ -6,7 +6,7 @@ from skimage import io
 from string import ascii_uppercase
 
 from .dataset import Dataset
-from .dataset_loader import DatasetLoader
+from handshape_datasets.dataset_loader import DatasetLoader
 from .utils import mkdir_unless_exists, download_file, extract_zip
 
 

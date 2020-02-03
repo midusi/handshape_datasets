@@ -1,6 +1,6 @@
 from .utils import mkdir_unless_exists, extract_zip, download_file
 from .dataset import Dataset
-from .dataset_loader import DatasetLoader
+from handshape_datasets.dataset_loader import DatasetLoader
 from logging import warning
 from skimage import io
 
