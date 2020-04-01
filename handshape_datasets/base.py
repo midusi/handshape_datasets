@@ -17,8 +17,8 @@ def list_datasets()->DatasetInfo:
         print(".Tamaño de descarga:", dlz)
         dz = options[id].get_loader().disk_size
         print(".Tamaño en disco:", dz)
-        s = options[id].get_loader().subject
-        print(".Cantidad de elementos a descargar:", s)
+        sub = options[id].get_loader().subject
+        print(".Cantidad de elementos a descargar:", sub)
 
 
 def info(id:str)->DatasetInfo:
