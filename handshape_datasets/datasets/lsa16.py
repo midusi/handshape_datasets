@@ -7,9 +7,11 @@ class LSA16Info(ClassificationDatasetInfo):
         \n LSA16
         \n Argentinian Sign Language Handshapes dataset 
         \nMore details can be found at http://facundoq.github.io/unlp/lsa16/
-        \nTamaño de la descarga = 641 kb
-        \nTamaño en disco = 1.16 Mb
-        \nCantidad de subjects = 800"""
+        \nCaracterísticas del archivo:
+        \n -Tamaño de la descarga = 641 kb
+        \n -Tamaño en disco = 1.16 Mb
+        \n -Cantidad de subjects = 800
+        \n"""
         super().__init__("lsa16",(32,32,3),{"y":"classes"},description,labels)
     def get_loader(self) ->DatasetLoader:
         return LSA16()
@@ -23,6 +25,11 @@ class LSA16(DatasetLoader):
         self.url = f'http://facundoq.github.io/unlp/lsa16/data/{self.filename}'
         self.shape= (32,32) # TODO get from version
         self.classes = 16
+        self.download_size = "641 kb"
+        self.disk_size = "1.16 Mb"
+        self.subject = "800"
+
+
 
     def urls(self):
         return self.url
@@ -78,3 +85,4 @@ class LSA16(DatasetLoader):
             subjects[i] = int(filename.split("_")[1]) - 1
         metadata={"y":y,"subjects":subjects}
         return x, metadata
+

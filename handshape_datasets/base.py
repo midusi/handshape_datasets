@@ -1,5 +1,5 @@
 from shutil import rmtree as _rmtree
-
+import os
 from pathlib import Path
 from logging import warning as warning
 from handshape_datasets.config import options
@@ -9,9 +9,17 @@ default_folder = Path.home() / '.handshape_datasets'
 from .dataset_info import DatasetInfo
 
 def list_datasets()->DatasetInfo:
+    print("Handshapes disponible:")
     for id in options.keys():
         dataset_name =options[id].id
-        print(dataset_name)
+        print("\n-", dataset_name)
+        dlz = options[id].get_loader().download_size
+        print(".Tamaño de descarga:", dlz)
+        dz = options[id].get_loader().disk_size
+        print(".Tamaño en disco:", dz)
+        s = options[id].get_loader().subject
+        print(".Cantidad de elementos a descargar:", s)
+
 
 def info(id:str)->DatasetInfo:
     return options[id]
