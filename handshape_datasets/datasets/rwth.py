@@ -1,4 +1,5 @@
 from .common import *
+import platform
 
 labels = ['1', '2', '3', '3_hook', '4', '5', 'a', 'ae', 'b', 'b_nothumb', 'b_thumb', 'by', 'c', 'cbaby', 'd', 'e', 'f', 'f_open', 'fly', 'fly_nothumb', 'g', 'h', 'h_hook', 'h_thumb', 'i', 'index', 'index_flex', 'index_hook', 'ital', 'ital_nothumb', 'ital_open', 'ital_thumb', 'jesus', 'k', 'l_hook', 'o', 'obaby', 'pincet', 'r', 's', 'v', 'v_flex', 'w', 'write', 'y']
 
@@ -60,6 +61,9 @@ class RWTH(DatasetLoader):
         extracted_folderpath=os.path.join(folderpath,"ph2014-dev-set-handshape-annotations")
         metadata_path = os.path.join(extracted_folderpath, "3359-ph2014-MS-handshape-annotations.txt")
 
+        search="*"
+        replace1="_"
+
         logging.info("Loading ph dataset from %s" % metadata_path)
         with open(metadata_path) as f:
             lines = f.readlines()
@@ -68,6 +72,13 @@ class RWTH(DatasetLoader):
             assert (len(l) == 2)
         images_paths = [x[0] for x in lines]
         images_class_names = [x[1] for x in lines]
+
+        if(platform.system()=="Windows"):
+            print("SO: Windows")
+            i=0
+            for im in images_paths:
+                images_paths[i]=im.replace(search, replace1)
+                i=i+1
 
         classes = sorted(list(set(images_class_names)))
         #print(classes)

@@ -13,6 +13,9 @@ import os
 import random
 import tarfile
 import zipfile
+import codecs
+import patoolib
+import platform
 
 
 def download_file_content_as_text(url:str):
@@ -82,11 +85,12 @@ def extract_zip(zip_path, extracted_path):
 
 
 def extract_tar(tarfile_path, extracted_path):
+    extracted_path_act=str(extracted_path)
     try:
         warning(f"Extracting {tarfile_path} to {extracted_path}")
 
         if (tarfile_path.endswith("tar.gz")):
-            mode ="r:gz"
+           mode ="r:gz"
         elif (tarfile_path.endswith("tar")):
             mode = "r:"
         elif tarfile_path.endswith(".tar.bz2"):
@@ -94,8 +98,13 @@ def extract_tar(tarfile_path, extracted_path):
         else:
             raise ValueError(f"Unsupported file extension for file {tarfile_path}")
 
-        with tarfile.open(tarfile_path, mode) as tar:
-            tar.extractall(path=extracted_path)
+        if(platform.system()=="Windows"):
+            print("Windows")
+            patoolib.extract_archive(tarfile_path.encode().decode('utf-8'), outdir=extracted_path_act)
+        else:
+            print("Sistema Op: Linux")
+            with tarfile.open(tarfile_path, mode) as tar:
+               tar.extractall(path=extracted_path)
         warning("DONE ᕦ(ò_óˇ)ᕤ")
     except FileExistsError:
         error("The folder already exists.")
