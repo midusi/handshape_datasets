@@ -99,7 +99,7 @@ def extract_tar(tarfile_path, extracted_path):
             raise ValueError(f"Unsupported file extension for file {tarfile_path}")
 
         if(platform.system()=="Windows"):
-            print("Windows")
+            print("So: Windows")
             patoolib.extract_archive(tarfile_path.encode().decode('utf-8'), outdir=extracted_path_act)
         else:
             print("Sistema Op: Linux")
