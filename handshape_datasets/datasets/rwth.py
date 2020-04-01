@@ -60,8 +60,8 @@ class RWTH(DatasetLoader):
         images_class_names = [x[1] for x in lines]
 
         classes = sorted(list(set(images_class_names)))
-        print(classes)
-        print("','".join(classes))
+        #print(classes)
+        #print("','".join(classes))
         y = np.array([classes.index(name) for name in images_class_names])
         # print(self.y)
         # print(self.classes)

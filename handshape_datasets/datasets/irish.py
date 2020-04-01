@@ -60,7 +60,7 @@ def download_and_extract(folderpath, images_folderpath):
         if not os.path.exists(zip_filepath):
             origin = url + filename + "?raw=true"
             logging.warning("Downloading: %s ..." % origin)
-            util.download_file(origin, zip_filepath)
+            utils.download_file(origin, zip_filepath)
 
             with zipfile.ZipFile(zip_filepath, "r") as zip_ref:
                 logging.warning("Extracting images to %s..." %

@@ -4,11 +4,13 @@ import handshape_datasets as hd
 
 DATASET_NAME = "lsa16"
 
+ciarp_info = hd.info(DATASET_NAME)
 ciarp = hd.load(DATASET_NAME)
 
-# print(ciarp.summary())
 
-# ciarp.show_dataset()
+#print(ciarp_info.summary())
+
+#ciarp[0].show_dataset() #nunca devuelve un dataset, sino que en el caso de lsa16 devuelve un np.array y un dict (x y metadata)
 
 # ciarp.show_dataset(subsets=["test_Kinect_WithGabor"],samples=128)
 

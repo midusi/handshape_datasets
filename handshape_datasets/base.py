@@ -8,6 +8,11 @@ default_folder = Path.home() / '.handshape_datasets'
 
 from .dataset_info import DatasetInfo
 
+def list_datasets()->DatasetInfo:
+    for id in options.keys():
+        dataset_name =options[id].id
+        print(dataset_name)
+
 def info(id:str)->DatasetInfo:
     return options[id]
 
