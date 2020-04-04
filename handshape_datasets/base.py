@@ -3,27 +3,27 @@ import os
 from pathlib import Path
 from logging import warning as warning
 from handshape_datasets.config import options
-from tabulate import tabulate
+from prettytable import PrettyTable
 
 default_folder = Path.home() / '.handshape_datasets'
 
 from .dataset_info import DatasetInfo
 
 def list_datasets()->DatasetInfo:
-    print("Handshapes disponible:")
+    print("\n")
+    print("Datasets disponibles:")
+    table = PrettyTable ( ["Dataset", "Tamaño de descarga", "Tamaño en disco", "Ejemplos", "Cantidad de clases", "Url"])
     for id in options.keys():
-
         download_size_format, do_size_format, disk_size_format, di_size_format=size_format(options[id].download_size, options[id].disk_size)
-
         dataset_name =options[id].id
-        print("\n-", dataset_name)
-        dlz = round(download_size_format,1)
-        print(".Tamaño de descarga:", dlz, do_size_format)
-        dz = round(disk_size_format,1)
-        print(".Tamaño en disco:", dz, di_size_format)
+        dlz = str(round(download_size_format,1)) + ' ' + do_size_format
+        dz = str(round(disk_size_format,1)) + ' ' + di_size_format
         sub = options[id].subject
-        print(".Cantidad de elementos a descargar:", sub)
+        cla, y = options[id].return_labels()
+        url = options[id].url_info
+        table.add_row([dataset_name, dlz, dz, sub, cla, url])
 
+    print (table)
 
 def size_format(download_size, disk_size):
     if (download_size > 1000):

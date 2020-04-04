@@ -5,7 +5,7 @@ import handshape_datasets as hd
 
 from abc import ABC,abstractmethod
 class DatasetInfo(ABC):
-    def __init__(self, id:str, input_shape:Tuple[int,int,int], metadata:Dict[str, str], description:str, download_size:int, disk_size:int, subject:int):
+    def __init__(self, id:str, input_shape:Tuple[int,int,int], metadata:Dict[str, str], description:str, download_size:int, disk_size:int, subject:int, url_info:str):
         self.id=id
         self.input_shape=input_shape
         self.description=description
@@ -13,6 +13,7 @@ class DatasetInfo(ABC):
         self.download_size=download_size
         self.disk_size=disk_size
         self.subject=subject
+        self.url_info=url_info
 
     def summary(self):
 
@@ -31,10 +32,13 @@ class DatasetInfo(ABC):
 
 class ClassificationDatasetInfo(DatasetInfo):
 
-    def __init__(self, id:str, input_shape:Tuple[int,int,int], metadata:Dict[str, str], description:str, labels:[str], download_size:int , disk_size:int, subject:int):
-        super().__init__(id, input_shape, metadata, description, download_size, disk_size, subject)
+    def __init__(self, id:str, input_shape:Tuple[int,int,int], metadata:Dict[str, str], description:str, labels:[str], download_size:int , disk_size:int, subject:int, url_info:str):
+        super().__init__(id, input_shape, metadata, description, download_size, disk_size, subject, url_info)
         self.labels=labels
 
 
     def summary(self):
         return super().summary()+f"\nClasses: {len(self.labels)}\n{','.join(self.labels)}"
+
+    def return_labels(self):
+        return (len(self.labels), self.labels)
