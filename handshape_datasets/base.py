@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from logging import warning as warning
 from handshape_datasets.config import options
+from tabulate import tabulate
 
 default_folder = Path.home() / '.handshape_datasets'
 
@@ -11,15 +12,41 @@ from .dataset_info import DatasetInfo
 def list_datasets()->DatasetInfo:
     print("Handshapes disponible:")
     for id in options.keys():
+
+        download_size_format, do_size_format, disk_size_format, di_size_format=size_format(options[id].download_size, options[id].disk_size)
+
         dataset_name =options[id].id
         print("\n-", dataset_name)
-        dlz = options[id].get_loader().download_size
-        print(".Tamaño de descarga:", dlz)
-        dz = options[id].get_loader().disk_size
-        print(".Tamaño en disco:", dz)
-        sub = options[id].get_loader().subject
+        dlz = round(download_size_format,1)
+        print(".Tamaño de descarga:", dlz, do_size_format)
+        dz = round(disk_size_format,1)
+        print(".Tamaño en disco:", dz, di_size_format)
+        sub = options[id].subject
         print(".Cantidad de elementos a descargar:", sub)
 
+
+def size_format(download_size, disk_size):
+    if (download_size > 1000):
+        download_size_format = download_size / 1024
+        do_size_format = "Kb"
+        if (download_size > 1000000):
+            download_size_format = download_size_format / 1024
+            do_size_format = "Mb"
+            if (download_size > 1000000000):
+                download_size_format = download_size_format / 1024
+                do_size_format = "Gb"
+
+    if (disk_size > 1000):
+        disk_size_format = disk_size / 1024
+        di_size_format = "Kb"
+        if (disk_size > 1000000):
+            disk_size_format = disk_size_format / 1024
+            di_size_format = "Mb"
+            if (disk_size > 1000000000):
+                disk_size_format = disk_size_format / 1024
+                di_size_format = "Gb"
+
+    return (download_size_format, do_size_format, disk_size_format, di_size_format)
 
 def info(id:str)->DatasetInfo:
     return options[id]

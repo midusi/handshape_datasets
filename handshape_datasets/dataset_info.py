@@ -1,5 +1,6 @@
 from .dataset_loader import DatasetLoader
 from typing import Dict,Tuple
+import handshape_datasets as hd
 
 
 from abc import ABC,abstractmethod
@@ -14,30 +15,14 @@ class DatasetInfo(ABC):
         self.subject=subject
 
     def summary(self):
-        if(self.download_size>1000):
-            download_size_format=self.download_size/1024
-            size_format="Kb"
-            if(self.download_size>1000000):
-                download_size_format = download_size_format / 1024
-                size_format = "Mb"
-                if(self.download_size>1000000000):
-                    download_size_format= download_size_format/1024
-                    size_format = "Gb"
-        if (self.disk_size > 1000):
-            disk_size_format = self.disk_size / 1024
-            d_size_format = "Kb"
-            if (self.download_size > 1000000):
-                disk_size_format = disk_size_format / 1024
-                d_size_format = "Mb"
-                if (self.download_size > 1000000000):
-                    disk_size_format = disk_size_format / 1024
-                    d_size_format = "Gb"
+
+        download_size_format, do_size_format, disk_size_format, di_size_format=hd.size_format(self.download_size, self.disk_size)
 
         return f"Dataset id: {self.id}\nDescription: {self.description}" \
                f"\nInput shape: {self.input_shape}" \
                f"\nMetadata: {self.metadata}" \
-               f"\nTamaño descarga: {round(download_size_format,1), size_format}" \
-               f"\nTamaño en disco: {round(disk_size_format,1), d_size_format}" \
+               f"\nTamaño descarga: {round(download_size_format,1)} {do_size_format}" \
+               f"\nTamaño en disco: {round(disk_size_format,1)} {di_size_format}" \
                f"\nCantidad de subjects: {self.subject}" \
 
     @abstractmethod

@@ -26,8 +26,6 @@ class LSA16(DatasetLoader):
         self.classes = 16
 
 
-
-
     def urls(self):
         return self.url
 

@@ -11,3 +11,6 @@ gdown
 
 # (un)zipping
 pyunpack
+
+#formato texto
+tabulate
