@@ -2,10 +2,18 @@
 import handshape_datasets as hd
 
 
-DATASET_NAME = "lsa16"
+DATASET_NAME = "Ciarp"
+version=dict({'1':'WithGabor'})
 
 ciarp_info = hd.info(DATASET_NAME)
-ciarp = hd.load(DATASET_NAME)
+ciarp = hd.load(DATASET_NAME, **version)
+print(len(ciarp))
+for ci in ciarp:
+    print(ci, ciarp[ci][0].shape, ciarp[ci][1].shape)
+
+
+
+
 
 
 #print(ciarp_info.summary())

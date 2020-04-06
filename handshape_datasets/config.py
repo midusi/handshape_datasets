@@ -1,7 +1,7 @@
 
 from handshape_datasets.datasets import (pugeaultASL,
                                          ciarp,
-                                         irish as _irish,
+                                         irish_refactory as _irish,
                                          indian_training as _indian_training,
                                          jsl as _jsl,
                                          nus1 as _nus1,
@@ -15,7 +15,9 @@ from typing import Dict
 from .dataset_info import DatasetInfo
 
 info = [lsa16.LSA16Info(),
-        rwth.RWTHInfo()
+        rwth.RWTHInfo(),
+        _irish.IrishInfo(),
+        ciarp.CiarpInfo()
         ]
 
 options:Dict[str,DatasetInfo] = {i.id:i for i in info}

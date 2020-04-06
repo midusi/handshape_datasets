@@ -5,10 +5,29 @@ import csv
 import os
 import numpy as np
 from enum import Enum
+from .common import *
+
+labels=[]
 
 class CiarpVersion(Enum):
     WithoutGabor = "WithoutGabor"
     WithGabor = "WithGabor"
+
+class CiarpInfo(ClassificationDatasetInfo):
+    def __init__(self):
+        description="""
+        \n CIARP
+        \n Convolutional neural network-based algorithm for recognition of hand postures on images acquired by a single
+        \n color camera
+        \n More details can be found at https://link.springer.com/chapter/10.1007/978-3-319-75193-1_53
+        \n"""
+        url_info = "https://link.springer.com/chapter/10.1007/978-3-319-75193-1_53"
+        download_size = 11067633
+        disk_size = 19496078
+        subject = 6000
+        super().__init__("Ciarp",(38,38,1),{"y":"classes"},description, labels, download_size, disk_size, subject, url_info)
+    def get_loader(self) ->DatasetLoader:
+        return Ciarp()
 
 class Ciarp(DatasetLoader):
     def __init__(self,version=CiarpVersion.WithoutGabor):
@@ -45,10 +64,13 @@ class Ciarp(DatasetLoader):
             x[i,:]=image
         return x,y
 
-    def load(self,folderpath):
+    def load(self,folderpath, **kwargs):
         dataset_folder = os.path.join(folderpath , 'ciarp')
-
-        version_string=self.version.value
+        print(kwargs['1'])
+        if(kwargs['1']!='WithGabor'):
+            version_string=self.version.value
+        else:
+            version_string='WithGabor'
         folders = [f for f in os.scandir(dataset_folder) if f.is_dir() and f.path.endswith(version_string) ]
 
         # start the load
@@ -61,7 +83,8 @@ class Ciarp(DatasetLoader):
             txt_path=os.path.join(dataset_folder,txt_name)
             x,y=self.load_folder(folder,txt_path)
             result[folder.name]=(x,y)
-        return result
+        metadata={"result":result}
+        return result #result contiene 3 arreglos (por que procesa las 3 carpetas whitoutGabor) y devuelve los 3 preprocess. Cada result contiene su x(imagenes) y su y(clases)
 
 
 

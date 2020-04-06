@@ -44,12 +44,12 @@ class DatasetLoader(ABC):
             path.mkdir()
 
         if not self.get_downloaded_flag(path):
-            self.download_dataset(path)
+            self.download_dataset(path, **kwargs)
         if not self.get_preprocessed_flag(path):
             logging.warning(f"Preprocessing {self.name}...")
             self.preprocess(path)
             logging.warning("Done")
-        return self.load(path)
+        return self.load(path, **kwargs)
 
     def images_folderpath(self,folderpath:Path)->Path:
         return folderpath / f"{self.name}_images"
