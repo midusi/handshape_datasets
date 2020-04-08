@@ -25,7 +25,7 @@ class CiarpInfo(ClassificationDatasetInfo):
         url_info = "https://link.springer.com/chapter/10.1007/978-3-319-75193-1_53"
         download_size = 11067633
         disk_size = 19496078
-        subject = 6000
+        subject = 7127
         super().__init__("Ciarp",(38,38,1),{"y":"classes", "subject":"subject"},description, labels, download_size, disk_size, subject, url_info)
     def get_loader(self) ->DatasetLoader:
         return Ciarp()
@@ -114,9 +114,9 @@ class Ciarp(DatasetLoader):
             result[folder.name]=(x,y)
         metadata={"y":ytot, "Type":subject}
         print("""El valor indica el codigo de la carpeta
-            1= test_DifferentCamera
-            2=test_Kinect
-            3=train_Kinect""")
+            0= test_DifferentCamera
+            1=test_Kinect
+            2=train_Kinect""")
         return xtot,metadata #result contiene 3 arreglos (por que procesa las 3 carpetas whitoutGabor) y devuelve los 3 preprocess. Cada result contiene su x(imagenes) y su y(clases)
 
 

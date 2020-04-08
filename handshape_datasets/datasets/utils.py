@@ -100,7 +100,11 @@ def extract_tar(tarfile_path, extracted_path):
 
         if(platform.system()=="Windows"):
             print("So: Windows")
-            patoolib.extract_archive(tarfile_path.encode().decode('utf-8'), outdir=extracted_path_act)
+            if (mode=="r:bz2"):
+                with tarfile.open(tarfile_path, mode) as tar:
+                    tar.extractall(path=extracted_path)
+            else:
+                patoolib.extract_archive(tarfile_path.encode().decode('utf-8'), outdir=extracted_path_act)
         else:
             print("Sistema Op: Linux")
             with tarfile.open(tarfile_path, mode) as tar:
