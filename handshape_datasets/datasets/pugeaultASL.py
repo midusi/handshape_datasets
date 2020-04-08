@@ -5,7 +5,7 @@ from .common import *
 import os
 import numpy as np
 
-import cv2 as cv
+import cv2
 
 from skimage import io
 from skimage import transform
@@ -148,15 +148,11 @@ class PugeaultASL_B(DatasetLoader):
             self.set_downloaded(folderpath)
 
     def load(self, path):
-
-        #https://medium.com/@a.ydobon/python-in-depth-image-handling-in-python-with-opencv-1-be44da5db5c9
-        image_path_test="C:\\Users\\corti\\.handshape_datasets"
-        image=cv.imread(image_path_test[cv.IMREAD_UNCHANGED])
-#
-
-
-        #cvLoadImage(filename.c_str(), CV_LOAD_IMAGE_UNCHANGED)
-        # FIXME Download and check the file structure
+        print (path)
+        images_folderpath = str(path) + '\\aslB_images\\ds9\\A\\b\\depth_1_0001.png' #test for the first image
+        print (images_folderpath)
+        image = cv2.imread(images_folderpath, flags=cv2.IMREAD_UNCHANGED)
+        print(image.shape)
         return True
 
     def preprocess(self, folderpath, images_folderpath=None):
