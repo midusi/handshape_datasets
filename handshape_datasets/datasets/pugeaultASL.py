@@ -152,7 +152,7 @@ class PugeaultASL_B(DatasetLoader):
         #https://medium.com/@a.ydobon/python-in-depth-image-handling-in-python-with-opencv-1-be44da5db5c9
         image_path_test="C:\\Users\\corti\\.handshape_datasets"
         image=cv.imread(image_path_test[cv.IMREAD_UNCHANGED])
-
+#
 
 
         #cvLoadImage(filename.c_str(), CV_LOAD_IMAGE_UNCHANGED)
