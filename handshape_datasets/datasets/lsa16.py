@@ -12,7 +12,7 @@ class LSA16Info(ClassificationDatasetInfo):
         download_size = 655994
         disk_size = 1225566
         subject = 800
-        super().__init__("lsa16",(32,32,3),{"y":"classes"},description, labels, download_size, disk_size, subject, url_info)
+        super().__init__("lsa16",(32,32,3),{"y":"classes", "subject":"subject"},description, labels, download_size, disk_size, subject, url_info)
     def get_loader(self) ->DatasetLoader:
         return LSA16()
 

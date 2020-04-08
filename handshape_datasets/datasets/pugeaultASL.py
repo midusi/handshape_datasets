@@ -1,13 +1,34 @@
 from handshape_datasets.dataset_loader import DatasetLoader
 from .utils import mkdir_unless_exists, extract_tar, download_bigger_file
 import logging
-
+from .common import *
 import os
 import numpy as np
+
+import cv2 as cv
 
 from skimage import io
 from skimage import transform
 
+labels=["A","B","C","D","E","F","G","H","I","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y"]
+
+#todavia queda cambiar los tamaños y el shape dle info
+
+class PugeaultASL_AInfo(ClassificationDatasetInfo):
+    def __init__(self):
+        description="""
+        \n ASL A
+        \n The first dataset comprises 24 static signs (excluding letters j and z because they involve motion).
+        \nThis was captured in 5 different sessions, with similar lighting and background
+        \nMore details can be found at http://empslocal.ex.ac.uk/people/staff/np331/index.php?section=FingerSpellingDataset
+        \n"""
+        url_info = "http://empslocal.ex.ac.uk/people/staff/np331/index.php?section=FingerSpellingDataset"
+        download_size = 100
+        disk_size = 100
+        subject = 131000
+        super().__init__("PugeaultASL_A",(32,32,3),{"y":"classes", "subject":"subject"},description, labels, download_size, disk_size, subject, url_info)
+    def get_loader(self) ->DatasetLoader:
+        return PugeaultASL_A()
 
 class PugeaultASL_A(DatasetLoader):
     def __init__(self,image_size=(32,32)):
@@ -92,12 +113,26 @@ class PugeaultASL_A(DatasetLoader):
 
 
 
-
+class PugeaultASL_BInfo(ClassificationDatasetInfo):
+    def __init__(self):
+        description="""
+        \n ASL B
+        \n The second dataset (depth only) is captured from 9 different persons in two very different environments and lighting. 
+        \nMore details can be found at http://empslocal.ex.ac.uk/people/staff/np331/index.php?section=FingerSpellingDataset
+        \n"""
+        url_info = "http://empslocal.ex.ac.uk/people/staff/np331/index.php?section=FingerSpellingDataset"
+        download_size = 332789476
+        disk_size = 752803969
+        subject = 72676
+        super().__init__("PugeaultASL_B",(32,32,3),{"y":"classes", "subject":"subject"},description, labels, download_size, disk_size, subject, url_info)
+    def get_loader(self) ->DatasetLoader:
+        return PugeaultASL_B()
 
 class PugeaultASL_B(DatasetLoader):
     def __init__(self):
         super().__init__("aslB")
         self.url = 'http://www.cvssp.org/FingerSpellingKinect2011/dataset9-depth.tar.gz'
+        self.subject=["A","B","C","D","E","F","G","H", "I"]
 
     def urls(self):
         return self.url
@@ -113,6 +148,12 @@ class PugeaultASL_B(DatasetLoader):
             self.set_downloaded(folderpath)
 
     def load(self, path):
+
+        #https://medium.com/@a.ydobon/python-in-depth-image-handling-in-python-with-opencv-1-be44da5db5c9
+
+        image=cv.imread(path)
+
+        #cvLoadImage(filename.c_str(), CV_LOAD_IMAGE_UNCHANGED)
         # FIXME Download and check the file structure
         return True
 

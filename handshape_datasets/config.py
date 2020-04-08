@@ -17,7 +17,9 @@ from .dataset_info import DatasetInfo
 info = [lsa16.LSA16Info(),
         rwth.RWTHInfo(),
         _irish.IrishInfo(),
-        ciarp.CiarpInfo()
+        ciarp.CiarpInfo(),
+        pugeaultASL.PugeaultASL_AInfo(),
+        pugeaultASL.PugeaultASL_BInfo()
         ]
 
 options:Dict[str,DatasetInfo] = {i.id:i for i in info}

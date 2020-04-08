@@ -5,9 +5,10 @@ import csv
 import os
 import numpy as np
 from enum import Enum
+from os import listdir
 from .common import *
 
-labels=[]
+labels=["Puño","Mano Plana B","Duo Inclinado", "Duo","Pulgar","Cuernos", "L", "Meñique","Miton", "Tres Alternativo" ]
 
 class CiarpVersion(Enum):
     WithoutGabor = "WithoutGabor"
@@ -25,7 +26,7 @@ class CiarpInfo(ClassificationDatasetInfo):
         download_size = 11067633
         disk_size = 19496078
         subject = 6000
-        super().__init__("Ciarp",(38,38,1),{"y":"classes"},description, labels, download_size, disk_size, subject, url_info)
+        super().__init__("Ciarp",(38,38,1),{"y":"classes", "subject":"subject"},description, labels, download_size, disk_size, subject, url_info)
     def get_loader(self) ->DatasetLoader:
         return Ciarp()
 
@@ -66,25 +67,57 @@ class Ciarp(DatasetLoader):
 
     def load(self,folderpath, **kwargs):
         dataset_folder = os.path.join(folderpath , 'ciarp')
-        print(kwargs['1'])
         if(kwargs['1']!='WithGabor'):
             version_string=self.version.value
         else:
             version_string='WithGabor'
-        folders = [f for f in os.scandir(dataset_folder) if f.is_dir() and f.path.endswith(version_string) ]
-
+        folders = [f for f in os.scandir(dataset_folder) if f.is_dir() and f.path.endswith(version_string)]
         # start the load
         images_loaded_counter = 0
         # each image is stored in the key corresponding to its subset
+
         result={}
+        cant_images=0
+        for (i, folder) in enumerate(folders):  # this counts the amount of images
+           images = list(
+               filter(lambda x: ".db" not in x,
+                      listdir(str(dataset_folder) + f"\{folder.name}"))
+           )
+           cant_images = len(images) + cant_images
+
+        j=0
+        h = 0
+        i=0
+
+        subject = np.zeros(cant_images)
+        xtot=np.zeros((cant_images, 38, 38, 1), dtype="uint8")
+        ytot=np.zeros(cant_images)
+    #recorrer x para ir copiando datos a xtot
+
         for folder in folders:
-            print(folder.name)
+
             txt_name=f"{folder.name}.txt"
             txt_path=os.path.join(dataset_folder,txt_name)
             x,y=self.load_folder(folder,txt_path)
+            #el valor i, indica el codigo de la carpeta
+            #1= test_DifferentCamera
+            #2=test_Kinect
+            #3=train_Kinect
+            for valuesy in y:
+                ytot[j] =valuesy
+                j += 1
+            for valuesx in x:
+                xtot[h]=valuesx
+                subject[h]=i
+                h += 1
+            i+=1
             result[folder.name]=(x,y)
-        metadata={"result":result}
-        return result #result contiene 3 arreglos (por que procesa las 3 carpetas whitoutGabor) y devuelve los 3 preprocess. Cada result contiene su x(imagenes) y su y(clases)
+        metadata={"y":ytot, "Type":subject}
+        print("""El valor indica el codigo de la carpeta
+            1= test_DifferentCamera
+            2=test_Kinect
+            3=train_Kinect""")
+        return xtot,metadata #result contiene 3 arreglos (por que procesa las 3 carpetas whitoutGabor) y devuelve los 3 preprocess. Cada result contiene su x(imagenes) y su y(clases)
 
 
 

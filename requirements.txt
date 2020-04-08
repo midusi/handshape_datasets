@@ -9,8 +9,11 @@ requests
 patool
 gdown
 
+#procces depth image
+opencv-python
+
 # (un)zipping
 pyunpack
 
-#formato texto
+#text format
 PrettyTable

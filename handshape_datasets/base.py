@@ -26,6 +26,10 @@ def list_datasets()->DatasetInfo:
     print (table)
 
 def size_format(download_size, disk_size):
+    do_size_format="b"
+    di_size_format = "b"
+    download_size_format=download_size
+    disk_size_format=disk_size
     if (download_size > 1000):
         download_size_format = download_size / 1024
         do_size_format = "Kb"

@@ -30,7 +30,7 @@ class IrishInfo(ClassificationDatasetInfo):
         download_size = 181773245
         disk_size = 540026681
         subject = 58114
-        super().__init__("Irish",(640,480,1),{"y":"classes"},description, labels, download_size, disk_size, subject, url_info)
+        super().__init__("Irish",(640,480,1),{"y":"classes", "subject":"subject"},description, labels, download_size, disk_size, subject, url_info)
     def get_loader(self) ->DatasetLoader:
         return Irish()
 
