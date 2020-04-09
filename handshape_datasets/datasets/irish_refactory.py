@@ -41,7 +41,7 @@ class Irish(DatasetLoader):
         self.url = "https://github.com/marlondcu/ISL/blob/master/Frames/"
         self.shape = (640, 480)
         self.klasess_ids = {
-            klass: (id + 1) for (id, klass) in enumerate(list(ascii_uppercase))  # { A: 1, B: 2 }
+            klass: (id + 1) for (id, klass) in enumerate(list(ascii_uppercase))
         }
 
     def _get_klass_for_filename(self, klass):
@@ -57,11 +57,8 @@ class Irish(DatasetLoader):
         }
 
     def download_dataset(self, zips_path: str):
-
         mkdir_unless_exists(zips_path)
-
         urls = self.urls()
-
         file_exists = self.get_downloaded_flag(zips_path)
         if file_exists is False:
             for filename in urls.keys():  # filename => Person1     f"{filename}.zip" # Person$7
@@ -70,13 +67,8 @@ class Irish(DatasetLoader):
                               filepath=filepath)
             self.set_downloaded(zips_path)
 
-
-
     def preprocess(self, folderpath):
-        # FALTA AGREGAR EL PREPROCESADO PARA CADA IMAGEN. HABRÍA QUE SOBRESCRIBIR LAS IMÁGENES??
-
         preprocess_flag = "{}_preprocessed".format(self.name)
-
         if self.get_status_flag(folderpath, preprocess_flag) is False:
             datasets = list(
                 filter(lambda x: x[-4:] == '.zip',
@@ -88,30 +80,20 @@ class Irish(DatasetLoader):
                 filepath = str(folderpath) + f"\{dataset_file}"
                 extract_zip(filepath,
                             extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
-
             self.set_preprocessed_flag(folderpath)
 
     def crop_to_hand(self, image, pad=10):
         h, w = image.shape
-        # r, c = np.where(image > 0)
-        # min_r, max_r = r.min(), r.max()
-        # min_c, max_c = c.min(), c.max()
-
         binary_image = morphology.opening(image > 50)
-
         label = skimage.measure.label(binary_image)
-
         biggest_region = None
-
         for region in skimage.measure.regionprops(label):
             if biggest_region is None:
                 biggest_region = region
             else:
                 if region.area > biggest_region.area:
                     biggest_region = region
-
         min_r, min_c, max_r, max_c = biggest_region.bbox
-
         min_c = max(0, min_c - pad)
         min_r = max(0, min_r - pad)
         max_c = min(w, max_c + pad)
@@ -133,8 +115,6 @@ class Irish(DatasetLoader):
         ht, wt = target_image_size
         image_aspect_ratio = h / w
         t_image_aspect_ratio = ht / wt
-        #padded_image=1
-        # print(h,w,ht,wt,image_aspect_ratio,t_image_aspect_ratio)
         color = color.astype(image.dtype)
         if image_aspect_ratio > t_image_aspect_ratio:
             deltaW = h / t_image_aspect_ratio - w
@@ -152,34 +132,25 @@ class Irish(DatasetLoader):
             padded_image[extra:extra + h, :] = image
         else:
             padded_image = image
-
         return padded_image
 
     def load(self, images_folderpath):
         image_size = (64, 64)
-
         subsets_folders = list(
             filter(lambda x: '.zip' not in x,
                    listdir(images_folderpath)))  # Files contains all the folders (Person1, Person2, Person3, Person4, Person5, Person6)
         files = list(filter(lambda x: 'irish' not in x,
                     list(subsets_folders)))
-
-        #files = os.listdir(images_folderpath)
-        #n=len(files)
-        #logging.warning("Loading ", n, " images..")
-
         h=0
-        for (i, filename) in enumerate(files):  #this counts the amount of images
+        for (i, filename) in enumerate(files):  #Counts the amount of images
             images = list(
                 filter(lambda x: ".db" not in x,
                        listdir(str(images_folderpath) + f"\{filename}"))
             )
             h = len(images) + h
-
         if h != dataset_images:
             logging.warning(
                 f"Wrong number of images, please delete files and repeat the download and extraction process (expected {dataset_images}, got {h}).")
-
         xtot= np.zeros((h, image_size[0], image_size[1], 1), dtype='uint8')
         ytot=np.zeros(h)
         subjecttot = np.zeros(h)
@@ -190,12 +161,7 @@ class Irish(DatasetLoader):
                 filter(lambda x: ".db" not in x,
                        listdir(str(images_folderpath) + f"\{filename}"))
             )
-            #print(images)
             m = len(images)
-            #print(m)
-            #x = np.zeros((m, image_size[0], image_size[1], 1), dtype='uint8')
-            #y = np.zeros(m)
-            #subject = np.zeros(m)
             print("Processing "+filename+"...")
             for(j,im) in enumerate(images): #for images in the specific folder
                 klass = im[8]
@@ -214,30 +180,24 @@ class Irish(DatasetLoader):
         metadata = {"y": ytot, "subjects":subjecttot}
         return xtot, metadata
 
-
     def load_image(self, images_folderpath):
         subsets_folders = list(
                 filter(lambda x:'.zip' not in x,
                        listdir(images_folderpath)))  # subsets_folders_act contains all the folders (Person1, Person2, Person3, Person4, Person5, Person6)
         subsets_folders_act=list(filter(lambda x:'irish' not in x,
                        list(subsets_folders)))
-        #print(subsets_folders_act)
         subsets = {}
         images_loaded_counter = 0
         for person_subset in subsets_folders_act:
             warning(f"Loading images from {person_subset}")
-
             # the data variable of the dataset class
             subsets[person_subset] = {}
-
             images = list(
                 filter(lambda x: ".db" not in x,
                        listdir(str(images_folderpath)+f"\{person_subset}"))
             )  # discard the .db files.
             NUMBER_OF_IMAGES = len(images)
-            #print(NUMBER_OF_IMAGES)
             images_loaded_counter += NUMBER_OF_IMAGES
-
             # image size is an array or a tuple with two elements (width,height)
             IMAGE_HEIGHT = self.shape[1]
             IMAGE_WIDTH = self.shape[0]
@@ -246,32 +206,16 @@ class Irish(DatasetLoader):
                                IMAGE_HEIGHT,
                               IMAGE_WIDTH),
                          dtype="uint8")  # reserves the memory for more optimal use
-
-
-
-            y = create_np_array_with_zeros(shape=NUMBER_OF_IMAGES)  # the klass for each image
-
-            #x=[]
+            y = create_np_array_with_zeros(shape=NUMBER_OF_IMAGES)  # the class for each image
             for position, image_name in enumerate(images):
-                # loads the image
-
-            #    im = io.imread(str(images_folderpath)+f"\{person_subset}"+f"\{image_name}")
-            #    im = im[np.newaxis, :, :]
-            #   if len(im.shape) == 2:
-            #       pass
-            #    x.append(im)
-
+                # load the image
                 x[position] = io.imread(str(images_folderpath)+f"\{person_subset}"+f"\{image_name}")
-
-                # loads the image klass in the array
-                y[position] = self.klasess_ids[image_name[8]]  # the letter for the klass
-
-            #x = np.vstack(x)
+                # load the image class in the array
+                y[position] = self.klasess_ids[image_name[8]]  # the letter for the class
             # assign to the subset
             subsets[person_subset]["y"] = y
             subsets[person_subset]["x"] = x
         warning(
             f"Dataset Loaded (´・ω・)っ. {images_loaded_counter} images were loaded")
-
         irish = Dataset('irish', subsets)
         return irish if subsets is not None else None

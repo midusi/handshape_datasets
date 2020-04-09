@@ -30,14 +30,11 @@ class LSA16(DatasetLoader):
         return self.url
 
     def download_dataset(self, folderpath):
-
         zip_filepath= os.path.join(folderpath, self.filename)
-
         # check if the dataset is downloaded
         file_exists = self.get_downloaded_flag(folderpath)
         if file_exists is False:
             download_file(url=self.urls(), filepath=zip_filepath)
-
             # set the exit flag
             self.set_downloaded(folderpath)
 
@@ -45,13 +42,11 @@ class LSA16(DatasetLoader):
         return folderpath / f"{self.name}_images"
 
     def preprocess(self, folderpath):
-
         zip_filepath = os.path.join(folderpath, self.filename)
         if self.get_preprocessed_flag(folderpath) is False:
             # if it doenst receives the images_folderpath arg creates into folderpath
             images_folderpath = self.images_folderpath(folderpath)
             images_folderpath.mkdir(exist_ok=True)
-
             # extract the zip into the images path
             extract_zip(zip_filepath, images_folderpath)
             self.set_preprocessed_flag(folderpath)
@@ -67,11 +62,9 @@ class LSA16(DatasetLoader):
         x = np.zeros((n, self.shape[0], self.shape[1], 3), dtype='uint8')
         y = np.zeros(n, dtype='uint8')
         subjects = np.zeros(n)
-
         # Load images with labels
         for (i, filepath) in enumerate(files):
             # load image
-            # print(filepath)
             image = io.imread(filepath)
             x[i, :, :, :] = image
             # Get class and subject id for image

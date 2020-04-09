@@ -4,10 +4,9 @@ from pathlib import Path
 from logging import warning as warning
 from handshape_datasets.config import options
 from prettytable import PrettyTable
+from .dataset_info import DatasetInfo
 
 default_folder = Path.home() / '.handshape_datasets'
-
-from .dataset_info import DatasetInfo
 
 def list_datasets()->DatasetInfo:
     print("\n")
@@ -22,7 +21,6 @@ def list_datasets()->DatasetInfo:
         cla, y = options[id].return_labels()
         url = options[id].url_info
         table.add_row([dataset_name, dlz, dz, sub, cla, url])
-
     print (table)
 
 def size_format(download_size, disk_size):
@@ -39,7 +37,6 @@ def size_format(download_size, disk_size):
             if (download_size > 1000000000):
                 download_size_format = download_size_format / 1024
                 do_size_format = "Gb"
-
     if (disk_size > 1000):
         disk_size_format = disk_size / 1024
         di_size_format = "Kb"
@@ -49,7 +46,6 @@ def size_format(download_size, disk_size):
             if (disk_size > 1000000000):
                 disk_size_format = disk_size_format / 1024
                 di_size_format = "Gb"
-
     return (download_size_format, do_size_format, disk_size_format, di_size_format)
 
 def info(id:str)->DatasetInfo:
@@ -79,9 +75,6 @@ def load(id, folderpath:Path=default_folder, **kwargs):
     # load and return the dataset
     return dataset_loader.get(folderpath, **kwargs)
 
-
-
-
 def clear(dataset,
           folderpath=default_folder):
     """Removes a dataset folder from the specified path
@@ -101,9 +94,6 @@ def clear(dataset,
         warning("""The dataset {} doesn't exist (ಥ﹏ಥ). The options available
                 are: \n {}""".format(dataset, "\n".join(options.keys())))
 
-
-# def clear_all(path=_os.path.join(_os.getenv("HOME"), ".handshape_datasets")):
-
 def help():
     message = f"""To load a dataset, call load('dataset'),
     where the supported datasets are:\n{", ".join(options.keys())}\n\
@@ -113,7 +103,6 @@ Example:\n\
     print(dataset.summary)
 """
     print(message)
-
 
 def ids():
     return list(options.keys())

@@ -1,33 +1,26 @@
 import numpy as np
 import os
 from os.path import expanduser
-
 import tarfile
-
 
 def download_and_extract(folderpath):
     if not os.path.exists(folderpath):
         print("Creating folder %s..." % folderpath)
         os.mkdir(folderpath)
-
     filename = "fingerspelling5.tar.bz2"
     zip_filepath = os.path.join(folderpath, filename)
-
     if not os.path.exists(zip_filepath):
         print("Downloading Pugeault's Fingerspelling dataset to folder %s ..." % zip_filepath)
         origin = "http://www.cvssp.org/FingerSpellingKinect2011/fingerspelling5.tar.bz2"
         get_file(zip_filepath, origin=origin)
-
     if len(os.listdir(folderpath))==1:
         print("Extracting images to %s..." % folderpath)
         with tarfile.open(zip_filepath, "r:bz2") as tar_ref:
             tar_ref.extractall(folderpath)
 
-
 def load_data(image_size=(32,32),skip=1,test_subjects=["E"],folderpath=os.path.join(expanduser("~"),".keras",
                                                                                      "datasets","pugeault")):
     # get folder where the dataset is / will be downloaded
-    # folderpath = os.path.join(tempfile.gettempdir(), "pugeault")
     test_subjects_string="".join(test_subjects)
     np_filename="pugeault_skip%d_testsubjects%s_color.npz" %(skip,test_subjects_string)
     np_filepath=os.path.join(folderpath,np_filename)

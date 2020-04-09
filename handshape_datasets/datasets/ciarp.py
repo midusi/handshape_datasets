@@ -80,31 +80,24 @@ class Ciarp(DatasetLoader):
 
         result={}
         cant_images=0
-        for (i, folder) in enumerate(folders):  # this counts the amount of images
+        for (i, folder) in enumerate(folders):  #Counts the amount of images
            images = list(
                filter(lambda x: ".db" not in x,
                       listdir(str(dataset_folder) + f"\{folder.name}"))
            )
            cant_images = len(images) + cant_images
-
         j=0
         h = 0
         i=0
-
         subject = np.zeros(cant_images)
         xtot=np.zeros((cant_images, 38, 38, 1), dtype="uint8")
         ytot=np.zeros(cant_images)
-    #recorrer x para ir copiando datos a xtot
-
+    #Loop x to copy data into xtot
         for folder in folders:
 
             txt_name=f"{folder.name}.txt"
             txt_path=os.path.join(dataset_folder,txt_name)
             x,y=self.load_folder(folder,txt_path)
-            #el valor i, indica el codigo de la carpeta
-            #1= test_DifferentCamera
-            #2=test_Kinect
-            #3=train_Kinect
             for valuesy in y:
                 ytot[j] =valuesy
                 j += 1
@@ -115,12 +108,13 @@ class Ciarp(DatasetLoader):
             i+=1
             result[folder.name]=(x,y)
         metadata={"y":ytot, "Type":subject}
+        #i show folder code
         table= PrettyTable (["Valor", "Código de carpeta"])
         table.add_row([0, "test_DifferentCamera"])
         table.add_row([1, "test_Kinect"])
         table.add_row([2, "train_Kinect"])
         print(table)
-        return xtot,metadata #result contiene 3 arreglos (por que procesa las 3 carpetas whitoutGabor) y devuelve los 3 preprocess. Cada result contiene su x(imagenes) y su y(clases)
+        return xtot,metadata #result contains 3 arrays and returns the 3 prepocess. Each result cointains their x(images) and their y(class)
 
 
 
