@@ -2,12 +2,12 @@
 import handshape_datasets as hd
 
 
-DATASET_NAME = "PugeaultASL_B"
-#version=dict({'1':'WithGabor'})
+DATASET_NAME = "ciarp"
+version=dict({'1':'WithGabor'})
 
 #ciarp_info = hd.info(DATASET_NAME)
 #ciarp = hd.load(DATASET_NAME, **version)
-x , metadata = hd.load(DATASET_NAME)
+ciarp = hd.load(DATASET_NAME, **version)
 print(x.shape)
 for k in metadata:
     print(k,metadata[k].shape)

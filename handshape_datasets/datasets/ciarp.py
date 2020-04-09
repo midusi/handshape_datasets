@@ -1,3 +1,5 @@
+from prettytable import PrettyTable
+
 from .utils import extract_zip, download_file
 from handshape_datasets.dataset_loader import DatasetLoader
 from skimage import io
@@ -113,10 +115,11 @@ class Ciarp(DatasetLoader):
             i+=1
             result[folder.name]=(x,y)
         metadata={"y":ytot, "Type":subject}
-        print("""El valor indica el codigo de la carpeta
-            0= test_DifferentCamera
-            1=test_Kinect
-            2=train_Kinect""")
+        table= PrettyTable (["Valor", "Código de carpeta"])
+        table.add_row([0, "test_DifferentCamera"])
+        table.add_row([1, "test_Kinect"])
+        table.add_row([2, "train_Kinect"])
+        print(table)
         return xtot,metadata #result contiene 3 arreglos (por que procesa las 3 carpetas whitoutGabor) y devuelve los 3 preprocess. Cada result contiene su x(imagenes) y su y(clases)
 
 

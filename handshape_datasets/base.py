@@ -55,8 +55,7 @@ def size_format(download_size, disk_size):
 def info(id:str)->DatasetInfo:
     return options[id]
 
-def load(id,
-         folderpath:Path=default_folder, **kwargs):
+def load(id, folderpath:Path=default_folder, **kwargs):
     """Downloads, preprocesses and load in memory a dataset.
 
     Args:

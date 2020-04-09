@@ -205,7 +205,7 @@ class PugeaultASL_B(DatasetLoader):
 
         folders = sorted(os.listdir(subject_folderpath))
         # definir variables vacías, luego crecen
-        data = np.zeros((0, image_size[0], image_size[1]), dtype='uint8')
+        data = np.zeros((0, image_size[0], image_size[1]), dtype='uint16')
         labels = np.array(())
 
         # cargar cada folder con sus labels
@@ -214,7 +214,7 @@ class PugeaultASL_B(DatasetLoader):
             files = sorted(os.listdir(os.path.join(subject_folderpath, folderName)))
             files = [f for f in files if f.startswith("depth")]
             # por cada archivo dentro del folder
-            folder_data = np.zeros((len(files), image_size[0], image_size[1]), dtype='uint8')
+            folder_data = np.zeros((len(files), image_size[0], image_size[1]), dtype='uint16')
             for (j, filename) in enumerate(files):
                 image_filepath = os.path.join(subject_folderpath, folderName, filename)
                 image = cv2.imread(image_filepath, flags=cv2.IMREAD_UNCHANGED)
@@ -237,7 +237,7 @@ class PugeaultASL_B(DatasetLoader):
 
         ytot=np.array(())
         subjecttot = np.array(())
-        xtot=np.zeros((0, self.image_size[0], self.image_size[1]), dtype='uint8')
+        xtot=np.zeros((0, self.image_size[0], self.image_size[1]), dtype='uint16')
         for i in range(0,n):
             subject_id=i
             subject= self.subjects[i]
