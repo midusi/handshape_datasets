@@ -155,7 +155,6 @@ def show_images(plot_title, images, cols, titles=None):
         if n_images <= 16:
             a.set_title(title)
 
-    # fig.set_size_inches(np.array(fig.get_size_inches()) * n_images)
     if n_images <= 16:
         plt.subplots_adjust(left=0.13, bottom=0.15, right=0.9,
                             top=0.89, wspace=0, hspace=0.32)
