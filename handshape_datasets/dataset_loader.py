@@ -47,7 +47,7 @@ class DatasetLoader(ABC):
             self.download_dataset(path, **kwargs)
         if not self.get_preprocessed_flag(path):
             logging.warning(f"Preprocessing {self.name}...")
-            self.preprocess(path)
+            self.preprocess(path,**kwargs)
             logging.warning("Done")
         return self.load(path, **kwargs)
 

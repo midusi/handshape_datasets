@@ -1,74 +1,292 @@
 from pyunpack import Archive
-
+from .common import *
 import os
+from os import listdir, path
+from .utils import mkdir_unless_exists
 from . import utils
+from skimage import transform
+from sys import stdin
+import numpy as np1
+
+#Each depth image is a matrix of size 640x480 having values in the range [0,2047]
+#https://github.com/zafar142007/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/zipball/master
+#url info http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/
+
+labels=["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "A", "Add", "Appreciation", "A-SingleHanded", "Assistance", "B", "Bell", "Between", "Bhangada", "Bite", "Blow", "Bottle", "Bowl", "Boxing", "B-SingleHanded", "Bud", "C", "Conservation", "Control", "C-SingleHanded", "D", "Density", "Deposit", "D-SingleHanded", "E", "Elbow", "E-SingleHanded", "F", "Few", "Fine", "Friend", "F-SingleHanded", "G", "Ghost", "Good", "Gram", "G-SingleHanded", "Gun", "H", "Handcuff", "Help", "Here", "Hold", "How", "H-SingleHanded", "I", "Intermediate", "Iron", "I-SingleHanded", "It", "K", "Keep", "K-SingleHanded", "L", "Leaf", "Learn", "Leprosy", "Little", "Lose", "L-SingleHanded", "M", "Mail", "Me", "Measure", "Mirror", "M-SingleHanded", "N", "Negative", "N-SingleHanded", "O", "Obedience", "Okay","Opposite","Opposition","O-SingleHanded", "P", "Participation", "Paw", "Perfect", "Potentiality", "Pray", "Promise", "P-SingleHanded", "Q","Q-SingleHanded","Quantity","Questions", "R", "Respect", "Rigid","R-SingleHanded", "S", "Sample", "Season", "Secondary", "Size", "Skin", "Small", "Snake", "Some", "Specific", "S-SingleHanded", "Stand", "Strong", "Study", "Sugar", "T", "There", "Thick", "Thursday","T-SingleHanded", "U", "Unit", "Up", "U-SingleHanded", "V", "Vacation", "Varanasi","V-SingleHanded", "W", "Warn", "Weight","Work", "W-SingleHanded", "X", "X-SingleHanded", "Y", "You", "Y-SingleHanded", "Z"]
+ids_txt=["0B6iDOaIw70ScYndDbGVrZWdIeVE", "0B6iDOaIw70ScLUZPcEMxXzdGb1k","1o7xtLyItrRlQctrCFmM1ZPx_IHXuk29x"]
+name_txt=["credits.txt", "license.txt","README.txt"]
+ids_rgb=["0B6iDOaIw70ScbndjX1NrMUFhczA","0B6iDOaIw70ScYkhLRW5JWlhCY1U", "0B6iDOaIw70ScZHo2OG5VWmd6eDQ", "0B6iDOaIw70ScR1pYT29DSUIzVlU", "0B6iDOaIw70ScYzVZU25HcWl0bEk", "0B6iDOaIw70ScVzVnZV9HWE42WjQ", "0B6iDOaIw70ScMm84Tzc4Nkhvcm8","0B6iDOaIw70ScaFpWREJKSFBrQXM", "0B6iDOaIw70ScSlpsVEhxcVdRbVk", "0B6iDOaIw70ScQnpZYUNWSU9tcWM", "0B6iDOaIw70ScTkRCT0k1NlFMdkk", "0B6iDOaIw70ScS3FncUFHZ0FYZXc", "0B6iDOaIw70ScX2JZc05XZ3l6YW8", "0B6iDOaIw70ScRWk3cThFdl9wUHc","0B6iDOaIw70ScRmZnZjhGNmhRalU", "0B6iDOaIw70ScUEJRWWJQYi01RVE", "0B6iDOaIw70ScT2ZRMFFzaC05ZGM", "0B6iDOaIw70ScUEM0ZnlJSWlkbDg"]
+ids_depth=["0B6iDOaIw70ScbnYtcnpJdGR5Vmc", "0B6iDOaIw70ScLWJDR2p4VGJUR0U","0B6iDOaIw70ScbmxkaEk0Mk0tYmM", "0B6iDOaIw70ScYll3YnQ3X3VsSEU", "0B6iDOaIw70ScaXpYNjJxazJPN1k","0B6iDOaIw70ScWm5nQmM0VGNXQmc","0B6iDOaIw70SceEJuaXBQa0tMZUE", "0B6iDOaIw70ScT2xZTVcydk9RbE0", "0B6iDOaIw70ScTUJyN2s3RHhzNkk", "0B6iDOaIw70ScSDkzZGR5aVBJZlU","0B6iDOaIw70ScRlgzMF9fd2N3ZDQ", "0B6iDOaIw70ScZ19Xby1PM1lXeUk","0B6iDOaIw70ScVmQwQ0RHT09fMFE","0B6iDOaIw70ScX0ltODc1OFpUbHc","0B6iDOaIw70ScNkdkV1RjZkltaDg","0B6iDOaIw70ScWFdFellEcklBQlk","0B6iDOaIw70ScTEFCNHFyd0lNNWc","0B6iDOaIw70ScWGRHMTFqa3JpaFk"]
+
+class Indian_AInfo(ClassificationDatasetInfo):
+    def __init__(self):
+        description="""
+        \n Indian Sign Language
+        \n Gesture recognition for Indian sign language using Kinect
+        \nMore details can be found at http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/
+        \n"""
+        url_info = "http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/"
+        download_size = 1
+        disk_size = 1
+        subject = 1
+        super().__init__("indianA",(640,480,3),{"y":"classes", "subject":"subject"},description, labels, download_size, disk_size, subject, url_info)
+    def get_loader(self) ->DatasetLoader:
+        return IndianA()
+
+class IndianA(DatasetLoader):
+    def __init__(self,image_size=(32,32)):
+        super().__init__(self.__class__.__name__)
+        assert(len(image_size)==2)
+        self.url = 'https://drive.google.com/uc?export=download&id='
+        self.image_size=image_size
+        self.npz_filename=f"indian_color_{image_size[0]}x{image_size[1]}.npz"
+        #self.zipfile_name = 'zafar142007-Gesture-Recognition-for-Indian-Sign-Language-using-Kinect-10b6aa2.zip'
+        self.folder_name="zafar142007"
+
+    def urls(self):
+        return self.url
+
+    def download_dataset(self, folderpath, images_folderpath=None):
+        mkdir_unless_exists(os.path.join(folderpath,self.folder_name))
+        folder_n=os.path.join(folderpath,self.folder_name)
+        for i in range(len(ids_txt)):
+            download_from_drive(f"{self.urls()}{ids_txt[i]}", folder_n+"\\"+name_txt[i])
+            # set the exit flag
+        for j in range(len(ids_rgb)):
+            if(j==0):
+                    download_from_drive(f"{self.urls()}{ids_rgb[j]}", folder_n + "\\" + f"user{j + 1}rgbreshoot.tar.gz")
+            else:
+                    download_from_drive(f"{self.urls()}{ids_rgb[j]}", folder_n + "\\" + f"user{j+1}rgb.tar.gz")
+        self.set_downloaded(folderpath)
+
+    def load(self, folderpath):
+        npz_filepath = os.path.join(folderpath, self.npz_filename) #get the npz file with the data
+        data = np.load(npz_filepath)
+        x,y,subject = (data["x"], data["y"],data["subject"])
+        metadata={"y":y,"subjects":subject}
+        return x,metadata
+
+    def load_subject(self,subject_folderpath, subject_id,image_size):
+        print(subject_folderpath)
+        folders = sorted(os.listdir(subject_folderpath))
+        data = np.zeros((0, image_size[0], image_size[1], 3), dtype='uint8')
+        labels = np.array(())
+        if (subject_id > 9):# for control de filename labels
+            text_control = 8
+        else:
+            text_control = 7
+        for (i, folderName) in enumerate(folders):
+
+            files = sorted(os.listdir(os.path.join(subject_folderpath, folderName)))
+
+            folder_data = np.zeros((len(files), image_size[0], image_size[1], 3), dtype='uint8')
+            for (j, filename) in enumerate(files):
+                image_filepath = os.path.join(subject_folderpath, folderName, filename)
+                image = io.imread(image_filepath)
+                image = transform.resize(image, (image_size[0], image_size[1]), preserve_range=True,mode="reflect",anti_aliasing=True)
+                # Update the matrix (data and labels)
+                if (filename[text_control+1] == "-"):
+                    labels_i = ord(filename[text_control]) - 48
+                else:
+                    if (filename[text_control+2] == "-"):
+                        labels_i = (ord(filename[text_control]) - 48) * 10 + ord(filename[text_control+1]) - 48
+                    else:
+                        labels_i = (ord(filename[text_control]) - 48) * 100 + (ord(filename[text_control+1]) - 48) * 10 + ord(filename[text_control + 2]) - 48
+                labels = np.append(labels, labels_i)
+                folder_data[j, :, :, :] = image
+            data = np.vstack((data, folder_data))
+        subject=np.zeros(len(labels))+subject_id
+        print(data.shape,labels.shape,subject.shape)
+        return data, labels,subject
+
+    def load_images(self,images_folderpath):
+        n=18
+        ytot=np.array(())
+        subjecttot = np.array(())
+        xtot = np.zeros((0, self.image_size[0], self.image_size[1], 3), dtype='uint8')
+
+        for i in range(0,n):
+            subject_id=i+1
+            logging.warning(f"({subject_id}/{n}) Loading images for subject {subject_id}")
+            if (i == 0):
+                path_rgb=Path(str(images_folderpath) + "\\" + f"user{i + 1}rgbreshoot")
+            else:
+                path_rgb = Path(str(images_folderpath) + "\\" + f"user{i + 1}rgb")
+            x, y, subject = self.load_subject(path_rgb, subject_id, self.image_size)
+            ytot=np.append(ytot, y)
+            subjecttot=np.append(subjecttot, subject)
+            xtot=np.vstack((xtot, x))
+        return xtot,ytot,subjecttot
+
+    def preprocess(self, folderpath):
+
+        preprocess_flag = "{}_preprocessed".format(self.name)
+        folderpath_act=Path(str(folderpath)+"\\"+self.folder_name)
+        print(folderpath_act)
+        if self.get_status_flag(folderpath_act, preprocess_flag) is False:
+            datasets = list(
+                filter(lambda x: x[-7:] == '.tar.gz', #comprobar el -4
+                       listdir(folderpath_act)))  # i just want the .tar files
+            for dataset_file in datasets:
+                dataset_folder_name = dataset_file[:-7]  # until the .tar(excluded) #comprobar el -4
+                dataset_images_path = path.join(folderpath_act, dataset_folder_name)
+                mkdir_unless_exists(dataset_images_path)
+                filepath = str(folderpath_act) + f"\{dataset_file}"
+                extract_tar(filepath,
+                            extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
+                # remove the zips files
+                os.remove((filepath))
+
+        #load images
+        images_folderpath = folderpath_act
+        x,y,subject=self.load_images(images_folderpath)
+        # save to binary
+        npz_filepath=os.path.join(folderpath,self.npz_filename)
+        np.savez(npz_filepath, x=x,y=y,subject=subject)
+        self.set_preprocessed_flag(folderpath)
+
+class Indian_BInfo(ClassificationDatasetInfo):
+    def __init__(self):
+        description="""
+        \n Indian Sign Language- depth images
+        \n Gesture recognition for Indian sign language using Kinect B
+        \nMore details can be found at http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/
+        \n"""
+        url_info = "http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/"
+        download_size = 1
+        disk_size = 1
+        subject = 1
+        super().__init__("indianB",(640,480,1),{"y":"classes", "subject":"subject"},description, labels, download_size, disk_size, subject, url_info)
+    def get_loader(self) ->DatasetLoader:
+        return IndianB()
+
+class IndianB(DatasetLoader):
+    def __init__(self,image_size=(480,640)):
+        super().__init__(self.__class__.__name__)
+        assert(len(image_size)==2)
+        self.url = 'https://drive.google.com/uc?export=download&id='
+        self.image_size=image_size
+        self.npz_filename=f"indian_depth_{image_size[0]}x{image_size[1]}.npz"
+        #self.zipfile_name = 'zafar142007-Gesture-Recognition-for-Indian-Sign-Language-using-Kinect-10b6aa2.zip'
+        self.folder_name="zafar142007B"
+
+    def urls(self):
+        return self.url
+
+    def download_dataset(self, folderpath, images_folderpath=None):
+        mkdir_unless_exists(os.path.join(folderpath, self.folder_name))
+        folder_n = os.path.join(folderpath, self.folder_name)
+        for i in range(len(ids_txt)):
+            download_from_drive(f"{self.urls()}{ids_txt[i]}", folder_n + "\\" + name_txt[i])
+        # set the exit flag
+        for j in range(len(ids_depth)):
+            if (j == 0):
+                download_from_drive(f"{self.urls()}{ids_depth[j]}", folder_n + "\\" + f"user{j + 1}depthreshoot.tar.gz")
+            else:
+                download_from_drive(f"{self.urls()}{ids_depth[j]}", folder_n + "\\" + f"user{j + 1}depth.tar.gz")
+        self.set_downloaded(folderpath)
+
+    def load(self, folderpath):
+        npz_filepath = os.path.join(folderpath, self.npz_filename)  # get the npz file with the data
+        data = np.load(npz_filepath)
+        x, y, subject = (data["x"], data["y"], data["subject"])
+        metadata = {"y": y, "subjects": subject}
+        return x, metadata
+
+    def load_subject(self,subject_folderpath, subject_id,image_size):
+        folders = sorted(os.listdir(subject_folderpath))
+        data = np.zeros((0, image_size[0], image_size[1], 1), dtype='uint16')
+        labels = np.array(())
+
+        if (subject_id > 9):# for control de filename labels
+            text_control = 8
+        else:
+            text_control = 7
+
+        for (i, folderName) in enumerate(folders):
+            files = sorted(os.listdir(os.path.join(subject_folderpath, folderName)))
+            print(len(files))
+            folder_data = np.zeros((len(files), image_size[0], image_size[1], 1), dtype='uint16')
+            #data_xact = np.zeros((len(files), image_size[0], image_size[1], 1), dtype='uint16')
+            files_path=os.path.join(subject_folderpath, folderName)
 
 
-def download_and_extract(folderpath, images_folderpath, download):
-    """
-    Download the dataset in the folderpath and extract it to images_folderpath.
-    Both routes may not exist and in that case they are created.
-        :folderpath (str): The path where the zip wi'll be downloaded
-        :images_folderpath (str): The path where the zip wi'll be extracted
-    """
-    actual_wd = os.getcwd()
+            for (j, filename) in enumerate(files):
+                # or stdin.read().splitlines() if you are concerned about training newline characters
 
-    utils.mkdir_unless_exists(folderpath)
-    utils.mkdir_unless_exists(images_folderpath)
-    success_filename = "indian_download_complete"
-    if download is True:
-        print("Downloading Indian Sign Language dataset to folder %s ..." % folderpath)
+                file = open(os.path.join(files_path, filename))
+                infile = file.readlines()
+                #print(j)
+                for (l, line) in enumerate(infile):
+                    #print(l)
+                    dato=line.split(' 'or'\n')
+                    for (k,dat) in enumerate(dato):
+                        folder_data[j, l, k] = dat
+                #print(j)
 
-        # temporal store for the urls readed from file
-        urls = {
-            "depth": [],
-            "rgb": []
-        }
+               # with open(os.path.join(files_path, filename)) as fp:
+                #    line = fp.readline()
+                #    while line:
+                #        data_x=np.append(data_x, line)
+                #        line = fp.readline()
+               # print(data_x)
+                if (filename[text_control+1] == "-"):
+                    labels_i = ord(filename[text_control]) - 48
+                else:
+                    if (filename[text_control+2] == "-"):
+                        labels_i = (ord(filename[text_control]) - 48) * 10 + ord(filename[text_control+1]) - 48
+                    else:
+                        labels_i = (ord(filename[text_control]) - 48) * 100 + (ord(filename[text_control+1]) - 48) * 10 + ord(filename[text_control + 2]) - 48
+                #print(data_tot)
+                #print(len(data_tot))
+                labels = np.append(labels, labels_i)
+        subject=np.zeros(len(labels))+ subject_id
+        data=folder_data
+        print(data.shape,labels.shape,subject.shape)
+        return data, labels,subject
 
-        path = os.path.join(utils.get_project_root(), '__data__/indian')
+    def load_images(self,images_folderpath,**kwargs):
+        n=18
 
-        for folder in urls:
-            with open('%s/links.txt' % (os.path.join(path, folder)), 'r') as links:
-                for line in links:
-                    info = line.split(',')
-                    urls[folder].append((info[0],
-                                         # remove empty spaces and the implicit \nB
-                                         info[1].replace(" ", "")[:-1]
-                                         ))
-        # after links added
-        for folder_name in urls:
-            os.chdir(folderpath)  # me paro en la ruta recibida por parametro
-            try:
-                zips_path = os.path.join(folderpath, folder_name)
-                os.mkdir(zips_path)
-                for url in urls[folder_name]:
-                    filename = "%s.tar.gz" % (url[0])
-                    utils.download_from_drive(url[1], filename)
+        ytot=np.array(())
+        subjecttot = np.array(())
+        xtot=np.zeros((0, self.image_size[0], self.image_size[1], 1), dtype='uint16')
 
-                os.chdir("..")
-            except FileExistsError:
-                print(
-                    """Already exists a folder with the name %s.
-                    Aborting the download""" % folder_name)
-        utils.create_download_complete_file(
-            os.path.join(folderpath, success_filename), 'jsl')
-    else:
-        if utils.download_detector_found(folderpath, success_filename) is False:
-            exit(
-                "The success file doesn't exists. Try again with the arg download in false")
+        for i in range(0,n):
+            subject_id=i+1
+            logging.warning(f"({subject_id}/{n}) Loading images for subject {subject_id}")
+            if (i == 0):
+                path_depth=Path(str(images_folderpath) + "\\" + f"user{i + 1}depthreshoot")
+            else:
+                path_depth= Path(str(images_folderpath) + "\\" + f"user{i + 1}depth")
+            x, y, subject = self.load_subject(path_depth, subject_id, self.image_size)
+            ytot=np.append(ytot, y)
+            subjecttot=np.append(subjecttot, subject)
+            xtot=np.vstack((xtot, x))
+        return xtot,ytot,subjecttot
 
-    # create the same folder on the images path
-    # just extraction if the file already exists or no
-    for folder_name in urls:
-        imagefolder_path = os.path.join(images_folderpath, folder_name)
-        os.mkdir(imagefolder_path)
+    def preprocess(self, folderpath):
 
-        tarfile_path = os.path.join(folderpath, folder_name)
-        extracted_path = os.path.join(images_folderpath, folder_name)
-        for url in urls[folder_name]:
-            filename = "%s.tar.gz" % (url[0])
-            utils.extract_tar(os.path.join(
-                tarfile_path, filename), extracted_path)
-            print("--------------------------------")
+        preprocess_flag = "{}_preprocessed".format(self.name)
+        folderpath_act=Path(str(folderpath)+"\\"+self.folder_name)
+        if self.get_status_flag(folderpath_act, preprocess_flag) is False:
+            datasets = list(
+                filter(lambda x: x[-7:] == '.tar.gz', #comprobar el -4
+                       listdir(folderpath_act)))  # i just want the .tar files
+            for dataset_file in datasets:
+                dataset_folder_name = dataset_file[:-7]  # until the .tar(excluded) #comprobar el -4
+                dataset_images_path = path.join(folderpath_act, dataset_folder_name)
+                mkdir_unless_exists(dataset_images_path)
+                filepath = str(folderpath_act) + f"\{dataset_file}"
+                extract_tar(filepath,
+                            extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
+                # remove the zips files
+                os.remove((filepath))
 
-    os.chdir(actual_wd)
+        #load images
+        images_folderpath = folderpath_act
+        x,y,subject=self.load_images(images_folderpath)
+        # save to binary
+        npz_filepath=os.path.join(folderpath,self.npz_filename)
+        np.savez(npz_filepath, x=x,y=y,subject=subject)
+        self.set_preprocessed_flag(folderpath)

@@ -6,7 +6,7 @@ for id in hd.ids():
     info = hd.info(id)
     if(options[id].id == 'Ciarp'):
         version = dict({'1': 'WithGabor'})
-        x, metadata = hd.load(id, **version)
+        x, metadata = hd.load(id, version='WithGabor')
     else:
         x,metadata = hd.load(id)
     print(x.shape)

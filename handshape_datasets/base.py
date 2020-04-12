@@ -8,7 +8,7 @@ from .dataset_info import DatasetInfo
 
 default_folder = Path.home() / '.handshape_datasets'
 
-def list_datasets()->DatasetInfo:
+def list_datasets():
     print("\n")
     print("Datasets disponibles:")
     table = PrettyTable ( ["Dataset", "Tamaño de descarga", "Tamaño en disco", "Ejemplos", "Cantidad de clases", "Url"])

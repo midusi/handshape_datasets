@@ -87,4 +87,5 @@ class RWTH(DatasetLoader):
         x,y=self.load_images(folderpath)
         npz_filepath=os.path.join(folderpath,self.npz_filename)
         np.savez(npz_filepath, x=x,y=y)
+        os.remove(TARFILE_PATH)
         self.set_preprocessed_flag(folderpath)

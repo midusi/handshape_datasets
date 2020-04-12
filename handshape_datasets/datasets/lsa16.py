@@ -49,6 +49,8 @@ class LSA16(DatasetLoader):
             images_folderpath.mkdir(exist_ok=True)
             # extract the zip into the images path
             extract_zip(zip_filepath, images_folderpath)
+            #remove the zipfile
+            os.remove(zip_filepath)
             self.set_preprocessed_flag(folderpath)
         # if its already extracted doesnt do anything
 

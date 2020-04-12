@@ -80,6 +80,9 @@ class Irish(DatasetLoader):
                 filepath = str(folderpath) + f"\{dataset_file}"
                 extract_zip(filepath,
                             extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
+                #remove the zips files
+                os.remove((filepath))
+
             self.set_preprocessed_flag(folderpath)
 
     def crop_to_hand(self, image, pad=10):

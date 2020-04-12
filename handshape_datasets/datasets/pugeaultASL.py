@@ -48,11 +48,8 @@ class PugeaultASL_A(DatasetLoader):
             self.set_downloaded(folderpath)
 
     def load(self, folderpath):
-        #FIXME check the structure of the file downloading it(over 3gb)
-
         npz_filepath = os.path.join(folderpath, self.npz_filename) #get the npz file with the data
         data = np.load(npz_filepath)
-
         x,y,subject = (data["x"], data["y"],data["subject"])
         metadata={"y":y,"subjects":subject}
         return x,metadata
@@ -107,14 +104,14 @@ class PugeaultASL_A(DatasetLoader):
         # extract the zip
         tarfile_path = os.path.join(folderpath, self.tarfile_name)
         extract_tar(tarfile_path, folderpath)
-
         #load images
         images_folderpath = os.path.join(folderpath, "dataset5")
         x,y,subject=self.load_images(images_folderpath)
-
         # save to binary
         npz_filepath=os.path.join(folderpath,self.npz_filename)
         np.savez(npz_filepath, x=x,y=y,subject=subject)
+        #remove the .tar file
+        os.remove(tarfile_path)
         self.set_preprocessed_flag(folderpath)
 
 class PugeaultASL_BInfo(ClassificationDatasetInfo):
@@ -146,7 +143,6 @@ class PugeaultASL_B(DatasetLoader):
 
     def download_dataset(self, folderpath, images_folderpath=None):
         TARFILE_PATH = os.path.join(folderpath, 'aslB.tar.gz')
-
         # check if the dataset is downloaded
         file_exists = self.get_downloaded_flag(folderpath)
         if file_exists is False:
@@ -155,11 +151,8 @@ class PugeaultASL_B(DatasetLoader):
             self.set_downloaded(folderpath)
 
     def load(self, folderpath):
-        #FIXME check the structure of the file downloading it(over 3gb)
-
         npz_filepath = os.path.join(folderpath, self.npz_filename)
         data = np.load(npz_filepath)
-
         x,y,subject = (data["x"], data["y"],data["subject"])
         metadata={"y":y,"subjects":subject}
         return x,metadata
@@ -212,12 +205,12 @@ class PugeaultASL_B(DatasetLoader):
         # extract the zip
         tarfile_path = os.path.join(folderpath, self.tarfile_name)
         extract_tar(tarfile_path, folderpath)
-
         #load images
         images_folderpath = os.path.join(folderpath, "ds9")
         x,y,subject=self.load_images(images_folderpath)
-
         # save to binary
         npz_filepath=os.path.join(folderpath,self.npz_filename)
         np.savez(npz_filepath, x=x,y=y,subject=subject)
+        #remove the .tar file
+        os.remove(tarfile_path)
         self.set_preprocessed_flag(folderpath)

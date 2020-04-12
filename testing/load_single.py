@@ -2,18 +2,18 @@
 import handshape_datasets as hd
 
 
-DATASET_NAME = "PugeaultASL_B"
-version=dict({'1':'WithGabor'})
+DATASET_NAME = "indianB"
+#ersion=dict({'1':'WithGabor'})
 
 #ciarp_info = hd.info(DATASET_NAME)
-#ciarp = hd.load(DATASET_NAME, **version)
+#x,metadata = hd.load(DATASET_NAME,version='WithGabor')
 x,metadata = hd.load(DATASET_NAME)
 print(x.shape)
-print(x[1])
-print(x.max())
-print(x.min())
+#print(x[1])
+#print(x.max())
+#print(x.min())
 for k in metadata:
-    print(k,metadata[k].shape)
+    print(k,metadata[k].shape, metadata[k].min(), metadata[k].max())
 
 
 
