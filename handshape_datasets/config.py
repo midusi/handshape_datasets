@@ -20,7 +20,8 @@ info = [lsa16.LSA16Info(),
         ciarp.CiarpInfo(),
         pugeaultASL.PugeaultASL_AInfo(),
         pugeaultASL.PugeaultASL_BInfo(), _indian_training.Indian_AInfo(),
-        _indian_training.Indian_BInfo()
+        _indian_training.Indian_BInfo(),
+        _nus1.Nus1Info(), _nus2.Nus2Info()
         ]
 
 options:Dict[str,DatasetInfo] = {i.id:i for i in info}

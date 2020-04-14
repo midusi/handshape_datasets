@@ -40,6 +40,8 @@ class Irish(DatasetLoader):
         super().__init__('irish')
         self.url = "https://github.com/marlondcu/ISL/blob/master/Frames/"
         self.shape = (640, 480)
+        self.npz_filename = f"irish_color.npz"
+        self.folder_name="irish"
         self.klasess_ids = {
             klass: (id + 1) for (id, klass) in enumerate(list(ascii_uppercase))
         }
@@ -67,23 +69,14 @@ class Irish(DatasetLoader):
                               filepath=filepath)
             self.set_downloaded(zips_path)
 
-    def preprocess(self, folderpath):
-        preprocess_flag = "{}_preprocessed".format(self.name)
-        if self.get_status_flag(folderpath, preprocess_flag) is False:
-            datasets = list(
-                filter(lambda x: x[-4:] == '.zip',
-                       listdir(folderpath)))  # i just want the .zip files
-            for dataset_file in datasets:
-                dataset_folder_name = dataset_file[:-4]  # until the .zip(excluded)
-                dataset_images_path = path.join(folderpath, dataset_folder_name)
-                mkdir_unless_exists(dataset_images_path)
-                filepath = str(folderpath) + f"\{dataset_file}"
-                extract_zip(filepath,
-                            extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
-                #remove the zips files
-                os.remove((filepath))
 
-            self.set_preprocessed_flag(folderpath)
+
+    def load(self, folderpath):
+        npz_filepath = os.path.join(folderpath, self.npz_filename) #get the npz file with the data
+        data = np.load(npz_filepath)
+        x,y,subject = (data["x"], data["y"],data["subject"])
+        metadata={"y":y,"subjects":subject}
+        return x,metadata
 
     def crop_to_hand(self, image, pad=10):
         h, w = image.shape
@@ -137,7 +130,7 @@ class Irish(DatasetLoader):
             padded_image = image
         return padded_image
 
-    def load(self, images_folderpath):
+    def load_image(self, images_folderpath):
         image_size = (64, 64)
         subsets_folders = list(
             filter(lambda x: '.zip' not in x,
@@ -181,44 +174,25 @@ class Irish(DatasetLoader):
                    percent = j / m * 100
                    logging.warning(f'Progress {percent:.2f}%.. ')
         metadata = {"y": ytot, "subjects":subjecttot}
-        return xtot, metadata
+        return xtot,ytot, subjecttot
 
-    def load_image(self, images_folderpath):
-        subsets_folders = list(
-                filter(lambda x:'.zip' not in x,
-                       listdir(images_folderpath)))  # subsets_folders_act contains all the folders (Person1, Person2, Person3, Person4, Person5, Person6)
-        subsets_folders_act=list(filter(lambda x:'irish' not in x,
-                       list(subsets_folders)))
-        subsets = {}
-        images_loaded_counter = 0
-        for person_subset in subsets_folders_act:
-            warning(f"Loading images from {person_subset}")
-            # the data variable of the dataset class
-            subsets[person_subset] = {}
-            images = list(
-                filter(lambda x: ".db" not in x,
-                       listdir(str(images_folderpath)+f"\{person_subset}"))
-            )  # discard the .db files.
-            NUMBER_OF_IMAGES = len(images)
-            images_loaded_counter += NUMBER_OF_IMAGES
-            # image size is an array or a tuple with two elements (width,height)
-            IMAGE_HEIGHT = self.shape[1]
-            IMAGE_WIDTH = self.shape[0]
-
-            x = np.zeros(shape=(NUMBER_OF_IMAGES,
-                               IMAGE_HEIGHT,
-                              IMAGE_WIDTH),
-                         dtype="uint8")  # reserves the memory for more optimal use
-            y = create_np_array_with_zeros(shape=NUMBER_OF_IMAGES)  # the class for each image
-            for position, image_name in enumerate(images):
-                # load the image
-                x[position] = io.imread(str(images_folderpath)+f"\{person_subset}"+f"\{image_name}")
-                # load the image class in the array
-                y[position] = self.klasess_ids[image_name[8]]  # the letter for the class
-            # assign to the subset
-            subsets[person_subset]["y"] = y
-            subsets[person_subset]["x"] = x
-        warning(
-            f"Dataset Loaded (´・ω・)っ. {images_loaded_counter} images were loaded")
-        irish = Dataset('irish', subsets)
-        return irish if subsets is not None else None
+    def preprocess(self, folderpath):
+        preprocess_flag = "{}_preprocessed".format(self.name)
+        if self.get_status_flag(folderpath, preprocess_flag) is False:
+            datasets = list(
+                filter(lambda x: x[-4:] == '.zip',
+                       listdir(folderpath)))  # i just want the .zip files
+            for dataset_file in datasets:
+                dataset_folder_name = dataset_file[:-4]  # until the .zip(excluded)
+                dataset_images_path = path.join(folderpath, dataset_folder_name)
+                mkdir_unless_exists(dataset_images_path)
+                filepath = str(folderpath) + f"\{dataset_file}"
+                extract_zip(filepath,
+                            extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
+                #remove the zips files
+                os.remove((filepath))
+            x, y, subject = self.load_image(folderpath)
+            # save to binary
+            npz_filepath = os.path.join(folderpath, self.npz_filename)
+            np.savez(npz_filepath, x=x, y=y, subject=subject)
+            self.set_preprocessed_flag(folderpath)

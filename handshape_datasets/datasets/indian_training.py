@@ -26,9 +26,9 @@ class Indian_AInfo(ClassificationDatasetInfo):
         \nMore details can be found at http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/
         \n"""
         url_info = "http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/"
-        download_size = 1
-        disk_size = 1
-        subject = 1
+        download_size = 1780897140
+        disk_size = 2020009029
+        subject = 5040
         super().__init__("indianA",(640,480,3),{"y":"classes", "subject":"subject"},description, labels, download_size, disk_size, subject, url_info)
     def get_loader(self) ->DatasetLoader:
         return IndianA()
@@ -40,7 +40,6 @@ class IndianA(DatasetLoader):
         self.url = 'https://drive.google.com/uc?export=download&id='
         self.image_size=image_size
         self.npz_filename=f"indian_color_{image_size[0]}x{image_size[1]}.npz"
-        #self.zipfile_name = 'zafar142007-Gesture-Recognition-for-Indian-Sign-Language-using-Kinect-10b6aa2.zip'
         self.folder_name="zafar142007"
 
     def urls(self):
@@ -122,7 +121,7 @@ class IndianA(DatasetLoader):
 
         preprocess_flag = "{}_preprocessed".format(self.name)
         folderpath_act=Path(str(folderpath)+"\\"+self.folder_name)
-        print(folderpath_act)
+
         if self.get_status_flag(folderpath_act, preprocess_flag) is False:
             datasets = list(
                 filter(lambda x: x[-7:] == '.tar.gz', #comprobar el -4
@@ -153,9 +152,9 @@ class Indian_BInfo(ClassificationDatasetInfo):
         \nMore details can be found at http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/
         \n"""
         url_info = "http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/"
-        download_size = 1
-        disk_size = 1
-        subject = 1
+        download_size = 336079729
+        disk_size = 9263074067
+        subject = 5000
         super().__init__("indianB",(640,480,1),{"y":"classes", "subject":"subject"},description, labels, download_size, disk_size, subject, url_info)
     def get_loader(self) ->DatasetLoader:
         return IndianB()
@@ -167,7 +166,6 @@ class IndianB(DatasetLoader):
         self.url = 'https://drive.google.com/uc?export=download&id='
         self.image_size=image_size
         self.npz_filename=f"indian_depth_{image_size[0]}x{image_size[1]}.npz"
-        #self.zipfile_name = 'zafar142007-Gesture-Recognition-for-Indian-Sign-Language-using-Kinect-10b6aa2.zip'
         self.folder_name="zafar142007B"
 
     def urls(self):
@@ -195,41 +193,23 @@ class IndianB(DatasetLoader):
 
     def load_subject(self,subject_folderpath, subject_id,image_size):
         folders = sorted(os.listdir(subject_folderpath))
-        data = np.zeros((0, image_size[0], image_size[1], 1), dtype='uint16')
         labels = np.array(())
-
         if (subject_id > 9):# for control de filename labels
             text_control = 8
         else:
             text_control = 7
-
         for (i, folderName) in enumerate(folders):
             files = sorted(os.listdir(os.path.join(subject_folderpath, folderName)))
-            print(len(files))
-            folder_data = np.zeros((len(files), image_size[0], image_size[1], 1), dtype='uint16')
-            #data_xact = np.zeros((len(files), image_size[0], image_size[1], 1), dtype='uint16')
+            folder_data = np.zeros((len(files), image_size[0], image_size[1]), dtype='uint16')
             files_path=os.path.join(subject_folderpath, folderName)
-
-
             for (j, filename) in enumerate(files):
-                # or stdin.read().splitlines() if you are concerned about training newline characters
 
                 file = open(os.path.join(files_path, filename))
                 infile = file.readlines()
-                #print(j)
                 for (l, line) in enumerate(infile):
-                    #print(l)
                     dato=line.split(' 'or'\n')
                     for (k,dat) in enumerate(dato):
                         folder_data[j, l, k] = dat
-                #print(j)
-
-               # with open(os.path.join(files_path, filename)) as fp:
-                #    line = fp.readline()
-                #    while line:
-                #        data_x=np.append(data_x, line)
-                #        line = fp.readline()
-               # print(data_x)
                 if (filename[text_control+1] == "-"):
                     labels_i = ord(filename[text_control]) - 48
                 else:
@@ -237,8 +217,6 @@ class IndianB(DatasetLoader):
                         labels_i = (ord(filename[text_control]) - 48) * 10 + ord(filename[text_control+1]) - 48
                     else:
                         labels_i = (ord(filename[text_control]) - 48) * 100 + (ord(filename[text_control+1]) - 48) * 10 + ord(filename[text_control + 2]) - 48
-                #print(data_tot)
-                #print(len(data_tot))
                 labels = np.append(labels, labels_i)
         subject=np.zeros(len(labels))+ subject_id
         data=folder_data
@@ -247,11 +225,9 @@ class IndianB(DatasetLoader):
 
     def load_images(self,images_folderpath,**kwargs):
         n=18
-
         ytot=np.array(())
         subjecttot = np.array(())
-        xtot=np.zeros((0, self.image_size[0], self.image_size[1], 1), dtype='uint16')
-
+        xtot=np.zeros((0, self.image_size[0], self.image_size[1]), dtype='uint16')
         for i in range(0,n):
             subject_id=i+1
             logging.warning(f"({subject_id}/{n}) Loading images for subject {subject_id}")
@@ -282,7 +258,6 @@ class IndianB(DatasetLoader):
                             extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
                 # remove the zips files
                 os.remove((filepath))
-
         #load images
         images_folderpath = folderpath_act
         x,y,subject=self.load_images(images_folderpath)

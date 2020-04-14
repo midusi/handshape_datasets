@@ -10,7 +10,7 @@ from enum import Enum
 from os import listdir
 from .common import *
 
-labels=["Puño","Mano Plana B","Duo Inclinado", "Duo","Pulgar","Cuernos", "L", "Meñique","Miton", "Tres Alternativo" ]
+labels=["Puño","Mano Plana B","Duo Inclinado", "Duo","Pulgar","Cuernos", "L", "Meñique","Miton", "Tres Alternativo"]
 
 class CiarpVersion(Enum):
     WithoutGabor = "WithoutGabor"

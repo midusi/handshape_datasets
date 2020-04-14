@@ -3,10 +3,29 @@ from .dataset import Dataset
 from handshape_datasets.dataset_loader import DatasetLoader
 from logging import warning
 from skimage import io
+from .common import *
+
 
 import os
 import numpy as np
 
+labels=['a', 'b', 'c', 'd', 'e','f', 'g', 'h', 'i', 'j']
+
+class Nus2Info(ClassificationDatasetInfo):
+    def __init__(self):
+        description="""
+        \n Nus II
+        \n The postures are shot in and around National University of Singapore (NUS), against complex natural backgrounds, with various hand shapes and sizes
+        \nMore details can be found at https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet/
+        \nSelect Version normal or human noise ('hn')
+        \n"""
+        url_info = "https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet//"
+        download_size = 77233719
+        disk_size = 111294775
+        subject= 2750
+        super().__init__("Nus2",(160,120,3),{"y":"classes"},description, labels, download_size, disk_size, subject, url_info)
+    def get_loader(self) ->DatasetLoader:
+        return Nus2()
 
 class Nus2(DatasetLoader):
     def __init__(self):
@@ -28,13 +47,22 @@ class Nus2(DatasetLoader):
         # check if the dataset is downloaded
         file_exists = self.get_downloaded_flag(folderpath)
         if file_exists is False:
-            download_file(self.urls(), ZIP_PATH, filename=self._FILENAME)
+            download_file(url=self.urls(), filepath=ZIP_PATH)
             # set the exit flag
             self.set_downloaded(folderpath)
 
-    def load(self, folderpath):
+    def load(self, folderpath,**kwargs):
         images_folderpath = self.images_folderpath(folderpath)
         subsets_folder = os.path.join(images_folderpath,'NUS Hand Posture dataset-II')
+
+        IMAGE_HEIGHT = 120
+        IMAGE_WIDTH = 160
+        IMAGE_COLORS = 3
+
+        IMAGE_HEIGHT_hn = 240
+        IMAGE_WIDTH_hn = 320
+        IMAGE_COLORS_hn = 3
+
         if os.path.exists(subsets_folder):
             subsets = {}
             subsets_names = list(
@@ -61,32 +89,45 @@ class Nus2(DatasetLoader):
 
                 NUMBER_OF_IMAGES = len(images)
                 images_loaded_counter += NUMBER_OF_IMAGES
-
-                IMAGE_HEIGHT = 120
-                IMAGE_WIDTH = 160
-                IMAGE_COLORS = 3
-
-                subsets[subset]["x"] = np.zeros(shape=(NUMBER_OF_IMAGES,
+                if(subset=='Hand Postures'):
+                    x= np.zeros(shape=(NUMBER_OF_IMAGES,
                                                        IMAGE_HEIGHT,
                                                        IMAGE_WIDTH,
                                                        IMAGE_COLORS),
                                                 dtype="uint8")
 
-                subsets[subset]["y"] = np.zeros(shape=NUMBER_OF_IMAGES)
-                x = subsets[subset]["x"]
-                y = subsets[subset]["y"]
+                    y= np.zeros(shape=NUMBER_OF_IMAGES)
+                else:
+                    xn = np.zeros(shape=(NUMBER_OF_IMAGES,
+                                        IMAGE_HEIGHT_hn,
+                                        IMAGE_WIDTH_hn,
+                                        IMAGE_COLORS_hn),
+                                 dtype="uint8")
+
+                    yn = np.zeros(shape=NUMBER_OF_IMAGES)
                 for position, image_name in enumerate(images):
                     # loads the image
-                    x[position] = io.imread(image_name)
-                    # loads the image klass in the array
-                    y[position] = self.get_klass_id_for_filename(
-                        image_name)
-
+                    image_path= os.path.join(subsets_folder,subset)
+                    image_path2=os.path.join(image_path, image_name)
+                    if(subset=='Hand Postures'):
+                        x[position,:,:,:] = io.imread(image_path2)
+                        # loads the image klass in the array
+                        y[position] = self.get_klass_id_for_filename(
+                            image_name)
+                    else:
+                        xn[position, :, :, :] = io.imread(image_path2)
+                        # loads the image klass in the array
+                        yn[position] = self.get_klass_id_for_filename(
+                            image_name)
             warning(
                 f"Dataset Loaded (´・ω・)っ. {images_loaded_counter} images were loaded")
+            if(kwargs['version']=='hn'):
+                metadata={"y": yn}
+                return xn, metadata
+            else:
+                metadata = {"y": y}
+                return x, metadata
 
-            nus_2 = Dataset('nus_2', subsets)
-            return nus_2 if subsets is not None else None
 
     def get_klass_id_for_filename(self, filename):
         """Returns the class corresponding to the image
@@ -107,4 +148,5 @@ class Nus2(DatasetLoader):
         ZIP_PATH = os.path.join(folderpath, self._FILENAME)
         # extract the zip into the images_folderpath
         extract_zip(ZIP_PATH, images_folderpath)
+        os.remove(ZIP_PATH)
         self.set_preprocessed_flag(folderpath)

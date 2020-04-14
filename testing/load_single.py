@@ -2,11 +2,13 @@
 import handshape_datasets as hd
 
 
-DATASET_NAME = "indianB"
+DATASET_NAME = "Irish"
 #ersion=dict({'1':'WithGabor'})
 
 #ciarp_info = hd.info(DATASET_NAME)
-#x,metadata = hd.load(DATASET_NAME,version='WithGabor')
+#x,metadata = hd.load(DATASET_NAME,version='WithGabor') ciarp
+#x,metadata = hd.load(DATASET_NAME, version='bw') nus1
+#x,metadata = hd.load(DATASET_NAME, version='hn')
 x,metadata = hd.load(DATASET_NAME)
 print(x.shape)
 #print(x[1])
