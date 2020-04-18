@@ -69,7 +69,7 @@ class Ciarp(DatasetLoader):
 
     def load(self,folderpath, **kwargs):
         dataset_folder = os.path.join(folderpath , 'ciarp')
-        if(kwargs['version']!='WithGabor'):
+        if (kwargs.get('version') != 'WithGabor'):
             version_string=self.version.value
         else:
             version_string='WithGabor'
@@ -118,7 +118,7 @@ class Ciarp(DatasetLoader):
 
 
 
-    def preprocess(self, folderpath):
+    def preprocess(self, folderpath, **kwargs):
 
         zip_path = os.path.join(folderpath, self.filename)
         # extract the zip into the images path
