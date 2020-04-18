@@ -83,7 +83,7 @@ class Ciarp(DatasetLoader):
         for (i, folder) in enumerate(folders):  #Counts the amount of images
            images = list(
                filter(lambda x: ".db" not in x,
-                      listdir(os.path.join(str(dataset_folder), "{folder.name}"))
+                      listdir(os.path.join(str(dataset_folder), "{folder.name}")))
            )
            cant_images = len(images) + cant_images
         j=0
