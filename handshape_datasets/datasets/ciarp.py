@@ -42,7 +42,7 @@ class Ciarp(DatasetLoader):
     def urls(self):
         return self.url
 
-    def download_dataset(self, folderpath):
+    def download_dataset(self, folderpath, **kwargs):
         filepath = os.path.join(folderpath, self.filename)
         download_file(url=self.urls(), filepath=filepath)
         # set the exit flag
