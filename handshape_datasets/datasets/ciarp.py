@@ -42,7 +42,7 @@ class Ciarp(DatasetLoader):
     def urls(self):
         return self.url
 
-    def download_dataset(self, folderpath):
+    def download_dataset(self, folderpath, **kwargs):
         filepath = os.path.join(folderpath, self.filename)
         download_file(url=self.urls(), filepath=filepath)
         # set the exit flag
@@ -69,23 +69,21 @@ class Ciarp(DatasetLoader):
 
     def load(self,folderpath, **kwargs):
         dataset_folder = os.path.join(folderpath , 'ciarp')
-
-        self.folder_image=folderpath
-        if 'version' in kwargs:
-            if (kwargs['version']!='WithGabor'):
-                version_string=self.version.value
-            else:
-                version_string='WithGabor'
-        else:
+        if (kwargs.get('version') != 'WithGabor'):
             version_string=self.version.value
+        else:
+            version_string='WithGabor'
         folders = [f for f in os.scandir(dataset_folder) if f.is_dir() and f.path.endswith(version_string)]
+        # start the load
+        images_loaded_counter = 0
+        # each image is stored in the key corresponding to its subset
 
         result={}
         cant_images=0
         for (i, folder) in enumerate(folders):  #Counts the amount of images
            images = list(
                filter(lambda x: ".db" not in x,
-                      listdir(str(dataset_folder) + f"\{folder.name}"))
+                      listdir(os.path.join(str(dataset_folder), folder.name)))
            )
            cant_images = len(images) + cant_images
         j=0
@@ -120,7 +118,7 @@ class Ciarp(DatasetLoader):
 
 
 
-    def preprocess(self, folderpath):
+    def preprocess(self, folderpath, **kwargs):
 
         zip_path = os.path.join(folderpath, self.filename)
         # extract the zip into the images path
@@ -128,16 +126,3 @@ class Ciarp(DatasetLoader):
         #remove the zip file
         os.remove(zip_path)
         self.set_preprocessed_flag(folderpath)
-
-    def delete_temporary_files(self, path):
-        fpath = path / self.name
-        folder=os.path.join(fpath,'ciarp')
-        npz_exist = list(
-            filter(lambda x: '.npz' in x,
-                   listdir(fpath)))
-        if (len(npz_exist)==0):
-            return print("npz not found")
-        else:
-           rmtree(folder)
-           print("Folders delete")
-        return True
