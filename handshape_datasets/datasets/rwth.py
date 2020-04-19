@@ -61,14 +61,13 @@ class RWTH(DatasetLoader):
         images_paths = [x[0] for x in lines]
         images_class_names = [x[1] for x in lines]
         if(platform.system()=="Windows"):
-            print("SO: Windows")
+            logging.debug("SO: Windows")
             i=0
             for im in images_paths:
                 images_paths[i]=im.replace(search, replace1)
                 i=i+1
         classes = sorted(list(set(images_class_names)))
         y = np.array([classes.index(name) for name in images_class_names])
-        print("Reading images")
         paths = [os.path.join(extracted_folderpath, path) for path in images_paths]
         x = []
         for filepath in paths:
@@ -97,9 +96,8 @@ class RWTH(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(npz_exist) == 0):
-            return print("npz not found")
+            logging.warning(".npz not found")
         else:
             rmtree(folder)
-            print("Folders delete")
 
         return True

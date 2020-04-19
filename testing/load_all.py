@@ -2,8 +2,7 @@ import handshape_datasets as hd
 from handshape_datasets.config import options
 
 for id in hd.ids():
-    print(f"Loading {id}...")
-    info = hd.info(id)
+    #info = hd.info(id)
     done = False
     if (options[id].id == 'Nus1'):
         x, metadata = hd.load(id, version='Color')

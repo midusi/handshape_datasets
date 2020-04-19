@@ -46,22 +46,26 @@ class DatasetLoader(ABC):
         Returns:
             [type]: [description]
         """
+        logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
         path = filepath / self.name
         if not path.exists():
-            logging.warning(
+            logging.info(
                 f"Creating folder {path} for the dataset {self.name}")
             path.mkdir()
 
         if not self.get_downloaded_flag(path):
+            logging.info("Downloading...")
             self.download_dataset(path, **kwargs)
+            logging.info("Download Complete ƪ(˘⌣˘)ʃ")
         if not self.get_preprocessed_flag(path):
-            logging.warning(f"Preprocessing {self.name}...")
+            logging.info(f"Preprocessing {self.name}...")
             self.preprocess(path,**kwargs)
-            logging.warning("Done")
+            logging.info("Done ƪ(˘⌣˘)ʃ")
         load = self.load(path,**kwargs)
         if 'delete' in kwargs:
             if (kwargs['delete']==True):
                 self.delete_temporary_files(default_folder)
+                logging.info("Delete Complete ƪ(˘⌣˘)ʃ")
         return load
 
     def images_folderpath(self,folderpath:Path)->Path:

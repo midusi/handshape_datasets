@@ -158,7 +158,7 @@ class Irish(DatasetLoader):
                        listdir(str(images_folderpath) + f"\{filename}"))
             )
             m = len(images)
-            print("Processing "+filename+"...")
+            logging.info("Processing "+filename+"...")
             for(j,im) in enumerate(images): #for images in the specific folder
                 klass = im[8]
                 class_index = ord(klass) - ord("A")
@@ -172,8 +172,7 @@ class Irish(DatasetLoader):
                 j_act = j_act + 1
                 if j % (m // 10) == 0:
                    percent = j / m * 100
-                   logging.warning(f'Progress {percent:.2f}%.. ')
-        metadata = {"y": ytot, "subjects":subjecttot}
+                   logging.info(f'Progress {percent:.2f}%.. ')
         return xtot,ytot, subjecttot
 
     def preprocess(self, folderpath):
@@ -209,11 +208,9 @@ class Irish(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(npz_exist) == 0):
-            return print("npz not found")
+            logging.warning(".npz not found")
         else:
             for fol in files:
                 folder_to_delete = os.path.join(fpath, fol)
                 rmtree(folder_to_delete)
-                print("Folders delete")
-
         return True

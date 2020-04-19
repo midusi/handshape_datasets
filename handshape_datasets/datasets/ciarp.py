@@ -50,7 +50,6 @@ class Ciarp(DatasetLoader):
 
     def read_csv(self,txt_path):
         with open(txt_path) as f:
-            print(txt_path)
             reader = csv.reader(f,delimiter=' ')
             filename,y=zip(*reader)
             y=np.array(list(map(int,y )))
@@ -70,6 +69,7 @@ class Ciarp(DatasetLoader):
     def load(self,folderpath, **kwargs):
         dataset_folder = os.path.join(folderpath , 'ciarp')
 
+
         self.folder_image=folderpath
         if 'version' in kwargs:
             if (kwargs['version']!='WithGabor'):
@@ -79,6 +79,9 @@ class Ciarp(DatasetLoader):
         else:
             version_string=self.version.value
         folders = [f for f in os.scandir(dataset_folder) if f.is_dir() and f.path.endswith(version_string)]
+
+        logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+        logging.info(f"Version: {version_string}")
 
         result={}
         cant_images=0
@@ -96,7 +99,6 @@ class Ciarp(DatasetLoader):
         ytot=np.zeros(cant_images)
     #Loop x to copy data into xtot
         for folder in folders:
-
             txt_name=f"{folder.name}.txt"
             txt_path=os.path.join(dataset_folder,txt_name)
             x,y=self.load_folder(folder,txt_path)
@@ -110,13 +112,13 @@ class Ciarp(DatasetLoader):
             i+=1
             result[folder.name]=(x,y)
         metadata={"y":ytot, "Type":subject}
-        #i show folder code
         table= PrettyTable (["Valor", "Código de carpeta"])
         table.add_row([0, "test_DifferentCamera"])
         table.add_row([1, "test_Kinect"])
         table.add_row([2, "train_Kinect"])
-        print(table)
-        return xtot,metadata #result contains 3 arrays and returns the 3 prepocess. Each result cointains their x(images) and their y(class)
+        logging.info(f"\n{table}")
+
+        return xtot,metadata
 
 
 
@@ -136,9 +138,8 @@ class Ciarp(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(npz_exist)==0):
-            return print("npz not found")
+            logging.warning(".npz not found")
         else:
            rmtree(folder)
-           print("Folders delete")
         return True
     #

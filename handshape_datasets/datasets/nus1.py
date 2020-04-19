@@ -1,7 +1,6 @@
 from .utils import mkdir_unless_exists, extract_zip, download_file
 from .dataset import Dataset
 from handshape_datasets.dataset_loader import DatasetLoader
-from logging import warning
 from skimage import io
 from .common import *
 
@@ -63,7 +62,7 @@ class Nus1(DatasetLoader):
             images_loaded_counter = 0
             # each image is stored in the key corresponding to its subset
             for (j,folder) in enumerate(folders_names):
-                warning(f"Loading images from {folder}")
+                logging.debug(f"Loading images from {folder}")
                 folders[folder] = []
                 # cd subset folder
                 os.chdir(subsets_folder+'/{}'.format(folder))
@@ -79,7 +78,6 @@ class Nus1(DatasetLoader):
                         if (im.shape==(120,160)):
                             fix=os.path.join(subsets_folder,folder)
                             fix2=os.path.join(fix,image)
-                            print(fix2)
                             os.remove(fix2) #remove g7(14)
                             images = list(
                                 filter(
@@ -100,7 +98,7 @@ class Nus1(DatasetLoader):
                         x_bw[i,:,:]=im
                         y_bw=np.append(y_bw,label)
                 os.chdir("..")
-            warning(
+            logging.debug(
                 f"Dataset Loaded (´・ω・)っ. {images_loaded_counter} images were loaded")
             if 'version' in kwargs:
                 if (kwargs['version'] != 'Color'):
@@ -130,9 +128,8 @@ class Nus1(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(npz_exist) == 0):
-            return print("npz not found")
+            logging.warning(".npz not found")
         else:
             rmtree(folder)
-            print("Folders delete")
 
         return True

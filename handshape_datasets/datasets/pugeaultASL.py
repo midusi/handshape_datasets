@@ -77,7 +77,7 @@ class PugeaultASL_A(DatasetLoader):
                 folder_data[j, :, :, :] = image
             data = np.vstack((data, folder_data))
         subject=np.zeros(len(labels))+subject_id
-        print(data.shape,labels.shape,subject.shape)
+        logging.debug(data.shape,labels.shape,subject.shape)
         return data, labels,subject
 
     def load_images(self,images_folderpath):
@@ -85,7 +85,7 @@ class PugeaultASL_A(DatasetLoader):
 
         def f(i_subject):
             subject_id,subject=i_subject
-            logging.warning(f"({subject_id}/{n}) Loading images for subject {subject}")
+            logging.info(f"({subject_id}/{n}) Loading images for subject {subject}")
             return self.load_subject(os.path.join(images_folderpath, subject), subject_id, self.image_size)
         # get x,y,subject arrays for each subject
 
@@ -95,7 +95,7 @@ class PugeaultASL_A(DatasetLoader):
         for i in range(0,n):
             subject_id=i
             subject= self.subjects[i]
-            logging.warning(f"({subject_id+1}/{n}) Loading images for subject {subject}")
+            logging.info(f"({subject_id+1}/{n}) Loading images for subject {subject}")
             x,y,subject= self.load_subject(os.path.join(images_folderpath, subject), subject_id, self.image_size)
             ytot=np.append(ytot, y)
             subjecttot=np.append(subjecttot, subject)
@@ -123,10 +123,9 @@ class PugeaultASL_A(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(npz_exist) == 0):
-            return print("npz not found")
+            logging.warning(".npz not found")
         else:
             rmtree(folder)
-            print("Folders delete")
 
         return True
 
@@ -193,7 +192,7 @@ class PugeaultASL_B(DatasetLoader):
                 folder_data[j, :, :] = image
             data = np.vstack((data, folder_data))
         subject=np.zeros(len(labels))+subject_id
-        print(data.shape,labels.shape,subject.shape)
+        logging.debug(data.shape,labels.shape,subject.shape)
         return data, labels,subject
 
     def load_images(self,images_folderpath):
@@ -201,7 +200,7 @@ class PugeaultASL_B(DatasetLoader):
 
         def f(i_subject):
             subject_id,subject=i_subject
-            logging.warning(f"({subject_id}/{n}) Loading images for subject {subject}")
+            logging.info(f"({subject_id}/{n}) Loading images for subject {subject}")
             return self.load_subject(os.path.join(images_folderpath, subject), subject_id, self.image_size)
 
         ytot=np.array(())
@@ -210,7 +209,7 @@ class PugeaultASL_B(DatasetLoader):
         for i in range(0,n):
             subject_id=i
             subject= self.subjects[i]
-            logging.warning(f"({subject_id+1}/{n}) Loading images for subject {subject}")
+            logging.info(f"({subject_id+1}/{n}) Loading images for subject {subject}")
             x,y,subject= self.load_subject(os.path.join(images_folderpath, subject), subject_id, self.image_size)
             ytot=np.append(ytot, y)
             subjecttot=np.append(subjecttot, subject)
@@ -234,14 +233,12 @@ class PugeaultASL_B(DatasetLoader):
     def delete_temporary_files(self, path):
         fpath = path / self.name
         folder = os.path.join(fpath, "ds9")
-        print(folder)
         npz_exist = list(
             filter(lambda x: '.npz' in x,
                     listdir(fpath)))
         if (len(npz_exist) == 0):
-            return print("npz not found")
+            logging.warning(".npz not found")
         else:
             rmtree(folder)
-            print("Folders delete")
 
         return True

@@ -1,7 +1,7 @@
 from .utils import mkdir_unless_exists, extract_zip, download_file
 from .dataset import Dataset
 from handshape_datasets.dataset_loader import DatasetLoader
-from logging import warning
+
 from skimage import io
 from .common import *
 
@@ -73,7 +73,7 @@ class Nus2(DatasetLoader):
             images_loaded_counter = 0
             # each image is stored in the key corresponding to its subset
             for subset in subsets_names:
-                warning(f"Loading images from {subset}")
+                logging.debug(f"Loading images from {subset}")
 
                 # the data variable of the dataset class
                 subsets[subset] = {}
@@ -119,7 +119,7 @@ class Nus2(DatasetLoader):
                         # loads the image klass in the array
                         yn[position] = self.get_klass_id_for_filename(
                             image_name)
-            warning(
+            logging.debug(
                 f"Dataset Loaded (´・ω・)っ. {images_loaded_counter} images were loaded")
             if 'version' in kwargs:
                 if (kwargs['version'] == 'hn'):
@@ -163,9 +163,8 @@ class Nus2(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(npz_exist) == 0):
-            return print("npz not found")
+            logging.warning(".npz not found")
         else:
             rmtree(folder)
-            print("Folders delete")
 
         return True

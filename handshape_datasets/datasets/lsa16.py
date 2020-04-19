@@ -84,8 +84,7 @@ class LSA16(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(subsets_folders) == 0):
-            return print("npz not found")
+            logging.warning(".npz not found")
         else:
             rmtree(folder)
-            print("Folders delete")
         return True

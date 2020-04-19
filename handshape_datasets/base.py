@@ -5,12 +5,13 @@ from logging import warning as warning
 from handshape_datasets.config import options
 from prettytable import PrettyTable
 from .dataset_info import DatasetInfo
+import logging
 
 default_folder = Path.home() / '.handshape_datasets'
 
 def list_datasets():
     print("\n")
-    print("Datasets disponibles:")
+    print("Datasets availables: ")
     table = PrettyTable ( ["Dataset", "Tamaño de descarga", "Tamaño en disco", "Ejemplos", "Cantidad de clases"])
     for id in options.keys():
         download_size_format, do_size_format, disk_size_format, di_size_format=size_format(options[id].download_size, options[id].disk_size)
@@ -68,10 +69,11 @@ def load(id, folderpath:Path=default_folder, **kwargs):
         raise ValueError(f"Unknown dataset id {id}. Refer to handshape_datasets.ids() for a complete list of supported datasets.")
 
     folderpath.mkdir(parents=True,exist_ok=True)
-
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     # get downloader class for dataset
     dataset_loader = options[id].get_loader()
     # load and return the dataset
+    logging.info(f"Loading {dataset_loader.name}...")
     return dataset_loader.get(folderpath, **kwargs)
 
 def clear(dataset,
@@ -85,10 +87,10 @@ def clear(dataset,
     """
     # BUG Why doesnt work with nus1?
     try:
-        warning(f"Removing the dataset {dataset}")
+        info(f"Removing the dataset {dataset}")
         # removes the directory recursively
         _rmtree(folderpath / dataset)
-        warning("Success \(•◡•)/")
+        info("Success \(•◡•)/")
     except FileNotFoundError:
         warning("""The dataset {} doesn't exist (ಥ﹏ಥ). The options available
                 are: \n {}""".format(dataset, "\n".join(options.keys())))

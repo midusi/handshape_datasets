@@ -66,7 +66,6 @@ class IndianA(DatasetLoader):
         return x,metadata
 
     def load_subject(self,subject_folderpath, subject_id,image_size):
-        print(subject_folderpath)
         folders = sorted(os.listdir(subject_folderpath))
         data = np.zeros((0, image_size[0], image_size[1], 3), dtype='uint8')
         labels = np.array(())
@@ -75,9 +74,7 @@ class IndianA(DatasetLoader):
         else:
             text_control = 7
         for (i, folderName) in enumerate(folders):
-
             files = sorted(os.listdir(os.path.join(subject_folderpath, folderName)))
-
             folder_data = np.zeros((len(files), image_size[0], image_size[1], 3), dtype='uint8')
             for (j, filename) in enumerate(files):
                 image_filepath = os.path.join(subject_folderpath, folderName, filename)
@@ -95,7 +92,7 @@ class IndianA(DatasetLoader):
                 folder_data[j, :, :, :] = image
             data = np.vstack((data, folder_data))
         subject=np.zeros(len(labels))+subject_id
-        print(data.shape,labels.shape,subject.shape)
+        logging.debug(data.shape,labels.shape,subject.shape)
         return data, labels,subject
 
     def load_images(self,images_folderpath):
@@ -106,7 +103,7 @@ class IndianA(DatasetLoader):
 
         for i in range(0,n):
             subject_id=i+1
-            logging.warning(f"({subject_id}/{n}) Loading images for subject {subject_id}")
+            logging.info(f"({subject_id}/{n}) Loading images for subject {subject_id}")
             if (i == 0):
                 path_rgb=Path(str(images_folderpath) + "\\" + f"user{i + 1}rgbreshoot")
             else:
@@ -151,11 +148,9 @@ class IndianA(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(npz_exist)==0):
-            return print("npz not found")
+            logging.warning(".npz not found")
         else:
             rmtree(folder)
-            print("Folders delete")
-
         return True
 
 class Indian_BInfo(ClassificationDatasetInfo):
@@ -234,7 +229,7 @@ class IndianB(DatasetLoader):
                 labels = np.append(labels, labels_i)
         subject=np.zeros(len(labels))+ subject_id
         data=folder_data
-        print(data.shape,labels.shape,subject.shape)
+        logging.debug(data.shape,labels.shape,subject.shape)
         return data, labels,subject
 
     def load_images(self,images_folderpath):
@@ -244,7 +239,7 @@ class IndianB(DatasetLoader):
         xtot=np.zeros((0, self.image_size[0], self.image_size[1]), dtype='uint16')
         for i in range(0,n):
             subject_id=i+1
-            logging.warning(f"({subject_id}/{n}) Loading images for subject {subject_id}")
+            logging.info(f"({subject_id}/{n}) Loading images for subject {subject_id}")
             if (i == 0):
                 path_depth=Path(str(images_folderpath) + "\\" + f"user{i + 1}depthreshoot")
             else:
@@ -287,9 +282,9 @@ class IndianB(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(npz_exist) == 0):
-            return print("npz not found")
+            logging.warning(".npz not found")
         else:
             rmtree(folder)
-            print("Folders delete")
+
 
         return True
