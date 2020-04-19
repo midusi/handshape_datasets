@@ -6,7 +6,6 @@ from handshape_datasets.config import options
 from prettytable import PrettyTable
 from .dataset_info import DatasetInfo
 import logging
-
 default_folder = Path.home() / '.handshape_datasets'
 
 def list_datasets():

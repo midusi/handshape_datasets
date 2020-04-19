@@ -82,7 +82,6 @@ class DatasetLoader(ABC):
     def get_preprocessed_flag(self, path:Path):
         """
         Check if preprocessed flag exists in path
-
         Args:
             path(str): The route where to look for the preprocessed flag
         """

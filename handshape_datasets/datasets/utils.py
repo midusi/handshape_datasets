@@ -79,7 +79,6 @@ def extract_zip(zip_path, extracted_path):
     except FileExistsError:
         error("The folder already exists.")
 
-
 def extract_tar(tarfile_path, extracted_path):
     extracted_path_act=str(extracted_path)
     try:
