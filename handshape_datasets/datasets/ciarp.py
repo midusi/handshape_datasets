@@ -141,3 +141,4 @@ class Ciarp(DatasetLoader):
            rmtree(folder)
            print("Folders delete")
         return True
+    #
