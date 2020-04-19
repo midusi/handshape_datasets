@@ -6,6 +6,7 @@ import os
 import logging
 
 
+default_folder = Path.home() / '.handshape_datasets'
 
 class DatasetLoader(ABC):
 
@@ -29,6 +30,14 @@ class DatasetLoader(ABC):
         """
         pass
 
+    @abstractmethod
+    def delete_temporary_files(self, path, **kwargs):
+        """
+
+
+        """
+        pass
+
     def get(self, filepath:Path, **kwargs):
         """Downloads and load the dataset.
 
@@ -49,7 +58,11 @@ class DatasetLoader(ABC):
             logging.warning(f"Preprocessing {self.name}...")
             self.preprocess(path,**kwargs)
             logging.warning("Done")
-        return self.load(path, **kwargs)
+        load = self.load(path,**kwargs)
+        if 'delete' in kwargs:
+            if (kwargs['delete']==True):
+                self.delete_temporary_files(default_folder)
+        return load
 
     def images_folderpath(self,folderpath:Path)->Path:
         return folderpath / f"{self.name}_images"

@@ -11,7 +11,7 @@ default_folder = Path.home() / '.handshape_datasets'
 def list_datasets():
     print("\n")
     print("Datasets disponibles:")
-    table = PrettyTable ( ["Dataset", "Tamaño de descarga", "Tamaño en disco", "Ejemplos", "Cantidad de clases", "Url"])
+    table = PrettyTable ( ["Dataset", "Tamaño de descarga", "Tamaño en disco", "Ejemplos", "Cantidad de clases"])
     for id in options.keys():
         download_size_format, do_size_format, disk_size_format, di_size_format=size_format(options[id].download_size, options[id].disk_size)
         dataset_name =options[id].id
@@ -19,8 +19,7 @@ def list_datasets():
         dz = str(round(disk_size_format,1)) + ' ' + di_size_format
         sub = options[id].subject
         cla, y = options[id].return_labels()
-        url = options[id].url_info
-        table.add_row([dataset_name, dlz, dz, sub, cla, url])
+        table.add_row([dataset_name, dlz, dz, sub, cla])
     print (table)
 
 def size_format(download_size, disk_size):
@@ -106,3 +105,7 @@ Example:\n\
 
 def ids():
     return list(options.keys())
+
+def delete_temporary_folders(id, folderpath:Path=default_folder):
+    dataset_loader = options[id].get_loader()
+    return dataset_loader.delete_temporary_files(folderpath)

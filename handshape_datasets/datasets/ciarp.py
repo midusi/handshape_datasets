@@ -69,14 +69,16 @@ class Ciarp(DatasetLoader):
 
     def load(self,folderpath, **kwargs):
         dataset_folder = os.path.join(folderpath , 'ciarp')
-        if(kwargs['version']!='WithGabor'):
-            version_string=self.version.value
+
+        self.folder_image=folderpath
+        if 'version' in kwargs:
+            if (kwargs['version']!='WithGabor'):
+                version_string=self.version.value
+            else:
+                version_string='WithGabor'
         else:
-            version_string='WithGabor'
+            version_string=self.version.value
         folders = [f for f in os.scandir(dataset_folder) if f.is_dir() and f.path.endswith(version_string)]
-        # start the load
-        images_loaded_counter = 0
-        # each image is stored in the key corresponding to its subset
 
         result={}
         cant_images=0
@@ -126,3 +128,16 @@ class Ciarp(DatasetLoader):
         #remove the zip file
         os.remove(zip_path)
         self.set_preprocessed_flag(folderpath)
+
+    def delete_temporary_files(self, path):
+        fpath = path / self.name
+        folder=os.path.join(fpath,'ciarp')
+        npz_exist = list(
+            filter(lambda x: '.npz' in x,
+                   listdir(fpath)))
+        if (len(npz_exist)==0):
+            return print("npz not found")
+        else:
+           rmtree(folder)
+           print("Folders delete")
+        return True

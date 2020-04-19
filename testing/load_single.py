@@ -2,7 +2,7 @@
 import handshape_datasets as hd
 
 
-DATASET_NAME = "Irish"
+DATASET_NAME = "PugeaultASL_A"
 #ersion=dict({'1':'WithGabor'})
 
 #ciarp_info = hd.info(DATASET_NAME)
@@ -11,9 +11,9 @@ DATASET_NAME = "Irish"
 #x,metadata = hd.load(DATASET_NAME, version='hn')
 x,metadata = hd.load(DATASET_NAME)
 print(x.shape)
-#print(x[1])
-#print(x.max())
-#print(x.min())
+print(x[1])
+print(x.max())
+print(x.min())
 for k in metadata:
     print(k,metadata[k].shape, metadata[k].min(), metadata[k].max())
 

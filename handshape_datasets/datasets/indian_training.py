@@ -85,12 +85,12 @@ class IndianA(DatasetLoader):
                 image = transform.resize(image, (image_size[0], image_size[1]), preserve_range=True,mode="reflect",anti_aliasing=True)
                 # Update the matrix (data and labels)
                 if (filename[text_control+1] == "-"):
-                    labels_i = ord(filename[text_control]) - 48
+                    labels_i = ord(filename[text_control]) - 48-1
                 else:
                     if (filename[text_control+2] == "-"):
-                        labels_i = (ord(filename[text_control]) - 48) * 10 + ord(filename[text_control+1]) - 48
+                        labels_i = (ord(filename[text_control]) - 48) * 10 + ord(filename[text_control+1]) - 48-1
                     else:
-                        labels_i = (ord(filename[text_control]) - 48) * 100 + (ord(filename[text_control+1]) - 48) * 10 + ord(filename[text_control + 2]) - 48
+                        labels_i = (ord(filename[text_control]) - 48) * 100 + (ord(filename[text_control+1]) - 48) * 10 + ord(filename[text_control + 2]) - 48-1
                 labels = np.append(labels, labels_i)
                 folder_data[j, :, :, :] = image
             data = np.vstack((data, folder_data))
@@ -143,6 +143,20 @@ class IndianA(DatasetLoader):
         npz_filepath=os.path.join(folderpath,self.npz_filename)
         np.savez(npz_filepath, x=x,y=y,subject=subject)
         self.set_preprocessed_flag(folderpath)
+
+    def delete_temporary_files(self,path):
+        fpath = path / self.name
+        folder=os.path.join(fpath,self.folder_name)
+        npz_exist = list(
+            filter(lambda x: '.npz' in x,
+                   listdir(fpath)))
+        if (len(npz_exist)==0):
+            return print("npz not found")
+        else:
+            rmtree(folder)
+            print("Folders delete")
+
+        return True
 
 class Indian_BInfo(ClassificationDatasetInfo):
     def __init__(self):
@@ -211,19 +225,19 @@ class IndianB(DatasetLoader):
                     for (k,dat) in enumerate(dato):
                         folder_data[j, l, k] = dat
                 if (filename[text_control+1] == "-"):
-                    labels_i = ord(filename[text_control]) - 48
+                    labels_i = ord(filename[text_control]) - 48-1
                 else:
                     if (filename[text_control+2] == "-"):
-                        labels_i = (ord(filename[text_control]) - 48) * 10 + ord(filename[text_control+1]) - 48
+                        labels_i = (ord(filename[text_control]) - 48) * 10 + ord(filename[text_control+1]) - 48-1
                     else:
-                        labels_i = (ord(filename[text_control]) - 48) * 100 + (ord(filename[text_control+1]) - 48) * 10 + ord(filename[text_control + 2]) - 48
+                        labels_i = (ord(filename[text_control]) - 48) * 100 + (ord(filename[text_control+1]) - 48) * 10 + ord(filename[text_control + 2]) - 48-1
                 labels = np.append(labels, labels_i)
         subject=np.zeros(len(labels))+ subject_id
         data=folder_data
         print(data.shape,labels.shape,subject.shape)
         return data, labels,subject
 
-    def load_images(self,images_folderpath,**kwargs):
+    def load_images(self,images_folderpath):
         n=18
         ytot=np.array(())
         subjecttot = np.array(())
@@ -265,3 +279,17 @@ class IndianB(DatasetLoader):
         npz_filepath=os.path.join(folderpath,self.npz_filename)
         np.savez(npz_filepath, x=x,y=y,subject=subject)
         self.set_preprocessed_flag(folderpath)
+
+    def delete_temporary_files(self, path):
+        fpath = path / self.name
+        folder = os.path.join(fpath, self.folder_name)
+        npz_exist = list(
+            filter(lambda x: '.npz' in x,
+                   listdir(fpath)))
+        if (len(npz_exist) == 0):
+            return print("npz not found")
+        else:
+            rmtree(folder)
+            print("Folders delete")
+
+        return True

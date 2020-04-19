@@ -18,4 +18,4 @@ for id in hd.ids():
         x, metadata = hd.load(id)
     print(x.shape)
     for k in metadata:
-        print(k,metadata[k].shape)
+        print(k,metadata[k].shape, metadata[k].min(), metadata[k].max())

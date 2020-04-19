@@ -196,3 +196,24 @@ class Irish(DatasetLoader):
             npz_filepath = os.path.join(folderpath, self.npz_filename)
             np.savez(npz_filepath, x=x, y=y, subject=subject)
             self.set_preprocessed_flag(folderpath)
+
+    def delete_temporary_files(self, path):
+        fpath = path / self.name
+        folders = list(
+            filter(lambda x: '.zip' not in x,
+                   listdir(
+                       fpath)))  # Files contains all the folders (Person1, Person2, Person3, Person4, Person5, Person6)
+        files = list(filter(lambda x: 'irish' not in x,
+                            list(folders)))
+        npz_exist = list(
+            filter(lambda x: '.npz' in x,
+                   listdir(fpath)))
+        if (len(npz_exist) == 0):
+            return print("npz not found")
+        else:
+            for fol in files:
+                folder_to_delete = os.path.join(fpath, fol)
+                rmtree(folder_to_delete)
+                print("Folders delete")
+
+        return True

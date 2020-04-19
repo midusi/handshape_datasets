@@ -2,6 +2,7 @@ from handshape_datasets.dataset_loader import DatasetLoader
 from . import utils
 from pyunpack import Archive
 from logging import warning
+from .common import *
 
 import os
 
@@ -77,3 +78,17 @@ class Psl(DatasetLoader):
                 except FileNotFoundError:
                     warning(
                         "Folder with zips not found. Make sure you haven't modified the original structure of the files.")
+
+    def delete_temporary_files(self, path):
+        fpath = path / self.name
+        folder = self.images_folderpath(fpath)
+        npz_exist = list(
+            filter(lambda x: '.npz' in x,
+                   listdir(fpath)))
+        if (len(npz_exist) == 0):
+            return print("npz not found")
+        else:
+            rmtree(folder)
+            print("Folders delete")
+
+        return True

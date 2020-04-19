@@ -89,3 +89,17 @@ class RWTH(DatasetLoader):
         np.savez(npz_filepath, x=x,y=y)
         os.remove(TARFILE_PATH)
         self.set_preprocessed_flag(folderpath)
+
+    def delete_temporary_files(self, path):
+        fpath = path / self.name
+        folder = os.path.join(fpath, "ph2014-dev-set-handshape-annotations")
+        npz_exist = list(
+            filter(lambda x: '.npz' in x,
+                   listdir(fpath)))
+        if (len(npz_exist) == 0):
+            return print("npz not found")
+        else:
+            rmtree(folder)
+            print("Folders delete")
+
+        return True

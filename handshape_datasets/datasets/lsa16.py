@@ -1,4 +1,5 @@
 from .common import *
+from os import listdir
 labels=["Five","Four","Horns","Curve","Fingers together","Double","Hook","Index","L","Flat Hand","Mitten","Beak","Thumb","Fist","Telephone","V"]
 
 class LSA16Info(ClassificationDatasetInfo):
@@ -76,3 +77,15 @@ class LSA16(DatasetLoader):
         metadata={"y":y,"subjects":subjects}
         return x, metadata
 
+    def delete_temporary_files(self, path):
+        fpath = path / self.name
+        folder = self.images_folderpath(fpath)
+        subsets_folders = list(
+            filter(lambda x: '.npz' in x,
+                   listdir(fpath)))
+        if (len(subsets_folders) == 0):
+            return print("npz not found")
+        else:
+            rmtree(folder)
+            print("Folders delete")
+        return True

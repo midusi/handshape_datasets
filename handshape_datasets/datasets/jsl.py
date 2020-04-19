@@ -3,7 +3,7 @@ from .dataset import Dataset
 from handshape_datasets.dataset_loader import DatasetLoader
 from skimage import io
 from logging import warning
-
+from .common import *
 import os
 
 
@@ -50,3 +50,17 @@ class Jsl(DatasetLoader):
         # extract the zip into the images_folderpath
         extract_zip(ZIP_PATH, images_folderpath)
         self.set_preprocessed_flag(folderpath)
+
+    def delete_temporary_files(self, path):
+        fpath = path / self.name
+        folder = os.path.join(fpath, self.folder_name)
+        subsets_folders = list(
+            filter(lambda x: '.npz' in x,
+                   listdir(fpath)))
+        if (len(subsets_folders) == 0):
+            return print("npz not found")
+        else:
+            # rmtree(folder)
+            print("Folders delete")
+
+        return True

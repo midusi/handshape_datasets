@@ -88,9 +88,9 @@ class Nus1(DatasetLoader):
                     x_bw = np.zeros((len(images), self.image_size[0], self.image_size[1]), dtype='uint8')
                 for (i,image) in enumerate(images):
                     if(image[2]=='0'):
-                        label=10
+                        label=9
                     else:
-                        label= ord(image[1]) - 48
+                        label= ord(image[1]) - 49
                     if(folder=='Color'):
                         im = io.imread(image)
                         x_color[i, :, :, :] = im
@@ -102,9 +102,13 @@ class Nus1(DatasetLoader):
                 os.chdir("..")
             warning(
                 f"Dataset Loaded (´・ω・)っ. {images_loaded_counter} images were loaded")
-            if(kwargs['version']=='bw'):
-                metadata = {"y": y_bw}
-                return x_bw, metadata
+            if 'version' in kwargs:
+                if (kwargs['version'] != 'Color'):
+                    metadata = {"y": y_bw}
+                    return x_bw, metadata
+                else:
+                    metadata = {"y": y_color}
+                    return x_color, metadata
             else:
                 metadata = {"y": y_color}
                 return x_color, metadata
@@ -118,3 +122,17 @@ class Nus1(DatasetLoader):
         extract_zip(ZIP_PATH, images_folderpath)
         os.remove(ZIP_PATH)
         self.set_preprocessed_flag(folderpath)
+
+    def delete_temporary_files(self, path):
+        fpath = path / self.name
+        folder = self.images_folderpath(fpath)
+        npz_exist = list(
+            filter(lambda x: '.npz' in x,
+                   listdir(fpath)))
+        if (len(npz_exist) == 0):
+            return print("npz not found")
+        else:
+            rmtree(folder)
+            print("Folders delete")
+
+        return True

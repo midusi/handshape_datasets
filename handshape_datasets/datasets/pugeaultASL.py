@@ -62,6 +62,8 @@ class PugeaultASL_A(DatasetLoader):
         labels = np.array(())
         for (i, folderName) in enumerate(folders):
             label_i = ord(folderName) - 97  #Transform the character into a index (A=0)
+            if(label_i > 9): #the class "j" doesnt exist
+                label_i=label_i-1
             files = sorted(os.listdir(os.path.join(subject_folderpath, folderName)))
             files = [f for f in files if f.startswith("color")]
             # for each file in the folder
@@ -113,6 +115,20 @@ class PugeaultASL_A(DatasetLoader):
         #remove the .tar file
         os.remove(tarfile_path)
         self.set_preprocessed_flag(folderpath)
+
+    def delete_temporary_files(self, path):
+        fpath = path / self.name
+        folder=os.path.join(fpath, "dataset5")
+        npz_exist = list(
+            filter(lambda x: '.npz' in x,
+                   listdir(fpath)))
+        if (len(npz_exist) == 0):
+            return print("npz not found")
+        else:
+            rmtree(folder)
+            print("Folders delete")
+
+        return True
 
 class PugeaultASL_BInfo(ClassificationDatasetInfo):
     def __init__(self):
@@ -214,3 +230,18 @@ class PugeaultASL_B(DatasetLoader):
         #remove the .tar file
         os.remove(tarfile_path)
         self.set_preprocessed_flag(folderpath)
+
+    def delete_temporary_files(self, path):
+        fpath = path / self.name
+        folder = os.path.join(fpath, "ds9")
+        print(folder)
+        npz_exist = list(
+            filter(lambda x: '.npz' in x,
+                    listdir(fpath)))
+        if (len(npz_exist) == 0):
+            return print("npz not found")
+        else:
+            rmtree(folder)
+            print("Folders delete")
+
+        return True

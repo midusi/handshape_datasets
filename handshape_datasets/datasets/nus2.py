@@ -33,8 +33,8 @@ class Nus2(DatasetLoader):
         self.url = 'https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet/NUS-Hand-Posture-Dataset-II.zip'
         self._FILENAME = self.name + '.zip'
         self._CLASSES_IDS = {
-            'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5,
-            'f': 6, 'g': 7, 'h': 8, 'i': 9, 'j': 10,
+            'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4,
+            'f': 5, 'g': 6, 'h': 7, 'i': 8, 'j': 9,
         }
 
     def urls(self):
@@ -121,12 +121,17 @@ class Nus2(DatasetLoader):
                             image_name)
             warning(
                 f"Dataset Loaded (´・ω・)っ. {images_loaded_counter} images were loaded")
-            if(kwargs['version']=='hn'):
-                metadata={"y": yn}
-                return xn, metadata
+            if 'version' in kwargs:
+                if (kwargs['version'] == 'hn'):
+                    metadata = {"y": yn}
+                    return xn, metadata
+                else:
+                    metadata = {"y": y}
+                    return x, metadata
             else:
                 metadata = {"y": y}
                 return x, metadata
+
 
 
     def get_klass_id_for_filename(self, filename):
@@ -150,3 +155,17 @@ class Nus2(DatasetLoader):
         extract_zip(ZIP_PATH, images_folderpath)
         os.remove(ZIP_PATH)
         self.set_preprocessed_flag(folderpath)
+
+    def delete_temporary_files(self, path):
+        fpath = path / self.name
+        folder = self.images_folderpath(fpath)
+        npz_exist = list(
+            filter(lambda x: '.npz' in x,
+                   listdir(fpath)))
+        if (len(npz_exist) == 0):
+            return print("npz not found")
+        else:
+            rmtree(folder)
+            print("Folders delete")
+
+        return True
