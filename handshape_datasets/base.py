@@ -60,7 +60,6 @@ def load(id, folderpath:Path=default_folder, **kwargs):
 
     Raises:
         KeyError: If the selected dataset is not a valid option
-
     Returns:
         An Dataset object instance
     """

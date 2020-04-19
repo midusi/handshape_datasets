@@ -91,7 +91,6 @@ class DatasetLoader(ABC):
         """
         Checks if the filename(status) received exists in path.
         The flags are used as checkpoints to avoid unnecessary repetition of processes.
-
         Args:
             path(str): The path where to look for the file
             status(str): The name of the file to find

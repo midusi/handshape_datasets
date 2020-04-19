@@ -22,7 +22,6 @@ def download_file_content_as_text(url:str):
     with get_file(url, stream=True) as r:
         return r.text
 
-
 def download_file(url: str, filepath: str) -> None:
     """
     download a file from an url and stores it in filepath
