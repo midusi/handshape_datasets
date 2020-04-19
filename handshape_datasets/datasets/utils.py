@@ -37,13 +37,11 @@ def download_file(url: str, filepath: str) -> None:
         # if filename exists
         with open(filepath, 'wb') as f:
             copyfileobj(r.raw, f)
-            info("Download Complete ƪ(˘⌣˘)ʃ")
 
 
 def download_from_drive(url:str, filepath:str):
     info("Downloading {} dataset from {}".format(filepath, url))
     gdown.download(url, filepath, quiet=True)
-    info("Done ƪ(˘⌣˘)ʃ")
 
 
 def download_file_over_ftp(ftp_url:str, ftp_relative_file_path:str, ftp_filename:str, filepath:str):
@@ -53,7 +51,6 @@ def download_file_over_ftp(ftp_url:str, ftp_relative_file_path:str, ftp_filename
     with open(filepath, 'wb') as f:
         info("Downloading the dataset...")
         ftp.retrbinary('RETR {}'.format(ftp_filename), f.write)
-        info("Done ƪ(˘⌣˘)ʃ")
 
 
 def download_bigger_file(url:str, filepath:str):
@@ -70,7 +67,6 @@ def download_bigger_file(url:str, filepath:str):
             for chunk in r.iter_content(chunk_size=512 * 1024):
                 if chunk:
                     f.write(chunk)
-    info("Done ƪ(˘⌣˘)ʃ")
 
 
 def extract_zip(zip_path, extracted_path):
@@ -79,7 +75,7 @@ def extract_zip(zip_path, extracted_path):
                              mode="r") as zip_ref:
             info(f"Extracting {zip_path} to {extracted_path}")
             zip_ref.extractall(path=extracted_path)
-            info("DONE ᕦ(ò_óˇ)ᕤ")
+            debug("DONE ᕦ(ò_óˇ)ᕤ")
     except FileExistsError:
         error("The folder already exists.")
 
@@ -109,7 +105,7 @@ def extract_tar(tarfile_path, extracted_path):
             debug("So: Linux")
             with tarfile.open(tarfile_path, mode) as tar:
                tar.extractall(path=extracted_path)
-        info("DONE ᕦ(ò_óˇ)ᕤ")
+               debug("DONE ᕦ(ò_óˇ)ᕤ")
     except FileExistsError:
         error("The folder already exists.")
 

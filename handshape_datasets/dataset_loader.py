@@ -54,7 +54,6 @@ class DatasetLoader(ABC):
             path.mkdir()
 
         if not self.get_downloaded_flag(path):
-            logging.info("Downloading...")
             self.download_dataset(path, **kwargs)
             logging.info("Download Complete ƪ(˘⌣˘)ʃ")
         if not self.get_preprocessed_flag(path):
