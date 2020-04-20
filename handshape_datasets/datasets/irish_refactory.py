@@ -208,9 +208,9 @@ class Irish(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(npz_exist) == 0):
-            logging.warning(".npz not found")
+            return False
         else:
             for fol in files:
                 folder_to_delete = os.path.join(fpath, fol)
                 rmtree(folder_to_delete)
-        return True
+            return True

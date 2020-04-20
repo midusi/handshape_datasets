@@ -163,8 +163,7 @@ class Nus2(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(npz_exist) == 0):
-            logging.warning(".npz not found")
+            return False
         else:
             rmtree(folder)
-
-        return True
+            return True

@@ -148,10 +148,10 @@ class IndianA(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(npz_exist)==0):
-            logging.warning(".npz not found")
+            return False
         else:
             rmtree(folder)
-        return True
+            return True
 
 class Indian_BInfo(ClassificationDatasetInfo):
     def __init__(self):
@@ -282,9 +282,7 @@ class IndianB(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(npz_exist) == 0):
-            logging.warning(".npz not found")
+            return False
         else:
             rmtree(folder)
-
-
-        return True
+            return True

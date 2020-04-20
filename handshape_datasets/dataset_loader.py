@@ -21,7 +21,7 @@ class DatasetLoader(ABC):
         pass
 
     @abstractmethod
-    def download_dataset(self, path, **kwargs):
+    def download_dataset(self, path):
         """Downloads the dataset in the specified path
 
         Args:
@@ -54,7 +54,7 @@ class DatasetLoader(ABC):
             path.mkdir()
 
         if not self.get_downloaded_flag(path):
-            self.download_dataset(path, **kwargs)
+            self.download_dataset(path)
             logging.info("Download Complete ƪ(˘⌣˘)ʃ")
         if not self.get_preprocessed_flag(path):
             logging.info(f"Preprocessing {self.name}...")
@@ -63,8 +63,11 @@ class DatasetLoader(ABC):
         load = self.load(path,**kwargs)
         if 'delete' in kwargs:
             if (kwargs['delete']==True):
-                self.delete_temporary_files(default_folder)
-                logging.info("Delete Complete ƪ(˘⌣˘)ʃ")
+                flag=self.delete_temporary_files(default_folder)
+                if(flag):
+                    logging.info("Delete Complete ƪ(˘⌣˘)ʃ")
+                else:
+                    logging.warning(".npz not found")
         return load
 
     def images_folderpath(self,folderpath:Path)->Path:

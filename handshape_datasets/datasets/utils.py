@@ -37,7 +37,6 @@ def download_file(url: str, filepath: str) -> None:
         with open(filepath, 'wb') as f:
             copyfileobj(r.raw, f)
 
-
 def download_from_drive(url:str, filepath:str):
     info("Downloading {} dataset from {}".format(filepath, url))
     gdown.download(url, filepath, quiet=True)
