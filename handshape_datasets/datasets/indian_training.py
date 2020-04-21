@@ -1,4 +1,3 @@
-from pyunpack import Archive
 from .common import *
 import os
 from os import listdir, path
