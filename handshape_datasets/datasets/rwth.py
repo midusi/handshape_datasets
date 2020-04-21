@@ -37,7 +37,7 @@ class RWTH(DatasetLoader):
         # set the success flag
         self.set_downloaded(folderpath)
         
-    def load(self, folderpath):
+    def load(self, folderpath, **kwargs):
         npz_filepath = os.path.join(folderpath, self.npz_filename)
         data = np.load(npz_filepath)
         x, y = (data["x"], data["y"])

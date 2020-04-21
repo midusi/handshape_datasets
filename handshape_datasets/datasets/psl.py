@@ -53,7 +53,7 @@ class Psl(DatasetLoader):
                         Aborting the download to avoid the overwriting of files""" % folder_name)
         self.set_downloaded(folderpath)
 
-    def load(self, extracted_images_folderpath):
+    def load(self, extracted_images_folderpath, **kwargs):
         return True
 
     def preprocess(self, folderpath, images_folderpath=None):
@@ -86,9 +86,7 @@ class Psl(DatasetLoader):
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
         if (len(npz_exist) == 0):
-            return print("npz not found")
+            return False
         else:
             rmtree(folder)
-            print("Folders delete")
-
-        return True
+            return True

@@ -58,9 +58,9 @@ class DatasetLoader(ABC):
             logging.info("Download Complete ƪ(˘⌣˘)ʃ")
         if not self.get_preprocessed_flag(path):
             logging.info(f"Preprocessing {self.name}...")
-            self.preprocess(path,**kwargs)
+            self.preprocess(path)
             logging.info("Done ƪ(˘⌣˘)ʃ")
-        load = self.load(path,**kwargs)
+        load = self.load(path, **kwargs)
         if 'delete' in kwargs:
             if (kwargs['delete']==True):
                 flag=self.delete_temporary_files(default_folder)
@@ -105,7 +105,7 @@ class DatasetLoader(ABC):
         return status_path.exists()
 
     @abstractmethod
-    def load(self, image_files_path:Path, **kwargs):
+    def load(self, image_files_path:Path):
         """
         Loads dataset images in memory and instance to a dataset class object.
         The management of the load of the images in memory varies according to the implementation.
@@ -120,7 +120,7 @@ class DatasetLoader(ABC):
 
 
     @abstractmethod
-    def preprocess(self, path:Path):
+    def preprocess(self, path:Path, **kwargs):
         """
         The process in which the dataset files are extracted and moved to a uniform folder received as argument
 

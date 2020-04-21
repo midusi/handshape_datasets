@@ -47,7 +47,7 @@ class PugeaultASL_A(DatasetLoader):
             # set the exit flag
             self.set_downloaded(folderpath)
 
-    def load(self, folderpath):
+    def load(self, folderpath, **kwargs):
         npz_filepath = os.path.join(folderpath, self.npz_filename) #get the npz file with the data
         data = np.load(npz_filepath)
         x,y,subject = (data["x"], data["y"],data["subject"])
@@ -164,7 +164,7 @@ class PugeaultASL_B(DatasetLoader):
             # set the exit flag
             self.set_downloaded(folderpath)
 
-    def load(self, folderpath):
+    def load(self, folderpath, **kwargs):
         npz_filepath = os.path.join(folderpath, self.npz_filename)
         data = np.load(npz_filepath)
         x,y,subject = (data["x"], data["y"],data["subject"])

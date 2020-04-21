@@ -58,7 +58,7 @@ class IndianA(DatasetLoader):
                     download_from_drive(f"{self.urls()}{ids_rgb[j]}", folder_n + "\\" + f"user{j+1}rgb.tar.gz")
         self.set_downloaded(folderpath)
 
-    def load(self, folderpath):
+    def load(self, folderpath, **kwargs):
         npz_filepath = os.path.join(folderpath, self.npz_filename) #get the npz file with the data
         data = np.load(npz_filepath)
         x,y,subject = (data["x"], data["y"],data["subject"])
@@ -193,7 +193,7 @@ class IndianB(DatasetLoader):
                 download_from_drive(f"{self.urls()}{ids_depth[j]}", folder_n + "\\" + f"user{j + 1}depth.tar.gz")
         self.set_downloaded(folderpath)
 
-    def load(self, folderpath):
+    def load(self, folderpath, **kwargs):
         npz_filepath = os.path.join(folderpath, self.npz_filename)  # get the npz file with the data
         data = np.load(npz_filepath)
         x, y, subject = (data["x"], data["y"], data["subject"])

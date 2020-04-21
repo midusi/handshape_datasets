@@ -5,6 +5,9 @@ from skimage import io
 from logging import warning
 from .common import *
 import os
+from pyunpack import Archive
+from handshape_datasets.dataset_loader import DatasetLoader
+from . import utils
 
 
 class Jsl(DatasetLoader):
@@ -23,7 +26,7 @@ class Jsl(DatasetLoader):
         # set the download flag
         self.set_downloaded(folderpath)
 
-    def load(self, folderpath):
+    def load(self, folderpath, **kwargs):
         images_folderpath = self.images_folderpath(folderpath)
         if os.path.exists(images_folderpath ):
             subsets = {
@@ -54,13 +57,11 @@ class Jsl(DatasetLoader):
     def delete_temporary_files(self, path):
         fpath = path / self.name
         folder = os.path.join(fpath, self.folder_name)
-        subsets_folders = list(
+        npz_exist = list(
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
-        if (len(subsets_folders) == 0):
-            return print("npz not found")
+        if (len(npz_exist) == 0):
+            return False
         else:
-            # rmtree(folder)
-            print("Folders delete")
-
-        return True
+            rmtree(folder)
+            return True

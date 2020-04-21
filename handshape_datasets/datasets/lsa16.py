@@ -55,7 +55,7 @@ class LSA16(DatasetLoader):
             self.set_preprocessed_flag(folderpath)
         # if its already extracted doesnt do anything
 
-    def load(self,folderpath):
+    def load(self,folderpath, **kwargs):
         images_folderpath = self.images_folderpath(folderpath)
         # get image file names
         files = sorted(images_folderpath.iterdir())

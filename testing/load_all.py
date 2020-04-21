@@ -5,16 +5,16 @@ for id in hd.ids():
     #info = hd.info(id)
     done = False
     if (options[id].id == 'Nus1'):
-        x, metadata = hd.load(id, version='Color')
+        x, metadata = hd.load(id, version='Color', delete=True)
         done=True
     if(options[id].id == 'Ciarp'):
-        x, metadata = hd.load(id, version='WithOutGabor')
+        x, metadata = hd.load(id, version='WithOutGabor', delete=True)
         done = True
     if (options[id].id == 'Nus2'):
-        x, metadata = hd.load(id, version='normal')
+        x, metadata = hd.load(id, version='normal', delete=True)
         done = True
     if (not done):
-        x, metadata = hd.load(id)
+        x, metadata = hd.load(id, delete=True)
     print(x.shape)
-    for k in metadata:
-        print(k,metadata[k].shape, metadata[k].min(), metadata[k].max())
+    #for k in metadata:
+        #print(k,metadata[k].shape, metadata[k].min(), metadata[k].max())
