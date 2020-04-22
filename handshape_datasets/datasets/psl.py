@@ -1,5 +1,6 @@
 from handshape_datasets.dataset_loader import DatasetLoader
 from . import utils
+import patoolib
 from pyunpack import Archive
 from logging import warning
 from .common import *

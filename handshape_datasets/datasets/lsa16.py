@@ -1,5 +1,6 @@
 from .common import *
 from os import listdir
+from skimage import transform
 labels=["Five","Four","Horns","Curve","Fingers together","Double","Hook","Index","L","Flat Hand","Mitten","Beak","Thumb","Fist","Telephone","V"]
 
 class LSA16Info(ClassificationDatasetInfo):
@@ -22,8 +23,8 @@ class LSA16(DatasetLoader):
     def __init__(self,version="lsa32x32_nr_rgb_black_background"):
         #TODO generate URL from options
         super().__init__("lsa16")
-        self.filename = f"{version}.zip"
-        self.url = f'http://facundoq.github.io/unlp/lsa16/data/{self.filename}'
+        self.filename =[f"{version}", f"lsa_nr_rgb"]
+        self.url = [f'http://facundoq.github.io/unlp/lsa16/data/{self.filename[0]}.zip', f"http://facundoq.github.io/unlp/lsa16/data/{self.filename[1]}.zip"]
         self.shape= (32,32) # TODO get from version
         self.classes = 16
 
@@ -31,34 +32,50 @@ class LSA16(DatasetLoader):
         return self.url
 
     def download_dataset(self, folderpath):
-        zip_filepath= os.path.join(folderpath, self.filename)
+
         # check if the dataset is downloaded
         file_exists = self.get_downloaded_flag(folderpath)
         if file_exists is False:
-            download_file(url=self.urls(), filepath=zip_filepath)
-            # set the exit flag
+            for (i,url) in enumerate(self.url):
+                zip_filepath = os.path.join(folderpath, f"{self.filename[i]}.zip")
+                download_file(url=url, filepath=zip_filepath)
+                # set the exit flag
             self.set_downloaded(folderpath)
 
     def images_folderpath(self,folderpath):
         return folderpath / f"{self.name}_images"
 
     def preprocess(self, folderpath):
-        zip_filepath = os.path.join(folderpath, self.filename)
+
         if self.get_preprocessed_flag(folderpath) is False:
             # if it doenst receives the images_folderpath arg creates into folderpath
-            images_folderpath = self.images_folderpath(folderpath)
-            images_folderpath.mkdir(exist_ok=True)
-            # extract the zip into the images path
-            extract_zip(zip_filepath, images_folderpath)
-            #remove the zipfile
-            os.remove(zip_filepath)
+            for (i,filename) in enumerate(self.filename):
+                zip_filepath = os.path.join(folderpath, f"{filename}.zip")
+                images_folderpath = self.images_folderpath(folderpath)
+                images_folderpath.mkdir(exist_ok=True)
+                # extract the zip into the images path
+                extract_zip(zip_filepath, os.path.join(images_folderpath,filename))
+                #remove the zipfile
+                os.remove(zip_filepath)
             self.set_preprocessed_flag(folderpath)
         # if its already extracted doesnt do anything
 
-    def load(self,folderpath, **kwargs):
-        images_folderpath = self.images_folderpath(folderpath)
+    def load(self,folderpath,**kwargs):
+
+        images_folderpath=self.images_folderpath((folderpath))
+
+        if 'version' in kwargs:
+            if (kwargs['version'] == 'colorbg'):
+                images_folderpath_act = os.path.join(images_folderpath, self.filename[1]+"\\cut_with_background")
+                ver="colorbg"
+            else:
+                images_folderpath_act = os.path.join(images_folderpath, self.filename[0])
+                ver="color"
+        else:
+            images_folderpath_act = os.path.join(images_folderpath, self.filename[0])
+            ver = "color"
         # get image file names
-        files = sorted(images_folderpath.iterdir())
+        files = sorted(Path(images_folderpath_act).iterdir())
         files = list(filter(lambda f: f.suffix in [".jpg",".png",".jpeg"], files))
         n = len(files)
         # pre-generate matrices
@@ -69,6 +86,9 @@ class LSA16(DatasetLoader):
         for (i, filepath) in enumerate(files):
             # load image
             image = io.imread(filepath)
+            if(ver=="colorbg"):
+                image=transform.resize(image, (32, 32), preserve_range=True, mode="reflect",
+                                 anti_aliasing=True)
             x[i, :, :, :] = image
             # Get class and subject id for image
             filename=filepath.stem
