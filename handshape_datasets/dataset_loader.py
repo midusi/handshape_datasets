@@ -105,7 +105,7 @@ class DatasetLoader(ABC):
         return status_path.exists()
 
     @abstractmethod
-    def load(self, image_files_path:Path):
+    def load(self, image_files_path:Path, **kwargs):
         """
         Loads dataset images in memory and instance to a dataset class object.
         The management of the load of the images in memory varies according to the implementation.
@@ -120,7 +120,7 @@ class DatasetLoader(ABC):
 
 
     @abstractmethod
-    def preprocess(self, path:Path, **kwargs):
+    def preprocess(self, path:Path):
         """
         The process in which the dataset files are extracted and moved to a uniform folder received as argument
 
