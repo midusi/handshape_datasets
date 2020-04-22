@@ -97,7 +97,7 @@ def extract_tar(tarfile_path, extracted_path):
                 with tarfile.open(tarfile_path, mode) as tar:
                     tar.extractall(path=extracted_path)
             else:
-                patoolib.extract_archive(tarfile_path.encode().decode('utf-8'), outdir=extracted_path_act)
+                patoolib.extract_archive(tarfile_path.encode().decode('utf-8'), outdir=extracted_path_act, verbosity=-1)
         else:
             debug("So: Linux")
             with tarfile.open(tarfile_path, mode) as tar:
