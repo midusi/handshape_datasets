@@ -3,7 +3,10 @@ import logging
 
 
 #hd.list_datasets()
-x,metadata=hd.load("Nus2")
+x,metadata=hd.load("jsl", delete=True)
+print(x.shape)
+for k in metadata:
+    print(k,metadata[k].shape, metadata[k].min(), metadata[k].max())
 
 #hd.clear("Nus1")
 logging.basicConfig(format='%(levelname)s:%(message)s',level=logging.DEBUG)

@@ -7,6 +7,22 @@ from .common import *
 
 import os
 
+labels=["a", "b", "c", "e", "i", "l", "m", "n", "o","p","r","s","t","u","w","y"]
+
+class PslInfo(ClassificationDatasetInfo):
+    def __init__(self):
+        description="""
+        \n PSL
+        Polish Sign Language Handshapes dataset 
+        More details can be found at http://vision.kia.prz.edu.pl/statictof.php
+        """
+        url_info = "http://vision.kia.prz.edu.pl/statictof.php"
+        download_size = 4
+        disk_size = 3
+        subject = 8
+        super().__init__("psl",(32,32),{"y":"classes"},description, labels, download_size, disk_size, subject, url_info)
+    def get_loader(self) ->DatasetLoader:
+        return Psl()
 
 class Psl(DatasetLoader):
     def __init__(self):
@@ -83,11 +99,14 @@ class Psl(DatasetLoader):
     def delete_temporary_files(self, path):
         fpath = path / self.name
         folder = self.images_folderpath(fpath)
-        npz_exist = list(
+        subsets_folders = list(
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))
-        if (len(npz_exist) == 0):
+        if (len(subsets_folders) == 0):
             return False
         else:
-            rmtree(folder)
+            if (os.path.exists(folder)):
+                rmtree(folder)
+            else:
+                return False
             return True
