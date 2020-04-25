@@ -1,3 +1,4 @@
+from os import listdir
 from shutil import rmtree as _rmtree
 import os
 from pathlib import Path
@@ -11,7 +12,7 @@ default_folder = Path.home() / '.handshape_datasets'
 def list_datasets():
     print("\n")
     print("Datasets availables: ")
-    table = PrettyTable ( ["Dataset", "Tamaño de descarga", "Tamaño en disco", "Ejemplos", "Cantidad de clases"])
+    table = PrettyTable ( ["Dataset", "Download size", "Size on disk", "Samples", "Classes"])
     for id in options.keys():
         download_size_format, do_size_format, disk_size_format, di_size_format=size_format(options[id].download_size, options[id].disk_size)
         dataset_name =options[id].id
@@ -78,20 +79,20 @@ def clear(dataset,
           folderpath=default_folder):
     """Removes a dataset folder from the specified path
     Args:
-        dataset (str): the dataset to delete
+        dataset (str): the dataset id to delete
         path (str, optional): Defaults to $HOME/handshape_datasets
     Raises:
         FileNotFoundError: The dataset entered doesnt exist or at least in path
     """
-    # BUG Why doesnt work with nus1?
+    logging.basicConfig(format='%(levelname)s:%(message)s',level=logging.INFO)
     try:
-        info(f"Removing the dataset {dataset}")
+        logging.info(f"Removing the dataset {dataset}")
         # removes the directory recursively
         _rmtree(folderpath / dataset)
-        info("Success \(•◡•)/")
+        logging.info("Success \(•◡•)/")
     except FileNotFoundError:
         warning("""The dataset {} doesn't exist (ಥ﹏ಥ). The options available
-                are: \n {}""".format(dataset, "\n".join(options.keys())))
+                are: \n {}""".format(dataset, "\n".join(listdir(folderpath))))
 
 def help():
     message = f"""To load a dataset, call load('dataset'),
@@ -99,7 +100,7 @@ def help():
 Example:\n\
     import handshape_datasets\n\
     dataset=handshape_datasets.load('ciarp')\n\
-    print(dataset.summary)
+    print(dataset.__repr__)
 """
     print(message)
 

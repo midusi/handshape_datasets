@@ -7,9 +7,10 @@ class LSA16Info(ClassificationDatasetInfo):
     def __init__(self):
         description="""
         \n LSA16
-        \n Argentinian Sign Language Handshapes dataset 
-        \nMore details can be found at http://facundoq.github.io/unlp/lsa16/
-        \n"""
+        Argentinian Sign Language Handshapes dataset 
+        More details can be found at http://facundoq.github.io/unlp/lsa16/
+        \nVersion default : color\nOther version : colorbg
+        """
         url_info = "http://facundoq.github.io/unlp/lsa16/"
         download_size = 655994
         disk_size = 1225566

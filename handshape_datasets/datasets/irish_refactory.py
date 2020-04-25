@@ -22,10 +22,10 @@ class IrishInfo(ClassificationDatasetInfo):
     def __init__(self):
         description="""
         \n Irish Sign Language - Hand shape dataset (ISL-HS)
-        \n To build this dataset, short videos were filmed. In total 6 people performed the finger spelling ISL alphabets.
-        \n performed the finger spelling ISL alphabets. Each shape was recorded 3 times.
-        \nMore details can be found at https://github.com/marlondcu/ISL
-        \n"""
+        To build this dataset, short videos were filmed. In total 6 people performed the finger spelling ISL alphabets.
+        performed the finger spelling ISL alphabets. Each shape was recorded 3 times.
+        More details can be found at https://github.com/marlondcu/ISL
+        """
         url_info = "https://github.com/marlondcu/ISL"
         download_size = 181773245
         disk_size = 540026681
@@ -37,7 +37,7 @@ class IrishInfo(ClassificationDatasetInfo):
 class Irish(DatasetLoader):
 
     def __init__(self):
-        super().__init__('irish')
+        super().__init__('Irish')
         self.url = "https://github.com/marlondcu/ISL/blob/master/Frames/"
         self.shape = (640, 480)
         self.npz_filename = f"irish_color.npz"

@@ -17,10 +17,10 @@ class PugeaultASL_AInfo(ClassificationDatasetInfo):
     def __init__(self):
         description="""
         \n ASL A
-        \n The first dataset comprises 24 static signs (excluding letters j and z because they involve motion).
-        \nThis was captured in 5 different sessions, with similar lighting and background
-        \nMore details can be found at http://empslocal.ex.ac.uk/people/staff/np331/index.php?section=FingerSpellingDataset
-        \n"""
+        The first dataset comprises 24 static signs (excluding letters j and z because they involve motion).
+        This was captured in 5 different sessions, with similar lighting and background
+        More details can be found at http://empslocal.ex.ac.uk/people/staff/np331/index.php?section=FingerSpellingDataset
+        """
         url_info = "http://empslocal.ex.ac.uk/people/staff/np331/index.php?section=FingerSpellingDataset"
         download_size = 2246539027
         disk_size = 4585740339
@@ -31,7 +31,7 @@ class PugeaultASL_AInfo(ClassificationDatasetInfo):
 
 class PugeaultASL_A(DatasetLoader):
     def __init__(self,image_size=(32,32)):
-        super().__init__(self.__class__.__name__)
+        super().__init__("PugeaultASL_A")
         assert(len(image_size)==2)
         self.url = 'http://www.cvssp.org/FingerSpellingKinect2011/fingerspelling5.tar.bz2'
         self.subjects=["A","B","C","D","E"]
@@ -134,10 +134,10 @@ class PugeaultASL_A(DatasetLoader):
 class PugeaultASL_BInfo(ClassificationDatasetInfo):
     def __init__(self):
         description="""
-        \n ASL B
-        \n The second dataset (depth only) is captured from 9 different persons in two very different environments and lighting. 
-        \nMore details can be found at http://empslocal.ex.ac.uk/people/staff/np331/index.php?section=FingerSpellingDataset
-        \n"""
+        \nASL B
+        The second dataset (depth only) is captured from 9 different persons in two very different environments and lighting. 
+        More details can be found at http://empslocal.ex.ac.uk/people/staff/np331/index.php?section=FingerSpellingDataset
+        """
         url_info = "http://empslocal.ex.ac.uk/people/staff/np331/index.php?section=FingerSpellingDataset"
         download_size = 332789476
         disk_size = 752803969
@@ -148,7 +148,7 @@ class PugeaultASL_BInfo(ClassificationDatasetInfo):
 
 class PugeaultASL_B(DatasetLoader):
     def __init__(self,image_size=(32,32)):
-        super().__init__("aslB")
+        super().__init__("PugeaultASL_B")
         self.url = 'http://www.cvssp.org/FingerSpellingKinect2011/dataset9-depth.tar.gz'
         self.npz_filename = f"pugeault_depth_{image_size[0]}x{image_size[1]}.npz"
         self.image_size=image_size

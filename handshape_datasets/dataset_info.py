@@ -14,14 +14,18 @@ class DatasetInfo(ABC):
         self.subject=subject
         self.url_info=url_info
 
+    def __repr__(self):
+        return self.summary()
+
     def summary(self):
-        download_size_format, do_size_format, disk_size_format, di_size_format=hd.size_format(self.download_size, self.disk_size)
+        download_size_format, do_size_format, disk_size_format, di_size_format = hd.size_format(self.download_size, self.disk_size)
         return f"Dataset id: {self.id}\nDescription: {self.description}" \
                f"\nInput shape: {self.input_shape}" \
                f"\nMetadata: {self.metadata}" \
-               f"\nTamaño descarga: {round(download_size_format,1)} {do_size_format}" \
-               f"\nTamaño en disco: {round(disk_size_format,1)} {di_size_format}" \
-               f"\nCantidad de subjects: {self.subject}" \
+               f"\nDownload size: {round(download_size_format, 1)} {do_size_format}" \
+               f"\nDisk size: {round(disk_size_format, 1)} {di_size_format}" \
+               f"\nSubjects: {self.subject}" \
+
 
     @abstractmethod
     def get_loader(self)->DatasetLoader:
@@ -34,7 +38,7 @@ class ClassificationDatasetInfo(DatasetInfo):
         self.labels=labels
 
     def summary(self):
-        return super().summary()+f"\nClasses: {len(self.labels)}\n{','.join(self.labels)}"
+        return super().summary()+f"\nClasses: {len(self.labels)}\n{','.join(self.labels)}\n"
 
     def return_labels(self):
         return (len(self.labels), self.labels)

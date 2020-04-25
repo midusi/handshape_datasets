@@ -12,10 +12,10 @@ class Nus1Info(ClassificationDatasetInfo):
     def __init__(self):
         description="""
         \n Nus 1
-        \n The NUS hand posture dataset I consists 10 classes of postures, 24 sample images per class
-        \nMore details can be found at https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet/
-        \n Select Version bw or color.
-        \n"""
+        The NUS hand posture dataset I consists 10 classes of postures, 24 sample images per class
+        More details can be found at https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet/
+        \nVersion default : color\nOther version : bw
+        """
         url_info = "https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet//"
         download_size = 2929790
         disk_size = 3810809
@@ -29,7 +29,7 @@ class Nus1Info(ClassificationDatasetInfo):
 class Nus1(DatasetLoader):
     def __init__(self, image_size=(120,160)):
         #self.__doc__ += super.__doc__
-        super().__init__("nus_1")
+        super().__init__("Nus1")
         self.url = 'https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet/NUS-Hand-Posture-Dataset-I.zip'
         self._FILENAME = self.name + '.zip'
         self.image_size=image_size

@@ -20,10 +20,11 @@ class CiarpInfo(ClassificationDatasetInfo):
     def __init__(self):
         description="""
         \n CIARP
-        \n Convolutional neural network-based algorithm for recognition of hand postures on images acquired by a single
-        \n color camera
-        \n More details can be found at https://link.springer.com/chapter/10.1007/978-3-319-75193-1_53
-        \n"""
+        Convolutional neural network-based algorithm for recognition of hand postures on images acquired by a single
+        color camera
+        More details can be found at https://link.springer.com/chapter/10.1007/978-3-319-75193-1_53
+        \nVersion default : WithGabor\nOther version : WithoutGabor
+        """
         url_info = "https://link.springer.com/chapter/10.1007/978-3-319-75193-1_53"
         download_size = 11067633
         disk_size = 19496078

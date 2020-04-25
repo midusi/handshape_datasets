@@ -15,10 +15,10 @@ class Nus2Info(ClassificationDatasetInfo):
     def __init__(self):
         description="""
         \n Nus II
-        \n The postures are shot in and around National University of Singapore (NUS), against complex natural backgrounds, with various hand shapes and sizes
-        \nMore details can be found at https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet/
-        \nSelect Version normal or human noise ('hn')
-        \n"""
+        The postures are shot in and around National University of Singapore (NUS), against complex natural backgrounds, with various hand shapes and sizes
+        More details can be found at https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet/
+        \nVersion default : normal\nOther version : hn
+        """
         url_info = "https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet//"
         download_size = 77233719
         disk_size = 111294775
@@ -29,7 +29,7 @@ class Nus2Info(ClassificationDatasetInfo):
 
 class Nus2(DatasetLoader):
     def __init__(self):
-        super().__init__("nus_2")
+        super().__init__("Nus2")
         self.url = 'https://www.ece.nus.edu.sg/stfpage/elepv/NUS-HandSet/NUS-Hand-Posture-Dataset-II.zip'
         self._FILENAME = self.name + '.zip'
         self._CLASSES_IDS = {

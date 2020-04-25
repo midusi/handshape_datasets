@@ -2,4 +2,4 @@ import handshape_datasets as hd
 
 for id in hd.ids():
     dataset = hd.info(id)
-    print(dataset.summary())
+    print(dataset.__repr__())

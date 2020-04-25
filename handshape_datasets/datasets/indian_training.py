@@ -21,9 +21,9 @@ class Indian_AInfo(ClassificationDatasetInfo):
     def __init__(self):
         description="""
         \n Indian Sign Language
-        \n Gesture recognition for Indian sign language using Kinect
-        \nMore details can be found at http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/
-        \n"""
+        Gesture recognition for Indian sign language using Kinect
+        More details can be found at http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/
+        """
         url_info = "http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/"
         download_size = 1780897140
         disk_size = 2020009029
@@ -34,7 +34,7 @@ class Indian_AInfo(ClassificationDatasetInfo):
 
 class IndianA(DatasetLoader):
     def __init__(self,image_size=(32,32)):
-        super().__init__(self.__class__.__name__)
+        super().__init__("indianA")
         assert(len(image_size)==2)
         self.url = 'https://drive.google.com/uc?export=download&id='
         self.image_size=image_size
@@ -159,9 +159,9 @@ class Indian_BInfo(ClassificationDatasetInfo):
     def __init__(self):
         description="""
         \n Indian Sign Language- depth images
-        \n Gesture recognition for Indian sign language using Kinect B
-        \nMore details can be found at http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/
-        \n"""
+        Gesture recognition for Indian sign language using Kinect B
+        More details can be found at http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/
+        """
         url_info = "http://zafar142007.github.io/Gesture-Recognition-for-Indian-Sign-Language-using-Kinect/"
         download_size = 336079729
         disk_size = 9263074067
@@ -172,7 +172,7 @@ class Indian_BInfo(ClassificationDatasetInfo):
 
 class IndianB(DatasetLoader):
     def __init__(self,image_size=(480,640)):
-        super().__init__(self.__class__.__name__)
+        super().__init__("indianB")
         assert(len(image_size)==2)
         self.url = 'https://drive.google.com/uc?export=download&id='
         self.image_size=image_size

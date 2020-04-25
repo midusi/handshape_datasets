@@ -7,9 +7,9 @@ class RWTHInfo(ClassificationDatasetInfo):
     def __init__(self):
         description="""
             \n RWTH
-        \n German Sign Language Handshapes dataset 
-        \nMore details can be found at https://www-i6.informatik.rwth-aachen.de/~koller/1miohands-data/
-        \n"""
+        German Sign Language Handshapes dataset 
+        More details can be found at https://www-i6.informatik.rwth-aachen.de/~koller/1miohands-data/
+        """
         url_info = "https://www-i6.informatik.rwth-aachen.de/~koller/1miohands-data/"
         download_size = 46982846
         disk_size = 216876384
@@ -20,7 +20,7 @@ class RWTHInfo(ClassificationDatasetInfo):
 
 class RWTH(DatasetLoader):
     def __init__(self):
-        super().__init__("rwth-phoenix")
+        super().__init__("rwth")
         self.url = 'ftp://wasserstoff.informatik.rwth-aachen.de/pub/rwth-phoenix/2016/ph2014-dev-set-handshape-annotations.tar.gz'
         self.FILENAME = self.name + '.tar.gz'
         self.npz_filename = "rwth.npz"
