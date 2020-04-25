@@ -212,5 +212,7 @@ class Irish(DatasetLoader):
         else:
             for fol in files:
                 folder_to_delete = os.path.join(fpath, fol)
-                rmtree(folder_to_delete)
+                if (os.path.exists(folder_to_delete)):
+                    rmtree(folder_to_delete)
+                    logging.info(f"Doesn´t exist {folder_to_delete}")
             return True

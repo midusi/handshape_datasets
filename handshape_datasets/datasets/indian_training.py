@@ -149,7 +149,10 @@ class IndianA(DatasetLoader):
         if (len(npz_exist)==0):
             return False
         else:
-            rmtree(folder)
+            if (os.path.exists(folder)):
+                rmtree(folder)
+            else:
+                return False
             return True
 
 class Indian_BInfo(ClassificationDatasetInfo):
@@ -283,5 +286,8 @@ class IndianB(DatasetLoader):
         if (len(npz_exist) == 0):
             return False
         else:
-            rmtree(folder)
+            if (os.path.exists(folder)):
+                rmtree(folder)
+            else:
+                return False
             return True

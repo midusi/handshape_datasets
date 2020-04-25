@@ -140,5 +140,8 @@ class Ciarp(DatasetLoader):
         if (len(npz_exist)==0):
             return False
         else:
-           rmtree(folder)
-           return True
+            if (os.path.exists(folder)):
+                rmtree(folder)
+            else:
+                return False
+            return True

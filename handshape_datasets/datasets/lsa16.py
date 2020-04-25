@@ -66,7 +66,8 @@ class LSA16(DatasetLoader):
 
         if 'version' in kwargs:
             if (kwargs['version'] == 'colorbg'):
-                images_folderpath_act = os.path.join(images_folderpath, self.filename[1]+"\\cut_with_background")
+                images_folderpath_act_1 = os.path.join(images_folderpath, self.filename[1])
+                images_folderpath_act= os.path.join(images_folderpath_act_1, "cut_with_background")
                 ver="colorbg"
             else:
                 images_folderpath_act = os.path.join(images_folderpath, self.filename[0])
@@ -106,5 +107,8 @@ class LSA16(DatasetLoader):
         if (len(subsets_folders) == 0):
             return False
         else:
-            rmtree(folder)
+            if (os.path.exists(folder)):
+                rmtree(folder)
+            else:
+                return False
             return True

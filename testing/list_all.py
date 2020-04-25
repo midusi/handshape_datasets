@@ -3,7 +3,7 @@ import logging
 
 
 #hd.list_datasets()
-x,metadata=hd.load("lsa16", delete=True)
+x,metadata=hd.load("lsa16",version="colorbg", delete=True)
 
 logging.basicConfig(format='%(levelname)s:%(message)s',level=logging.DEBUG)
 #logging.debug(f"This message should go to the log file")

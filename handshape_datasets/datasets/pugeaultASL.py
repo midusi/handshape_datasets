@@ -125,7 +125,10 @@ class PugeaultASL_A(DatasetLoader):
         if (len(npz_exist) == 0):
             return False
         else:
-            rmtree(folder)
+            if (os.path.exists(folder)):
+                rmtree(folder)
+            else:
+                return False
             return True
 
 class PugeaultASL_BInfo(ClassificationDatasetInfo):
@@ -238,5 +241,8 @@ class PugeaultASL_B(DatasetLoader):
         if (len(npz_exist) == 0):
             return False
         else:
-            rmtree(folder)
+            if (os.path.exists(folder)):
+                rmtree(folder)
+            else:
+                return False
             return True
