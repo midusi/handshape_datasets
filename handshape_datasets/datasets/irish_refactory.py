@@ -41,7 +41,7 @@ class Irish(DatasetLoader):
         self.url = "https://github.com/marlondcu/ISL/blob/master/Frames/"
         self.shape = (640, 480)
         self.npz_filename = f"irish_color.npz"
-        self.folder_name="irish"
+        self.folder_name="Irish"
         self.klasess_ids = {
             klass: (id + 1) for (id, klass) in enumerate(list(ascii_uppercase))
         }

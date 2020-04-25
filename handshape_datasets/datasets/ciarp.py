@@ -35,7 +35,7 @@ class CiarpInfo(ClassificationDatasetInfo):
 
 class Ciarp(DatasetLoader):
     def __init__(self,version=CiarpVersion.WithoutGabor):
-        super().__init__("ciarp")
+        super().__init__("Ciarp")
         self.url = 'http://home.agh.edu.pl/~bkw/code/ciarp2017/ciarp.zip'
         self.filename = self.name + '.zip'
         self.version=version
@@ -68,7 +68,7 @@ class Ciarp(DatasetLoader):
         return x,y
 
     def load(self,folderpath, **kwargs):
-        dataset_folder = os.path.join(folderpath , 'ciarp')
+        dataset_folder = os.path.join(folderpath , 'Ciarp')
 
 
         self.folder_image=folderpath
@@ -134,7 +134,7 @@ class Ciarp(DatasetLoader):
 
     def delete_temporary_files(self, path):
         fpath = path / self.name
-        folder=os.path.join(fpath,'ciarp')
+        folder=os.path.join(fpath,'Ciarp')
         npz_exist = list(
             filter(lambda x: '.npz' in x,
                    listdir(fpath)))

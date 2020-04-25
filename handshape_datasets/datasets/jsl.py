@@ -9,6 +9,22 @@ from pyunpack import Archive
 from handshape_datasets.dataset_loader import DatasetLoader
 from . import utils
 
+class JslInfo(ClassificationDatasetInfo):
+    def __init__(self):
+        description="""
+        \n LSA16
+        Argentinian Sign Language Handshapes dataset 
+        More details can be found at http://facundoq.github.io/unlp/lsa16/
+        \nVersion default : color\nOther version : colorbg
+        """
+        url_info = "http://facundoq.github.io/unlp/lsa16/"
+        download_size = 655994
+        disk_size = 1225566
+        subject = 800
+        super().__init__("lsa16",(32,32,3),{"y":"classes", "subject":"subject"},description, labels, download_size, disk_size, subject, url_info)
+    def get_loader(self) ->DatasetLoader:
+        return Jsl()
+
 
 class Jsl(DatasetLoader):
     def __init__(self):
