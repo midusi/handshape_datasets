@@ -155,14 +155,14 @@ class Irish(DatasetLoader):
         for (i, filename) in enumerate(files): #for folder (Person)
             images = list(
                 filter(lambda x: ".db" not in x,
-                       listdir(str(images_folderpath) + f"\{filename}"))
+                       listdir(os.path.join(images_folderpath, f"\{filename}")))
             )
             m = len(images)
             logging.info("Processing "+filename+"...")
             for(j,im) in enumerate(images): #for images in the specific folder
                 klass = im[8]
                 class_index = ord(klass) - ord("A")
-                image_filepath = str(images_folderpath) + f"\{filename}"+f"\{im}"
+                image_filepath = os.path.join(images_folderpath,f"\{filename}"+f"\{im}")
                 image = io.imread(image_filepath)
                 pad=10
                 image = self.preprocess_image(image, pad, image_size)

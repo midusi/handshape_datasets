@@ -71,7 +71,7 @@ class Nus1(DatasetLoader):
                         lambda x: ".db" not in x, os.listdir(os.getcwd())))
                 images_loaded_counter += len(images)
                 if(folder=='Color'):
-                    x_color = np.zeros((len(images), self.image_size[0], self.image_size[1], 3), dtype='uint8')
+
                     #fix a bw image in the color folder
                     for (i, image) in enumerate(images):
                         im=io.imread(image)
@@ -82,6 +82,7 @@ class Nus1(DatasetLoader):
                             images = list(
                                 filter(
                                     lambda x: ".db" not in x, os.listdir(os.getcwd())))
+                    x_color = np.zeros((len(images), self.image_size[0], self.image_size[1], 3), dtype='uint8')
                 else:
                     x_bw = np.zeros((len(images), self.image_size[0], self.image_size[1]), dtype='uint8')
                 for (i,image) in enumerate(images):

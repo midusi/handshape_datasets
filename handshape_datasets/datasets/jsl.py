@@ -62,7 +62,7 @@ class Jsl(DatasetLoader):
                 image_path=os.path.join(images_folderpath,image)
                 x[i, :, :] = io.imread(image_path, as_gray=True)
                 images_loaded_counter += 1
-                label= (ord(image[9])-48)*10+ord(image[10])-49
+                label= ((ord(image[9])-48)*10+ord(image[10])-48)-1
                 y=np.append(y,label)
             metadata= {"y":y}
             return x, metadata

@@ -1,9 +1,17 @@
+import py7zr
+
 from handshape_datasets.dataset_loader import DatasetLoader
 from . import utils
 import patoolib
 from pyunpack import Archive
 from logging import warning
 from .common import *
+
+import os
+import math
+import numpy as np
+from PIL import Image
+
 
 import os
 
@@ -70,31 +78,80 @@ class Psl(DatasetLoader):
                         Aborting the download to avoid the overwriting of files""" % folder_name)
         self.set_downloaded(folderpath)
 
-    def load(self, extracted_images_folderpath, **kwargs):
+    def read_pcd(self, pcd_path, output_path,i):
+
+        with open(pcd_path, "r") as pcd_file:
+            lines = [line.strip().split(" ") for line in pcd_file.readlines()]
+
+        img_height = 480
+        img_width = 640
+        is_data = False
+        min_d = 0
+        max_d = 0
+        img_depth = np.zeros((img_height, img_width), dtype='f8')
+        for line in lines:
+            print(line)
+            if line[0] == 'DATA':  # skip the header
+                is_data = True
+                continue
+            if is_data:
+                d = max(0., float(line[2]))
+                i = int(line[4])
+                col = i % img_width
+                row = math.floor(i / img_width)
+                img_depth[row, col] = d
+                min_d = min(d, min_d)
+                max_d = max(d, max_d)
+
+        max_min_diff = max_d - min_d
+
+        def normalize(x):
+            return 255 * (x - min_d) / max_min_diff
+
+        normalize = np.vectorize(normalize, otypes=[np.float])
+        img_depth = normalize(img_depth)
+        img_depth_file = Image.fromarray(img_depth)
+        img_depth_file.convert('RGB').save(os.path.join(output_path,i+ '_depth_image.png'))
+
+    def load(self, folderpath, **kwargs):
+        folders = list(
+            filter(lambda x: 'psl' not in x, listdir(folderpath)))
+        for folder in folders:
+            folder_path= os.path.join(folderpath,folder)
+            subsets_folder=list(filter(lambda x: '.db' not in x, listdir(folder_path)))
+            for subset in subsets_folder:
+                subset_path= os.path.join(folder_path,subset)
+                subset_folder_folder= list(filter(lambda x: '.db' not in x, listdir(subset_path)))
+                for sub in subset_folder_folder:
+                    path=os.path.join(subset_path,sub)
+                    images=list(filter(lambda x: ".db" not in x, listdir(path)))
+                    for (i,image) in enumerate(images):
+                        image_path= os.path.join(path, image)
+                        self.read_pcd(image_path,path, i)
+
         return True
 
     def preprocess(self, folderpath, images_folderpath=None):
         preprocess_flag = "{}_preprocessed".format(self.name)
+
+        folders= list(
+            filter(lambda x: 'psl' not in x, listdir(folderpath)))
         if self.get_status_flag(folderpath, preprocess_flag) is False:
-            utils.mkdir_unless_exists(images_folderpath)
-            images_folderpath = os.path.join(
-                folderpath, "%s_images" % self.name) if images_folderpath is None else images_folderpath
-            os.chdir(images_folderpath)
-            for image_class in self.url.keys():
-                images_class_foldername = os.path.join(
-                    images_folderpath, image_class)
-                os.mkdir(images_class_foldername)
-                os.chdir(images_class_foldername)
-                to_extract_current_dir = os.getcwd()
-                try:
-                    CURRENT_SUBSET_ZIPS_PATH = folderpath+f"/{image_class}_zips"
-                    os.chdir(CURRENT_SUBSET_ZIPS_PATH)
-                    FILES = os.listdir()
-                    for filename in FILES:
-                        Archive(filename).extractall(to_extract_current_dir) # extract into person_a in images folder
-                except FileNotFoundError:
-                    warning(
-                        "Folder with zips not found. Make sure you haven't modified the original structure of the files.")
+            for folder in folders:
+                folder_path=os.path.join(folderpath,folder)
+                zips = list(
+                    filter(lambda x: x[-3:] == '.7z',
+                           listdir(folder_path)))
+                for zip in zips:
+                    zip_path= os.path.join(folder_path, zip)
+                    zip_folder= os.path.join(folder_path, zip[0])
+                    utils.mkdir_unless_exists(zip_folder)
+                    with py7zr.SevenZipFile(zip_path, mode='r') as z:
+                        z.extractall(zip_folder)
+                    os.remove(zip_path)
+        self.set_preprocessed_flag(folderpath)
+
+
 
     def delete_temporary_files(self, path):
         fpath = path / self.name
