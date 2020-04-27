@@ -108,5 +108,6 @@ def ids():
     return list(options.keys())
 
 def delete_temporary_folders(id, folderpath:Path=default_folder):
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
     dataset_loader = options[id].get_loader()
     return dataset_loader.delete_temporary_files(folderpath)

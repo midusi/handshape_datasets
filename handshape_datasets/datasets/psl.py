@@ -14,7 +14,6 @@ from PIL import Image
 
 
 import os
-from pypcd import pypcd
 
 labels=["a", "b", "c", "e", "i", "l", "m", "n", "o","p","r","s","t","u","w","y"]
 
@@ -79,55 +78,46 @@ class Psl(DatasetLoader):
                         Aborting the download to avoid the overwriting of files""" % folder_name)
         self.set_downloaded(folderpath)
 #
-    def read_pcd(self, pcd_path, output_path,i):
+    def read_pcd(self, pcd_path, output_path,j):
 
-        cloud = pypcd.PointCloud.from_path(pcd_path)
-        x_column=pypcd.decode_x_from_pcl(cloud.pc_data['x'])
-        print(x_column)
+        with open(pcd_path, "r") as pcd_file:
+            lines = pcd_file.readlines()
+        w=lines[6].split(' ')
+        h = lines[6].split(' ')
+        img_height =int(h[1])
+        img_width = int(w[1])
+        max_z = -999
+        min_z = 999
+        z=np.array(())
 
-        img_height = 480
-        img_width = 640
-        is_data = False
-
-
-        min_d = 0
-        max_d = 0
         img_depth = np.zeros((img_height, img_width), dtype='f8')
-        for (i,line) in enumerate(lines):
 
-            if(i==11):
-                dato=line.split(' 'or'\n')
+        for (i, line) in enumerate(lines):
+
+            if (i > 10):
+                dato = line.split(' ' or '\n')
                 for (k, dat) in enumerate(dato):
-                    if (k==1):
-                        x= dat
-
-                    else:
-                        if (k==2):
-                            y=dat
-
-                        else:
-                            if(k==3):
-                                z=dat
-                            else:
-                                int=dat
-
-                d = max(0., float(line[2]))
-                i = int(line[4])
-                col = i % img_width
-                row = math.floor(i / img_width)
-                img_depth[row, col] = d
-                min_d = min(d, min_d)
-                max_d = max(d, max_d)
-
-        max_min_diff = max_d - min_d
-
+                    dat = float(dat)
+                    if (k == 2):
+                        z = np.append(z, dat)
+                        z_act=dat
+                        if (dat > max_z):
+                            max_z = dat
+                        if (dat < min_z):
+                            min_z = dat
+                index=i-11
+                col = index % img_width
+                row = math.floor(index / img_width)
+                img_depth[row, col] = z_act
+        max_min_diff_z = max_z - min_z
         def normalize(x):
-            return 255 * (x - min_d) / max_min_diff
-
+            return 255 * (x - min_z) / max_min_diff_z
         normalize = np.vectorize(normalize, otypes=[np.float])
         img_depth = normalize(img_depth)
         img_depth_file = Image.fromarray(img_depth)
-        img_depth_file.convert('RGB').save(os.path.join(output_path,i+ '_depth_image.png'))
+        img_depth_file.convert('RGB').save(os.path.join(output_path, str(j)+'_depth_img.png'))
+
+
 
     def load(self, folderpath, **kwargs):
         folders = list(
@@ -140,10 +130,12 @@ class Psl(DatasetLoader):
                 subset_folder_folder= list(filter(lambda x: '.db' not in x, listdir(subset_path)))
                 for sub in subset_folder_folder:
                     path=os.path.join(subset_path,sub)
-                    images=list(filter(lambda x: ".db" not in x, listdir(path)))
+                    images=list(filter(lambda x: ".pcd" in x, listdir(path)))
                     for (i,image) in enumerate(images):
                         image_path= os.path.join(path, image)
-                        self.read_pcd(image_path,path, i)
+                        output_path=os.path.join(path, "rgb-images")
+                        utils.mkdir_unless_exists(output_path)
+                        self.read_pcd(image_path,output_path, i)
 
         return True
 
