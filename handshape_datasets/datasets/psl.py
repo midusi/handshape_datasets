@@ -14,6 +14,7 @@ from PIL import Image
 
 
 import os
+from pypcd import pypcd
 
 labels=["a", "b", "c", "e", "i", "l", "m", "n", "o","p","r","s","t","u","w","y"]
 
@@ -80,21 +81,36 @@ class Psl(DatasetLoader):
 #
     def read_pcd(self, pcd_path, output_path,i):
 
-        with open(pcd_path, "r") as pcd_file:
-            lines = [line.strip().split(" ") for line in pcd_file.readlines()]
+        cloud = pypcd.PointCloud.from_path(pcd_path)
+        x_column=pypcd.decode_x_from_pcl(cloud.pc_data['x'])
+        print(x_column)
 
         img_height = 480
         img_width = 640
         is_data = False
+
+
         min_d = 0
         max_d = 0
         img_depth = np.zeros((img_height, img_width), dtype='f8')
-        for line in lines:
-            print(line)
-            if line[0] == 'DATA':  # skip the header
-                is_data = True
-                continue
-            if is_data:
+        for (i,line) in enumerate(lines):
+
+            if(i==11):
+                dato=line.split(' 'or'\n')
+                for (k, dat) in enumerate(dato):
+                    if (k==1):
+                        x= dat
+
+                    else:
+                        if (k==2):
+                            y=dat
+
+                        else:
+                            if(k==3):
+                                z=dat
+                            else:
+                                int=dat
+
                 d = max(0., float(line[2]))
                 i = int(line[4])
                 col = i % img_width

@@ -16,5 +16,10 @@ opencv-python
 pyunpack
 py7zr
 
+#psl
+#seaborn
+#pypcd
+python-lzf
+
 #text format
 PrettyTable
