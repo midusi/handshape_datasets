@@ -96,15 +96,13 @@ class Psl(DatasetLoader):
 
             if (i > 10):
                 dato = line.split(' ' or '\n')
-                for (k, dat) in enumerate(dato):
-                    dat = float(dat)
-                    if (k == 2):
-                        z = np.append(z, dat)
-                        z_act=dat
-                        if (dat > max_z):
-                            max_z = dat
-                        if (dat < min_z):
-                            min_z = dat
+                dat_float = float(dato[2])
+                z = np.append(z, dat_float)
+                z_act=dat_float
+                if (dat_float > max_z):
+                    max_z = dat_float
+                if (dat_float < min_z):
+                    min_z = dat_float
                 index=i-11
                 col = index % img_width
                 row = math.floor(index / img_width)
