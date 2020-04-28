@@ -1,4 +1,4 @@
-import py7zr
+#import py7zr
 
 from handshape_datasets.dataset_loader import DatasetLoader
 from . import utils
