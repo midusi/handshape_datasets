@@ -25,10 +25,10 @@ class PslInfo(ClassificationDatasetInfo):
         More details can be found at http://vision.kia.prz.edu.pl/statictof.php
         """
         url_info = "http://vision.kia.prz.edu.pl/statictof.php"
-        download_size = 4
-        disk_size = 3
-        subject = 8
-        super().__init__("psl",(32,32),{"y":"classes"},description, labels, download_size, disk_size, subject, url_info)
+        download_size = 299077505
+        disk_size = download_size+980552843
+        subject = 960
+        super().__init__("psl",(176,144),{"y":"classes"},description, labels, download_size, disk_size, subject, url_info)
     def get_loader(self) ->DatasetLoader:
         return Psl()
 
@@ -83,7 +83,7 @@ class Psl(DatasetLoader):
         with open(pcd_path, "r") as pcd_file:
             lines = pcd_file.readlines()
         w=lines[6].split(' ')
-        h = lines[6].split(' ')
+        h = lines[7].split(' ')
         img_height =int(h[1])
         img_width = int(w[1])
         max_z = -999
@@ -115,27 +115,72 @@ class Psl(DatasetLoader):
         img_depth_file = Image.fromarray(img_depth)
         img_depth_file.convert('RGB').save(os.path.join(output_path, str(j)+'_depth_img.png'))
 
-
-
-    def load(self, folderpath, **kwargs):
+    def convert_to_rgb(self, folderpath):
         folders = list(
             filter(lambda x: 'psl' not in x, listdir(folderpath)))
         for folder in folders:
-            folder_path= os.path.join(folderpath,folder)
-            subsets_folder=list(filter(lambda x: '.db' not in x, listdir(folder_path)))
+            folder_path = os.path.join(folderpath, folder)
+            subsets_folder = list(filter(lambda x: '.db' not in x, listdir(folder_path)))
             for subset in subsets_folder:
-                subset_path= os.path.join(folder_path,subset)
-                subset_folder_folder= list(filter(lambda x: '.db' not in x, listdir(subset_path)))
+                subset_path = os.path.join(folder_path, subset)
+                subset_folder_folder = list(filter(lambda x: '.db' not in x, listdir(subset_path)))
                 for sub in subset_folder_folder:
-                    path=os.path.join(subset_path,sub)
-                    images=list(filter(lambda x: ".pcd" in x, listdir(path)))
-                    for (i,image) in enumerate(images):
-                        image_path= os.path.join(path, image)
-                        output_path=os.path.join(path, "rgb-images")
+                    path = os.path.join(subset_path, sub)
+                    images = list(filter(lambda x: ".pcd" in x, listdir(path)))
+                    for (i, image) in enumerate(images):
+                        image_path = os.path.join(path, image)
+                        output_path = os.path.join(path, "rgb-images")
                         utils.mkdir_unless_exists(output_path)
-                        self.read_pcd(image_path,output_path, i)
+                        self.read_pcd(image_path, output_path, i)
 
-        return True
+    def load(self, folderpath, **kwargs):
+        rgb_images="{}_rgb_images".format(self.name)
+        count_image=0
+        IMAGE_WIDTH=176
+        IMAGE_HIGH=144
+        y = np.array(())
+        if self.get_status_flag(folderpath, rgb_images) is False:
+            self.convert_to_rgb(folderpath)
+            self._set_status_flag(folderpath, "{}_rgb_images".format(self.name))
+        folders = list(
+            filter(lambda x: 'psl' not in x, listdir(folderpath)))
+        for folder in folders:
+            folder_path = os.path.join(folderpath, folder)
+            subsets_folder = list(filter(lambda x: '.db' not in x, listdir(folder_path)))
+            for subset in subsets_folder:
+                subset_path = os.path.join(folder_path, subset)
+                subset_folder_folder = list(filter(lambda x: '.db' not in x, listdir(subset_path)))
+                for sub in subset_folder_folder:
+                    path = os.path.join(subset_path, sub)
+                    rgb_path = list(filter(lambda x: ".pcd" not in x, listdir(path)))
+                    for rgb_image_path in rgb_path:
+                        path_1 = os.path.join(path, rgb_image_path)
+                        image_paths = list(filter(lambda x: ".png" in x, listdir(path_1)))
+                        count_image=count_image+len(image_paths)
+        x = np.zeros((count_image, IMAGE_HIGH, IMAGE_WIDTH, 3), dtype='uint8')
+        index = 0
+        for folder in folders:
+            folder_path_img = os.path.join(folderpath, folder)
+            subsets_folder_img = list(filter(lambda x: '.db' not in x, listdir(folder_path_img)))
+            label = -1
+            for subset in subsets_folder_img:
+                subset_path_img = os.path.join(folder_path_img, subset)
+                subset_folder_folder_img = list(filter(lambda x: '.db' not in x, listdir(subset_path_img)))
+
+                for sub in subset_folder_folder_img:
+                    path_img = os.path.join(subset_path_img, sub)
+                    rgb_path_img = list(filter(lambda x: ".pcd" not in x, listdir(path_img)))
+                    for rgb_image_path in rgb_path_img:
+                        path_1_img = os.path.join(path_img, rgb_image_path)
+                        image_paths_img = list(filter(lambda x: ".png" in x, listdir(path_1_img)))
+                        label += 1
+                        for image in image_paths_img:
+                            path_image= os.path.join(path_1_img,image)
+                            x[index, :, :, :] = io.imread(path_image)
+                            y = np.append(y, label)
+                            index += 1
+        metadata={"y":y}
+        return x, metadata
 
     def preprocess(self, folderpath, images_folderpath=None):
         preprocess_flag = "{}_preprocessed".format(self.name)
