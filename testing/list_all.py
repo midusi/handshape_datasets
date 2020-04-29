@@ -3,7 +3,8 @@ import logging
 
 
 #hd.list_datasets()
-x,metadata=hd.load("PugeaultASL_B")
+hd.clear("indianA")
+x,metadata=hd.load("indianA")
 print(x.shape)
 for k in metadata:
     print(k,metadata[k].shape, metadata[k].min(), metadata[k].max())
