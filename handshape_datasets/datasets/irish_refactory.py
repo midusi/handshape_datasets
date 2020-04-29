@@ -187,7 +187,7 @@ class Irish(DatasetLoader):
                 dataset_folder_name = dataset_file[:-4]  # until the .zip(excluded)
                 dataset_images_path = path.join(folderpath, dataset_folder_name)
                 mkdir_unless_exists(dataset_images_path)
-                filepath = str(folderpath) + f"\{dataset_file}"
+                filepath = os.path.join(folderpath,dataset_file)
                 extract_zip(filepath,
                             extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
                 #remove the zips files
