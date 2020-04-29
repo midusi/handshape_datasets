@@ -1,4 +1,4 @@
-#import py7zr
+import py7zr
 
 from handshape_datasets.dataset_loader import DatasetLoader
 from . import utils
@@ -138,7 +138,7 @@ class Psl(DatasetLoader):
         count_image=0
         IMAGE_WIDTH=176
         IMAGE_HIGH=144
-        y = np.array(())
+        y = np.array((),dtype='uint8')
         if self.get_status_flag(folderpath, rgb_images) is False:
             self.convert_to_rgb(folderpath)
             self._set_status_flag(folderpath, "{}_rgb_images".format(self.name))

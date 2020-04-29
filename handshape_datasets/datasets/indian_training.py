@@ -67,7 +67,7 @@ class IndianA(DatasetLoader):
     def load_subject(self,subject_folderpath, subject_id,image_size):
         folders = sorted(os.listdir(subject_folderpath))
         data = np.zeros((0, image_size[0], image_size[1], 3), dtype='uint8')
-        labels = np.array(())
+        labels = np.array((),dtype='uint8')
         if (subject_id > 9):# for control de filename labels
             text_control = 8
         else:
@@ -96,7 +96,7 @@ class IndianA(DatasetLoader):
 
     def load_images(self,images_folderpath):
         n=18
-        ytot=np.array(())
+        ytot=np.array((),dtype='uint8')
         subjecttot = np.array(())
         xtot = np.zeros((0, self.image_size[0], self.image_size[1], 3), dtype='uint8')
 
@@ -204,7 +204,7 @@ class IndianB(DatasetLoader):
 
     def load_subject(self,subject_folderpath, subject_id,image_size):
         folders = sorted(os.listdir(subject_folderpath))
-        labels = np.array(())
+        labels = np.array((),dtype='uint8')
         if (subject_id > 9):# for control de filename labels
             text_control = 8
         else:
@@ -236,7 +236,7 @@ class IndianB(DatasetLoader):
 
     def load_images(self,images_folderpath):
         n=18
-        ytot=np.array(())
+        ytot=np.array((),dtype='uint8')
         subjecttot = np.array(())
         xtot=np.zeros((0, self.image_size[0], self.image_size[1]), dtype='uint16')
         for i in range(0,n):

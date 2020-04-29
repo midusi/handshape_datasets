@@ -59,7 +59,7 @@ class PugeaultASL_A(DatasetLoader):
 
         folders = sorted(os.listdir(subject_folderpath))
         data = np.zeros((0, image_size[0], image_size[1], 3), dtype='uint8')
-        labels = np.array(())
+        labels = np.array((),dtype='uint8')
         for (i, folderName) in enumerate(folders):
             label_i = ord(folderName) - 97  #Transform the character into a index (A=0)
             if(label_i > 9): #the class "j" doesnt exist
@@ -89,7 +89,7 @@ class PugeaultASL_A(DatasetLoader):
             return self.load_subject(os.path.join(images_folderpath, subject), subject_id, self.image_size)
         # get x,y,subject arrays for each subject
 
-        ytot=np.array(())
+        ytot=np.array((),dtype='uint8')
         subjecttot = np.array(())
         xtot=np.zeros((0, self.image_size[0], self.image_size[1], 3), dtype='uint8')
         for i in range(0,n):
@@ -179,7 +179,7 @@ class PugeaultASL_B(DatasetLoader):
 
         folders = sorted(os.listdir(subject_folderpath))
         data = np.zeros((0, image_size[0], image_size[1]), dtype='uint16')
-        labels = np.array(())
+        labels = np.array((),dtype='uint8')
 
         for (i, folderName) in enumerate(folders):
             label_i = ord(folderName) - 97
@@ -190,7 +190,7 @@ class PugeaultASL_B(DatasetLoader):
                 image_filepath = os.path.join(subject_folderpath, folderName, filename)
                 image = cv2.imread(image_filepath, flags=cv2.IMREAD_UNCHANGED)
                 image = transform.resize(image, (image_size[0], image_size[1]), preserve_range=True,mode="reflect",anti_aliasing=True)
-                labels = np.append(labels, label_i)
+                labels = np.append(labels, int(label_i))
                 folder_data[j, :, :] = image
             data = np.vstack((data, folder_data))
         subject=np.zeros(len(labels))+subject_id
@@ -205,7 +205,7 @@ class PugeaultASL_B(DatasetLoader):
             logging.info(f"({subject_id}/{n}) Loading images for subject {subject}")
             return self.load_subject(os.path.join(images_folderpath, subject), subject_id, self.image_size)
 
-        ytot=np.array(())
+        ytot=np.array((),dtype='uint8')
         subjecttot = np.array(())
         xtot=np.zeros((0, self.image_size[0], self.image_size[1]), dtype='uint16')
         for i in range(0,n):

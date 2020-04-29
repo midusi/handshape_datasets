@@ -50,8 +50,8 @@ class Nus1(DatasetLoader):
         images_folderpath = self.images_folderpath(folderpath)
         subsets_folder = os.path.join(images_folderpath,
                                       'NUS Hand Posture Dataset')
-        y_color = np.array(())
-        y_bw = np.array(())
+        y_color = np.array((),dtype='uint8')
+        y_bw = np.array((),dtype='uint8')
         if os.path.exists(subsets_folder):
             os.chdir(subsets_folder)
             folders = {}
@@ -93,11 +93,11 @@ class Nus1(DatasetLoader):
                     if(folder=='Color'):
                         im = io.imread(image)
                         x_color[i, :, :, :] = im
-                        y_color = np.append(y_color, label)
+                        y_color = np.append(y_color, int(label))
                     else:
                         im = io.imread(image, as_gray=(folder == 'Color'))
                         x_bw[i,:,:]=im
-                        y_bw=np.append(y_bw,label)
+                        y_bw=np.append(y_bw,int(label))
                 os.chdir("..")
             logging.debug(
                 f"Dataset Loaded (´・ω・)っ. {images_loaded_counter} images were loaded")

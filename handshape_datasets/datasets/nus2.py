@@ -96,7 +96,7 @@ class Nus2(DatasetLoader):
                                                        IMAGE_COLORS),
                                                 dtype="uint8")
 
-                    y= np.zeros(shape=NUMBER_OF_IMAGES)
+                    y= np.zeros(shape=NUMBER_OF_IMAGES, dtype='uint8')
                 else:
                     xn = np.zeros(shape=(NUMBER_OF_IMAGES,
                                         IMAGE_HEIGHT_hn,
@@ -104,7 +104,7 @@ class Nus2(DatasetLoader):
                                         IMAGE_COLORS_hn),
                                  dtype="uint8")
 
-                    yn = np.zeros(shape=NUMBER_OF_IMAGES)
+                    yn = np.zeros(shape=NUMBER_OF_IMAGES, dtype='uint8')
                 for position, image_name in enumerate(images):
                     # loads the image
                     image_path= os.path.join(subsets_folder,subset)

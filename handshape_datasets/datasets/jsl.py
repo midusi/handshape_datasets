@@ -53,7 +53,7 @@ class Jsl(DatasetLoader):
             files = list(filter(lambda f: f.suffix in [".jpg", ".png", ".jpeg"], files))
             n = len(files)
             x = np.zeros((n, 32, 32), dtype='uint8')
-            y = np.array(())
+            y = np.array((),dtype='uint8')
             images_loaded_counter = 0
             # each image is stored in the key corresponding to its subset
             # all images in thexe folder:

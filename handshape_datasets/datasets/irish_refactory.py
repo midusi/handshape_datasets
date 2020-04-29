@@ -132,6 +132,7 @@ class Irish(DatasetLoader):
 
     def load_image(self, images_folderpath):
         image_size = (64, 64)
+
         subsets_folders = list(
             filter(lambda x: '.zip' not in x,
                    listdir(images_folderpath)))  # Files contains all the folders (Person1, Person2, Person3, Person4, Person5, Person6)
@@ -148,21 +149,22 @@ class Irish(DatasetLoader):
             logging.warning(
                 f"Wrong number of images, please delete files and repeat the download and extraction process (expected {dataset_images}, got {h}).")
         xtot= np.zeros((h, image_size[0], image_size[1], 1), dtype='uint8')
-        ytot=np.zeros(h)
+        ytot=np.zeros((h),dtype='uint8')
         subjecttot = np.zeros(h)
         j_act=0 #index
         # load the image
         for (i, filename) in enumerate(files): #for folder (Person)
             images = list(
                 filter(lambda x: ".db" not in x,
-                       listdir(os.path.join(images_folderpath, f"\{filename}")))
+                       listdir(os.path.join(images_folderpath, filename)))
             )
             m = len(images)
             logging.info("Processing "+filename+"...")
             for(j,im) in enumerate(images): #for images in the specific folder
                 klass = im[8]
                 class_index = ord(klass) - ord("A")
-                image_filepath = os.path.join(images_folderpath,f"\{filename}"+f"\{im}")
+                image_filepath_1 = os.path.join(images_folderpath,filename)
+                image_filepath= os.path.join(image_filepath_1, im)
                 image = io.imread(image_filepath)
                 pad=10
                 image = self.preprocess_image(image, pad, image_size)
@@ -186,10 +188,10 @@ class Irish(DatasetLoader):
                 dataset_images_path = path.join(folderpath, dataset_folder_name)
                 mkdir_unless_exists(dataset_images_path)
                 filepath = str(folderpath) + f"\{dataset_file}"
-                extract_zip(filepath,
-                            extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
+              #  extract_zip(filepath,
+               #             extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
                 #remove the zips files
-                os.remove((filepath))
+              #  os.remove((filepath))
             x, y, subject = self.load_image(folderpath)
             # save to binary
             npz_filepath = os.path.join(folderpath, self.npz_filename)

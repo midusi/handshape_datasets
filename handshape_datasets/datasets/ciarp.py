@@ -97,7 +97,7 @@ class Ciarp(DatasetLoader):
         i=0
         subject = np.zeros(cant_images)
         xtot=np.zeros((cant_images, 38, 38, 1), dtype="uint8")
-        ytot=np.zeros(cant_images)
+        ytot=np.zeros(cant_images,dtype='uint8')
     #Loop x to copy data into xtot
         for folder in folders:
             txt_name=f"{folder.name}.txt"
