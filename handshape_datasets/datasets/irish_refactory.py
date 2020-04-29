@@ -188,10 +188,10 @@ class Irish(DatasetLoader):
                 dataset_images_path = path.join(folderpath, dataset_folder_name)
                 mkdir_unless_exists(dataset_images_path)
                 filepath = str(folderpath) + f"\{dataset_file}"
-              #  extract_zip(filepath,
-               #             extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
+                extract_zip(filepath,
+                            extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
                 #remove the zips files
-              #  os.remove((filepath))
+                os.remove((filepath))
             x, y, subject = self.load_image(folderpath)
             # save to binary
             npz_filepath = os.path.join(folderpath, self.npz_filename)
