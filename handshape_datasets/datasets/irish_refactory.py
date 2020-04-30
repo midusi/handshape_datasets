@@ -40,7 +40,7 @@ class Irish(DatasetLoader):
         super().__init__('Irish')
         self.url = "https://github.com/marlondcu/ISL/blob/master/Frames/"
         self.shape = (640, 480)
-        self.npz_filename = f"irish_color.npz"
+        self.npz_filename = f"Irish_color.npz"
         self.folder_name="Irish"
         self.klasess_ids = {
             klass: (id + 1) for (id, klass) in enumerate(list(ascii_uppercase))
@@ -204,7 +204,7 @@ class Irish(DatasetLoader):
             filter(lambda x: '.zip' not in x,
                    listdir(
                        fpath)))  # Files contains all the folders (Person1, Person2, Person3, Person4, Person5, Person6)
-        files = list(filter(lambda x: 'irish' not in x,
+        files = list(filter(lambda x: 'Irish' not in x,
                             list(folders)))
         npz_exist = list(
             filter(lambda x: '.npz' in x,
@@ -216,5 +216,6 @@ class Irish(DatasetLoader):
                 folder_to_delete = os.path.join(fpath, fol)
                 if (os.path.exists(folder_to_delete)):
                     rmtree(folder_to_delete)
+                else:
                     logging.info(f"Doesn´t exist {folder_to_delete}")
             return True

@@ -14,7 +14,9 @@ for id in hd.ids():
         x, metadata = hd.load(id, version='normal', delete=True)
         done = True
     if (not done):
-        x, metadata = hd.load(id, delete=True)
+        x, metadata = hd.load(id)
     print(x.shape)
+    for k in metadata:
+        print(k, metadata[k].shape, metadata[k].min(), metadata[k].max())
     #for k in metadata:
         #print(k,metadata[k].shape, metadata[k].min(), metadata[k].max())

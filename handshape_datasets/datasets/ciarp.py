@@ -57,7 +57,6 @@ class Ciarp(DatasetLoader):
         return filename,y
 
     def load_folder(self,folder,txt_path):
-
         filenames,y=self.read_csv(txt_path)
         x=np.zeros( (len(y),38,38,1),dtype="uint8")
         for i,filename in enumerate(filenames):
@@ -69,8 +68,6 @@ class Ciarp(DatasetLoader):
 
     def load(self,folderpath, **kwargs):
         dataset_folder = os.path.join(folderpath , 'Ciarp')
-
-
         self.folder_image=folderpath
         if 'version' in kwargs:
             if (kwargs['version']!='WithGabor'):
@@ -113,15 +110,12 @@ class Ciarp(DatasetLoader):
             i+=1
             result[folder.name]=(x,y)
         metadata={"y":ytot, "Type":subject}
-        table= PrettyTable (["Valor", "Código de carpeta"])
+        table= PrettyTable (["Value", "Folder Code"])
         table.add_row([0, "test_DifferentCamera"])
         table.add_row([1, "test_Kinect"])
         table.add_row([2, "train_Kinect"])
         logging.info(f"\n{table}")
-
         return xtot,metadata
-
-
 
     def preprocess(self, folderpath):
 
