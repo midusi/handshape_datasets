@@ -3,7 +3,7 @@ import logging
 
 
 #hd.list_datasets()
-x,metadata=hd.load("Irish",delete=True)
+x,metadata=hd.load("rwth")
 print(x.shape)
 for k in metadata:
     print(k,metadata[k].shape, metadata[k].min(), metadata[k].max())
