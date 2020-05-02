@@ -102,13 +102,24 @@ class Nus1(DatasetLoader):
             logging.debug(
                 f"Dataset Loaded (´・ω・)っ. {images_loaded_counter} images were loaded")
             if 'version' in kwargs:
-                if (kwargs['version'] != 'Color'):
-                    metadata = {"y": y_bw}
-                    return x_bw, metadata
-                else:
-                    metadata = {"y": y_color}
-                    return x_color, metadata
+                options=['bw', 'Color']
+                try:
+                    assert ((kwargs['version'])==options[0]) or ((kwargs['version'])==options[1])
+                    if (kwargs['version'] == 'bw'):
+                        logging.info(f"Loading version: {kwargs['version']}")
+                        metadata = {"y": y_bw}
+                        return x_bw, metadata
+                    else:
+                        if(kwargs['version'] == 'Color'):
+                            logging.info(f"Loading version: {kwargs['version']}")
+                            metadata = {"y": y_color}
+                            return x_color, metadata
+                except AssertionError:
+                    logging.warning(f"Version {kwargs['version']} is not valid. Valid options: {options[1]} , {options[0]}")
+                    exit()
+
             else:
+                logging.info(f"Loading default version: Color")
                 metadata = {"y": y_color}
                 return x_color, metadata
 

@@ -122,13 +122,24 @@ class Nus2(DatasetLoader):
             logging.debug(
                 f"Dataset Loaded (´・ω・)っ. {images_loaded_counter} images were loaded")
             if 'version' in kwargs:
-                if (kwargs['version'] == 'hn'):
-                    metadata = {"y": yn}
-                    return xn, metadata
-                else:
-                    metadata = {"y": y}
-                    return x, metadata
+                options = ['hn', 'normal']
+                try:
+                    assert ((kwargs['version']) == options[0]) or ((kwargs['version']) == options[1])
+                    if (kwargs['version'] == options[0]):
+                        logging.info(f"Loading version: {kwargs['version']}")
+                        metadata = {"y": yn}
+                        return xn, metadata
+                    else:
+                        if (kwargs['version'] == options[1]):
+                            logging.info(f"Loading version: {kwargs['version']}")
+                            metadata = {"y": y}
+                            return x, metadata
+                except AssertionError:
+                    logging.warning(
+                        f"Version {kwargs['version']} is not valid. Valid options: {options[1]} , {options[0]}")
+                    exit()
             else:
+                logging.info(f"Loading default version: normal")
                 metadata = {"y": y}
                 return x, metadata
 

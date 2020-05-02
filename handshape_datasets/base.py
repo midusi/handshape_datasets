@@ -65,8 +65,8 @@ def load(id, folderpath:Path=default_folder, **kwargs):
         An Dataset object instance
     """
     if not id in options.keys():
-        raise ValueError(f"Unknown dataset id {id}. Refer to handshape_datasets.ids() for a complete list of supported datasets.")
-
+        logging.error(f"Unknown dataset id {id}. Available datasets:\n {list(options.keys())}")
+        exit()
     folderpath.mkdir(parents=True,exist_ok=True)
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     # get downloader class for dataset

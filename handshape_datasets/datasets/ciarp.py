@@ -23,7 +23,7 @@ class CiarpInfo(ClassificationDatasetInfo):
         Convolutional neural network-based algorithm for recognition of hand postures on images acquired by a single
         color camera
         More details can be found at https://link.springer.com/chapter/10.1007/978-3-319-75193-1_53
-        \nVersion default : WithGabor\nOther version : WithoutGabor
+        \nVersion default : WithoutGabor\nOther version : WithGabor
         """
         url_info = "https://link.springer.com/chapter/10.1007/978-3-319-75193-1_53"
         download_size = 11067633
@@ -70,17 +70,25 @@ class Ciarp(DatasetLoader):
         dataset_folder = os.path.join(folderpath , 'Ciarp')
         self.folder_image=folderpath
         if 'version' in kwargs:
-            if (kwargs['version']!='WithGabor'):
-                version_string=self.version.value
-            else:
-                version_string='WithGabor'
+            options = ['WithGabor', 'WithoutGabor']
+            try:
+                assert ((kwargs['version']) == options[0]) or ((kwargs['version']) == options[1])
+                if (kwargs['version'] == options[0]):
+                    logging.info(f"Loading version: {kwargs['version']}")
+                    version_string = 'WithGabor'
+                else:
+                    if (kwargs['version'] == options[1]):
+                        logging.info(f"Loading version: {kwargs['version']}")
+                        version_string = self.version.value
+            except AssertionError:
+                logging.warning(
+                    f"Version {kwargs['version']} is not valid. Valid options: {options[1]} , {options[0]}")
+                exit()
         else:
+            logging.info(f"Loading default version: {self.version.value}")
             version_string=self.version.value
         folders = [f for f in os.scandir(dataset_folder) if f.is_dir() and f.path.endswith(version_string)]
-
         logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
-        logging.info(f"Version: {version_string}")
-
         result={}
         cant_images=0
         for (i, folder) in enumerate(folders):  #Counts the amount of images

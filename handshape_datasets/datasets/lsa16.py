@@ -66,14 +66,25 @@ class LSA16(DatasetLoader):
         images_folderpath=self.images_folderpath((folderpath))
 
         if 'version' in kwargs:
-            if (kwargs['version'] == 'colorbg'):
-                images_folderpath_act_1 = os.path.join(images_folderpath, self.filename[1])
-                images_folderpath_act= os.path.join(images_folderpath_act_1, "cut_with_background")
-                ver="colorbg"
-            else:
-                images_folderpath_act = os.path.join(images_folderpath, self.filename[0])
-                ver="color"
+            options = ['color', 'colorbg']
+            try:
+                assert ((kwargs['version']) == options[0]) or ((kwargs['version']) == options[1])
+                if (kwargs['version'] == options[0]):
+                    logging.info(f"Loading version: {kwargs['version']}")
+                    images_folderpath_act = os.path.join(images_folderpath, self.filename[0])
+                    ver = "color"
+                else:
+                    if (kwargs['version'] == options[1]):
+                        logging.info(f"Loading version: {kwargs['version']}")
+                        images_folderpath_act_1 = os.path.join(images_folderpath, self.filename[1])
+                        images_folderpath_act = os.path.join(images_folderpath_act_1, "cut_with_background")
+                        ver = "colorbg"
+            except AssertionError:
+                logging.warning(
+                    f"Version {kwargs['version']} is not valid. Valid options: {options[1]} , {options[0]}")
+                exit()
         else:
+            logging.info(f"Loading default version: color")
             images_folderpath_act = os.path.join(images_folderpath, self.filename[0])
             ver = "color"
         # get image file names
