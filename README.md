@@ -36,16 +36,16 @@ This library is a *work in progress*. Contributions are welcome.
 |   i    |    8     |
 |   j    |    9     |
 
-#How to use the library?
+### 						How to use?
 
     Import handshape_datasets
 
     handshape_datasets.load("dataset_id")
 Download, extract and preprocess the dataset. The function will return "x" 
-that contain an array with the images and metadata, which contain an array with classes and if its have an array with 
-subjects or differents options. For example, in lsa16 x will return a shape of (800,32,32,3). Also you could give
-a version if its available to the selected dataset and you could give a boolean value to delete temporary files if 
- possible
+that contain an array with the images and metadata, this one contain an array with classes and if it have, an array with 
+subjects or differents other values. For example, in lsa16 "x" will return a shape of (800,32,32,3). Also you could give
+a version value if its available to the selected dataset and you could give a boolean value to delete temporary files if 
+its possible
  
 Example:
  
@@ -58,7 +58,7 @@ Example:
 
     handshape_datasets.delete_temporary_files("dataset_id") --> Delete the local files if its exist a .npz file
 
-#How to use the dataset in keras?
+## 						How to use the dataset in keras?
 
 First, you must to load the dataset
 
@@ -69,7 +69,7 @@ You could have the input_shape and the number of classes
     input_shape = self.dataset[0][0].shape
     classes = self.dataset[1]['y'].max() + 1
 
-Then must to build a model
+Then you must to build a model
 
     base_model = keras.applications.mobilenet.MobileNet(input_shape=(input_shape[0],self.input_shape[1],3), weights='imagenet',
                                                                 include_top=False)
