@@ -3,8 +3,9 @@ import logging
 
 
 #hd.list_datasets()
-x,metadata=hd.load("x")
+x,metadata=hd.load("lsa16")
 print(x.shape)
+
 for k in metadata:
     print(k,metadata[k].shape, metadata[k].min(), metadata[k].max())
 

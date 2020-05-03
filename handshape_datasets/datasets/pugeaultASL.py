@@ -178,20 +178,21 @@ class PugeaultASL_B(DatasetLoader):
     def load_subject(self,subject_folderpath, subject_id,image_size):
 
         folders = sorted(os.listdir(subject_folderpath))
-        data = np.zeros((0, image_size[0], image_size[1]), dtype='uint16')
+        data = np.zeros((0, image_size[0], image_size[1],1), dtype='uint16')
         labels = np.array((),dtype='uint8')
 
         for (i, folderName) in enumerate(folders):
             label_i = ord(folderName) - 97
             files = sorted(os.listdir(os.path.join(subject_folderpath, folderName)))
             files = [f for f in files if f.startswith("depth")]
-            folder_data = np.zeros((len(files), image_size[0], image_size[1]), dtype='uint16') #uint16 cause of depth image
+            folder_data = np.zeros((len(files), image_size[0], image_size[1],1), dtype='uint16') #uint16 cause of depth image
             for (j, filename) in enumerate(files):
                 image_filepath = os.path.join(subject_folderpath, folderName, filename)
                 image = cv2.imread(image_filepath, flags=cv2.IMREAD_UNCHANGED)
                 image = transform.resize(image, (image_size[0], image_size[1]), preserve_range=True,mode="reflect",anti_aliasing=True)
+                image=image[:,:,np.newaxis]
                 labels = np.append(labels, int(label_i))
-                folder_data[j, :, :] = image
+                folder_data[j, :]= image
             data = np.vstack((data, folder_data))
         subject=np.zeros(len(labels))+subject_id
         logging.debug(data.shape,labels.shape,subject.shape)
@@ -207,7 +208,7 @@ class PugeaultASL_B(DatasetLoader):
 
         ytot=np.array((),dtype='uint8')
         subjecttot = np.array(())
-        xtot=np.zeros((0, self.image_size[0], self.image_size[1]), dtype='uint16')
+        xtot=np.zeros((0, self.image_size[0], self.image_size[1],1), dtype='uint16')
         for i in range(0,n):
             subject_id=i
             subject= self.subjects[i]

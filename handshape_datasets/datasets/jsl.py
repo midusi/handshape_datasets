@@ -52,7 +52,7 @@ class Jsl(DatasetLoader):
             files = sorted(Path(images_folderpath).iterdir())
             files = list(filter(lambda f: f.suffix in [".jpg", ".png", ".jpeg"], files))
             n = len(files)
-            x = np.zeros((n, 32, 32), dtype='uint8')
+            x = np.zeros((n, 32, 32,1), dtype='uint8')
             y = np.array((),dtype='uint8')
             images_loaded_counter = 0
             # each image is stored in the key corresponding to its subset
@@ -60,7 +60,9 @@ class Jsl(DatasetLoader):
             logging.info(f"Loading images from {images_folderpath }")
             for (i,image) in enumerate(os.listdir(images_folderpath )):
                 image_path=os.path.join(images_folderpath,image)
-                x[i, :, :] = io.imread(image_path, as_gray=True)
+                image1=io.imread(image_path)
+                image1 = image1[:, :, np.newaxis]
+                x[i, :] = image1
                 images_loaded_counter += 1
                 label= ((ord(image[9])-48)*10+ord(image[10])-48)-1
                 y=np.append(y,label)

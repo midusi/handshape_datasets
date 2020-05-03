@@ -8,7 +8,7 @@ for id in hd.ids():
         x, metadata = hd.load(id, version='Color', delete=True)
         done=True
     if(options[id].id == 'Ciarp'):
-        x, metadata = hd.load(id, version='WithOutGabor', delete=True)
+        x, metadata = hd.load(id, version='WithoutGabor', delete=True)
         done = True
     if (options[id].id == 'Nus2'):
         x, metadata = hd.load(id, version='normal', delete=True)

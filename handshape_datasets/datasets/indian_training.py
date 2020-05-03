@@ -211,7 +211,7 @@ class IndianB(DatasetLoader):
             text_control = 7
         for (i, folderName) in enumerate(folders):
             files = sorted(os.listdir(os.path.join(subject_folderpath, folderName)))
-            folder_data = np.zeros((len(files), image_size[0], image_size[1]), dtype='uint16')
+            folder_data = np.zeros((len(files), image_size[0], image_size[1],1), dtype='uint16')
             files_path=os.path.join(subject_folderpath, folderName)
             for (j, filename) in enumerate(files):
 
@@ -220,7 +220,7 @@ class IndianB(DatasetLoader):
                 for (l, line) in enumerate(infile):
                     dato=line.split(' 'or'\n')
                     for (k,dat) in enumerate(dato):
-                        folder_data[j, l, k] = dat
+                        folder_data[j, l, k, 0] = dat
                 if (filename[text_control+1] == "-"):
                     labels_i = ord(filename[text_control]) - 48-1
                 else:
@@ -238,7 +238,7 @@ class IndianB(DatasetLoader):
         n=18
         ytot=np.array((),dtype='uint8')
         subjecttot = np.array(())
-        xtot=np.zeros((0, self.image_size[0], self.image_size[1]), dtype='uint16')
+        xtot=np.zeros((0, self.image_size[0], self.image_size[1],1), dtype='uint16')
         for i in range(0,n):
             subject_id=i+1
             logging.info(f"({subject_id}/{n}) Loading images for subject {subject_id}")

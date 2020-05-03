@@ -25,14 +25,69 @@ This library is a *work in progress*. Contributions are welcome.
 
 | Letter | Class ID |
 | :----: | :------: |
-|   a    |    1     |
-|   b    |    2     |
-|   c    |    3     |
-|   d    |    4     |
-|   e    |    5     |
-|   f    |    6     |
-|   g    |    7     |
-|   h    |    8     |
-|   i    |    9     |
-|   j    |    10    |
+|   a    |    0     |
+|   b    |    1     |
+|   c    |    2     |
+|   d    |    3     |
+|   e    |    4     |
+|   f    |    5     |
+|   g    |    6     |
+|   h    |    7     |
+|   i    |    8     |
+|   j    |    9     |
+
+#How to use the library?
+
+    Import handshape_datasets
+
+    handshape_datasets.load("dataset_id")
+Download, extract and preprocess the dataset. The function will return "x" 
+that contain an array with the images and metadata, which contain an array with classes and if its have an array with 
+subjects or differents options. For example, in lsa16 x will return a shape of (800,32,32,3). Also you could give
+a version if its available to the selected dataset and you could give a boolean value to delete temporary files if 
+ possible
+ 
+Example:
+ 
+    handshape_datasets.load("lsa16",version="color",delete=True) --> download, extract and preprocess the lsa16 dataset in
+    version "color" and delete the temporary files if its have a .npz file.
+
+    handshape_datasets.clear("dataset_id") --> Delete all the local files for the dataset, if its exist.
+
+    handshape_datasets.list_datasets() --> Returns a table with the information for the availables datasets
+
+    handshape_datasets.delete_temporary_files("dataset_id") --> Delete the local files if its exist a .npz file
+
+#How to use the dataset in keras?
+
+First, you must to load the dataset
+
+    dataset = handshape_datasets.load(dataset_id, version=ver, delete=supr)
+
+You could have the input_shape and the number of classes
+
+    input_shape = self.dataset[0][0].shape
+    classes = self.dataset[1]['y'].max() + 1
+
+Then must to build a model
+
+    base_model = keras.applications.mobilenet.MobileNet(input_shape=(input_shape[0],self.input_shape[1],3), weights='imagenet',
+                                                                include_top=False)
+    output = keras.layers.GlobalAveragePooling2D()(base_model.output)
+    output = keras.layers.Dense(32, activation='relu')(output)
+    output = keras.layers.Dense(self.classes, activation='softmax')(output)
+    model = Model(inputs=base_model.input, outputs=output)
+    model.compile(optimizer='Adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+Its optional to split the dataset for the validation data when fit the model
+
+    X_train, X_test, Y_train, Y_test = sklearn.model_selection.train_test_split(self.dataset[0], self.dataset[1]['y'],
+                                                                                    test_size=test_size,
+                                                                                    stratify=self.dataset[1]['y'])
+
+At last you must to fit the model
+
+    history = model.fit(X_train, Y_train, batch_size=self.batch_size, epochs=self.epochs,
+                                 validation_data=(X_test, Y_test))
+
 
