@@ -1,9 +1,9 @@
 import handshape_datasets as hd
 import logging
-
+import numpy as np
 
 #hd.list_datasets()
-x,metadata=hd.load("lsa16")
+x,metadata=hd.load("rwth")
 print(x.shape)
 
 for k in metadata:

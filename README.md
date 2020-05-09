@@ -71,8 +71,8 @@ You could have the input_shape and the number of classes
 
 Then you must to build a model
 
-    base_model = keras.applications.mobilenet.MobileNet(input_shape=(input_shape[0],self.input_shape[1],3), weights='imagenet',
-                                                                include_top=False)
+    base_model = keras.applications.mobilenet.MobileNet(input_shape=(input_shape[0],self.input_shape[1],3), 
+                                                                weights='imagenet', include_top=False)
     output = keras.layers.GlobalAveragePooling2D()(base_model.output)
     output = keras.layers.Dense(32, activation='relu')(output)
     output = keras.layers.Dense(self.classes, activation='softmax')(output)
