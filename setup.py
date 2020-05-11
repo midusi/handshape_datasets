@@ -9,7 +9,7 @@ from shutil import rmtree
 import sys
 import os
 import io
-
+from pathlib import Path
 
 # Package meta-data.
 NAME = 'handshape-datasets'
@@ -27,7 +27,7 @@ except FileNotFoundError:
     long_description = DESCRIPTION
 
 # Load the package's __version__.py module as a dictionary.
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 
 
 class UploadCommand(Command):
@@ -48,11 +48,12 @@ class UploadCommand(Command):
         pass
 
     def run(self):
-        try:
+        
+        dist_path=Path(here)/'dist'
+        if dist_path.exists()
             self.status('Removing previous builds…')
-            rmtree(os.path.join(here, 'dist'))
-        except OSError:
-            pass
+            rmtree(dist_path)
+
 
         self.status('Building Source and Wheel (universal) distribution…')
         os.system(
@@ -91,7 +92,7 @@ setup(
     # entry_points={
     #     'console_scripts': ['mycli=mymodule:cli'],
     # },
-    install_requires= [ 'numpy', 'requests', 'patool', 'scipy', 'hurry', 'gdown', "scikit-image", 'pyunpack','py7zr','PrettyTable'],
+    install_requires= [ 'numpy', 'requests', 'patool', 'scipy', 'hurry', 'gdown', "scikit-image", 'pyunpack','py7zr','PrettyTable','opencv-python'],
     include_package_data=True,
     license='GNU Affero General Public License v3 or later (AGPLv3+)',
     classifiers=[
