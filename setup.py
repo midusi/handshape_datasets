@@ -12,7 +12,7 @@ import io
 
 
 # Package meta-data.
-NAME = 'handshape_datasets'
+NAME = 'handshape-datasets'
 URL="https://github.com/midusi/handshape_datasets"
 
 
@@ -101,8 +101,8 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython',
-        'Programming Language :: Python :: Implementation :: PyPy'
-        'Programming Language :: Python :: 3 :: Only',
+        # 'Programming Language :: Python :: Implementation :: PyPy',
+        # 'Programming Language :: Python :: 3 :: Only',
         "License :: OSI Approved :: Python Software Foundation License",
         "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
     ],
