@@ -2,6 +2,7 @@
 numpy
 scikit-image
 scipy
+opencv-python
 
 # downloading
 hurry

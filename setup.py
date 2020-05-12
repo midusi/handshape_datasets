@@ -1,34 +1,20 @@
-from setuptools import find_packages, setup, Command
-from shutil import rmtree
-import sys
-import os
-import io
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # Note: To use the 'upload' functionality of this file, you must:
 #   $ pip install twine
 
+from setuptools import find_packages, setup, Command
+from shutil import rmtree
+import sys
+import os
+import io
+from pathlib import Path
 
 # Package meta-data.
-NAME = 'handshape_datasets'
-DESCRIPTION = 'A single library to (down)load all existing sign language handshape datasets. This library allows you to automatically download and load various sign language handshape datasets. Currently supporting 13 different datasets.'
-URL = 'https://github.com/midusi/handshape_datasets'
-EMAIL = 'brianrey3@protonmail.com-facundoq@gmail.com'
-AUTHOR = 'Brian Rey-Facundo Quiroga'
-REQUIRES_PYTHON = '>=3.6.0'
-VERSION = 0.2
+NAME = 'handshape-datasets'
+URL="https://github.com/midusi/handshape_datasets"
 
-# What packages are required for this module to be executed?
-REQUIRED = [
-    'numpy', 'requests', 'patool', 'scipy', 'hurry', 'gdown', "scikit-image", 'pyunpack'
-]
-
-# What packages are optional?
-EXTRAS = {
-    # 'fancy feature': ['django'],
-}
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -41,12 +27,7 @@ except FileNotFoundError:
     long_description = DESCRIPTION
 
 # Load the package's __version__.py module as a dictionary.
-about = {}
-if not VERSION:
-    with open(os.path.join(here, NAME, '__version__.py')) as f:
-        exec(f.read(), about)
-else:
-    about['__version__'] = VERSION
+VERSION = "0.1.2"
 
 
 class UploadCommand(Command):
@@ -67,11 +48,12 @@ class UploadCommand(Command):
         pass
 
     def run(self):
-        try:
+        
+        dist_path=Path(here)/'dist'
+        if dist_path.exists()
             self.status('Removing previous builds…')
-            rmtree(os.path.join(here, 'dist'))
-        except OSError:
-            pass
+            rmtree(dist_path)
+
 
         self.status('Building Source and Wheel (universal) distribution…')
         os.system(
@@ -81,7 +63,7 @@ class UploadCommand(Command):
         os.system('twine upload dist/*')
 
         self.status('Pushing git tags…')
-        os.system('git tag v{0}'.format(about['__version__']))
+        os.system('git tag v{0}'.format(VERSION))
         os.system('git push --tags')
 
         sys.exit()
@@ -90,34 +72,40 @@ class UploadCommand(Command):
 # Where the magic happens:
 setup(
     name=NAME,
-    version=about['__version__'],
-    description=DESCRIPTION,
+    version=VERSION,
+    description='A single library to (down)load all existing sign language handshape datasets. This library allows you to automatically download and load various sign language handshape datasets. Currently supporting 13 different datasets.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    author=AUTHOR,
-    author_email=EMAIL,
-    python_requires=REQUIRES_PYTHON,
+    author='Facundo Quiroga - Brian Rey - Tomás Cortizas - Jeremias Dominguez Vega',
+    author_email='fquiroga@lidi.info.unlp.edu.ar',
+    python_requires='>=3.6.0',
     url=URL,
-    packages=find_packages(exclude=('tests',)),
+    project_urls={
+        "Bug Tracker": URL+"/issues",
+        "Documentation": URL,
+        "Source Code": URL,
+    },
+    packages=find_packages(exclude=('testing','samples')),
     # If your package is a single module, use this instead of 'packages':
     # py_modules=['mypackage'],
 
     # entry_points={
     #     'console_scripts': ['mycli=mymodule:cli'],
     # },
-    install_requires=REQUIRED,
-    extras_require=EXTRAS,
+    install_requires= [ 'numpy', 'requests', 'patool', 'scipy', 'hurry', 'gdown', "scikit-image", 'pyunpack','py7zr','PrettyTable','opencv-python'],
     include_package_data=True,
-    license='MIT',
+    license='GNU Affero General Public License v3 or later (AGPLv3+)',
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython',
-        'Programming Language :: Python :: Implementation :: PyPy'
+        # 'Programming Language :: Python :: Implementation :: PyPy',
+        # 'Programming Language :: Python :: 3 :: Only',
+        "License :: OSI Approved :: Python Software Foundation License",
+        "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
     ],
     # $ setup.py publish support.
     cmdclass={
