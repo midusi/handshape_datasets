@@ -116,24 +116,25 @@ class IndianA(DatasetLoader):
     def preprocess(self, folderpath):
 
         preprocess_flag = "{}_preprocessed".format(self.name)
-        folderpath_act=os.path.join(folderpath,self.folder_name)
+        folderpath_act=Path(str(folderpath)+"\\"+self.folder_name)
+        folderpath_act2 = os.path.join(folderpath, self.folder_name)
 
         if self.get_status_flag(folderpath_act, preprocess_flag) is False:
             datasets = list(
                 filter(lambda x: x[-7:] == '.tar.gz', #comprobar el -4
-                       listdir(folderpath_act)))  # i just want the .tar files
+                       listdir(folderpath_act2)))  # i just want the .tar files
             for dataset_file in datasets:
                 dataset_folder_name = dataset_file[:-7]  # until the .tar(excluded) #comprobar el -4
-                dataset_images_path = path.join(folderpath_act, dataset_folder_name)
+                dataset_images_path = path.join(folderpath_act2, dataset_folder_name)
                 mkdir_unless_exists(dataset_images_path)
-                filepath = os.path.join(folderpath_act,dataset_file)
+                filepath = os.path.join(folderpath_act2,dataset_file)
                 extract_tar(filepath,
                             extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
                 # remove the zips files
                 os.remove((filepath))
 
         #load images
-        images_folderpath = folderpath_act
+        images_folderpath = folderpath_act2
         x,y,subject=self.load_images(images_folderpath)
         # save to binary
         npz_filepath=os.path.join(folderpath,self.npz_filename)
@@ -255,22 +256,23 @@ class IndianB(DatasetLoader):
     def preprocess(self, folderpath):
 
         preprocess_flag = "{}_preprocessed".format(self.name)
-        folderpath_act=os.path.join(folderpath,self.folder_name)
+        folderpath_act=Path(str(folderpath)+"\\"+self.folder_name)
+        folderpath_act2 = os.path.join(folderpath,self.folder_name)
         if self.get_status_flag(folderpath_act, preprocess_flag) is False:
             datasets = list(
                 filter(lambda x: x[-7:] == '.tar.gz', #comprobar el -4
-                       listdir(folderpath_act)))  # i just want the .tar files
+                       listdir(folderpath_act2)))  # i just want the .tar files
             for dataset_file in datasets:
                 dataset_folder_name = dataset_file[:-7]  # until the .tar(excluded) #comprobar el -4
-                dataset_images_path = path.join(folderpath_act, dataset_folder_name)
+                dataset_images_path = path.join(folderpath_act2, dataset_folder_name)
                 mkdir_unless_exists(dataset_images_path)
-                filepath = os.path.join(folderpath_act,dataset_file)
+                filepath = os.path.join(folderpath_act2,dataset_file)
                 extract_tar(filepath,
                             extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
                 # remove the zips files
                 os.remove((filepath))
         #load images
-        images_folderpath = folderpath_act
+        images_folderpath = folderpath_act2
         x,y,subject=self.load_images(images_folderpath)
         # save to binary
         npz_filepath=os.path.join(folderpath,self.npz_filename)
