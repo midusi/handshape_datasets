@@ -52,9 +52,9 @@ class IndianA(DatasetLoader):
             # set the exit flag
         for j in range(len(ids_rgb)):
             if(j==0):
-                    download_from_drive(f"{self.urls()}{ids_rgb[j]}", folder_n + "\\" + f"user{j + 1}rgbreshoot.tar.gz")
+                    download_from_drive(f"{self.urls()}{ids_rgb[j]}", os.path.join(folder_n,f"user{j + 1}rgbreshoot.tar.gz"))
             else:
-                    download_from_drive(f"{self.urls()}{ids_rgb[j]}", folder_n + "\\" + f"user{j+1}rgb.tar.gz")
+                    download_from_drive(f"{self.urls()}{ids_rgb[j]}", os.path.join(folder_n,f"user{j+1}rgb.tar.gz"))
         self.set_downloaded(folderpath)
 
     def load(self, folderpath, **kwargs):
@@ -190,9 +190,9 @@ class IndianB(DatasetLoader):
         # set the exit flag
         for j in range(len(ids_depth)):
             if (j == 0):
-                download_from_drive(f"{self.urls()}{ids_depth[j]}", folder_n + "\\" + f"user{j + 1}depthreshoot.tar.gz")
+                download_from_drive(f"{self.urls()}{ids_depth[j]}", os.path.join(folder_n,f"user{j + 1}depthreshoot.tar.gz"))
             else:
-                download_from_drive(f"{self.urls()}{ids_depth[j]}", folder_n + "\\" + f"user{j + 1}depth.tar.gz")
+                download_from_drive(f"{self.urls()}{ids_depth[j]}", os.path.join(folder_n,f"user{j + 1}depth.tar.gz"))
         self.set_downloaded(folderpath)
 
     def load(self, folderpath, **kwargs):
