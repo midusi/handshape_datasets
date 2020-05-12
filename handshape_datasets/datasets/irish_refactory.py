@@ -64,7 +64,7 @@ class Irish(DatasetLoader):
         file_exists = self.get_downloaded_flag(zips_path)
         if file_exists is False:
             for filename in urls.keys():  # filename => Person1     f"{filename}.zip" # Person$7
-                filepath = str(zips_path) + f"\{filename}.zip"
+                filepath = os.path.join(zips_path,f"{filename}.zip")
                 download_file(url=urls[filename],
                               filepath=filepath)
             self.set_downloaded(zips_path)
@@ -142,7 +142,7 @@ class Irish(DatasetLoader):
         for (i, filename) in enumerate(files):  #Counts the amount of images
             images = list(
                 filter(lambda x: ".db" not in x,
-                       listdir(str(images_folderpath) + f"\{filename}"))
+                       listdir(os.path.join(images_folderpath,f"{filename}")))
             )
             h = len(images) + h
         if h != dataset_images:

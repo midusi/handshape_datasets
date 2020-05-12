@@ -67,7 +67,7 @@ class Ciarp(DatasetLoader):
         return x,y
 
     def load(self,folderpath, **kwargs):
-        dataset_folder = os.path.join(folderpath , 'Ciarp')
+        dataset_folder = os.path.join(folderpath , 'ciarp')
         self.folder_image=folderpath
         if 'version' in kwargs:
             options = ['WithGabor', 'WithoutGabor']
