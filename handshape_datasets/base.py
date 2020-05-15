@@ -64,8 +64,18 @@ def load(id, folderpath:Path=default_folder, **kwargs):
     Returns:
         An Dataset object instance
     """
-    if not id in options.keys():
-        logging.error(f"Unknown dataset id {id}. Available datasets:\n {list(options.keys())}")
+    try:
+        if not id in options.keys():
+            class UnAcceptedValueError(Exception):
+                def __init__(self, data):
+                    self.data = data
+
+                def __str__(self):
+                    return repr(self.data)
+
+            raise UnAcceptedValueError(f"Unknown dataset id {id}. Available datasets:\n {list(options.keys())}")
+    except UnAcceptedValueError as e:
+        logging.error(f"Received error:{e.data}")
         exit()
     folderpath.mkdir(parents=True,exist_ok=True)
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)

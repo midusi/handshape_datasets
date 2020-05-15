@@ -3,7 +3,8 @@ import logging
 import numpy as np
 
 #hd.list_datasets()
-x,metadata=hd.load("rwth")
+
+x,metadata=hd.load("Nus2",version="normal")
 print(x.shape)
 
 for k in metadata:

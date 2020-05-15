@@ -104,20 +104,30 @@ class Nus1(DatasetLoader):
             if 'version' in kwargs:
                 options=['bw', 'Color']
                 try:
-                    assert ((kwargs['version'])==options[0]) or ((kwargs['version'])==options[1])
-                    if (kwargs['version'] == 'bw'):
-                        logging.info(f"Loading version: {kwargs['version']}")
-                        metadata = {"y": y_bw}
-                        return x_bw, metadata
-                    else:
-                        if(kwargs['version'] == 'Color'):
-                            logging.info(f"Loading version: {kwargs['version']}")
-                            metadata = {"y": y_color}
-                            return x_color, metadata
-                except AssertionError:
-                    logging.warning(f"Version {kwargs['version']} is not valid. Valid options: {options[1]} , {options[0]}")
-                    exit()
+                    class UnAcceptedValueError(Exception):
+                        def __init__(self, data):
+                            self.data = data
 
+                        def __str__(self):
+                            return repr(self.data)
+
+                    if ((kwargs['version']) != options[0]) and ((kwargs['version']) != options[1]):
+                        raise UnAcceptedValueError(
+                            f"Version {kwargs['version']} is not valid. Valid options: {options[1]} , {options[0]}")
+                    else:
+                        if (kwargs['version'] == options[0]):
+                            logging.info(f"Loading version: {kwargs['version']}")
+                            metadata = {"y": y_bw}
+                            return x_bw, metadata
+                        else:
+                            if (kwargs['version'] == options[1]):
+                                logging.info(f"Loading version: {kwargs['version']}")
+                                metadata = {"y": y_color}
+                                return x_color, metadata
+
+                except UnAcceptedValueError as e:
+                    logging.error(f"Received error:{e.data}")
+                    exit()
             else:
                 logging.info(f"Loading default version: Color")
                 metadata = {"y": y_color}
