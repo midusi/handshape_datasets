@@ -90,4 +90,6 @@ At last you must to fit the model
     history = model.fit(X_train, Y_train, batch_size=self.batch_size, epochs=self.epochs,
                                  validation_data=(X_test, Y_test))
 
+## 						How to use Handshape-datasets with Google Colab:
 
+    https://colab.research.google.com/notebooks/io.ipynb
