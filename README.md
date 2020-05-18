@@ -92,4 +92,4 @@ At last you must to fit the model
 
 ## 						How to use Handshape-datasets with Google Colab:
 
-    https://colab.research.google.com/notebooks/io.ipynb
+   https://colab.research.google.com/drive/1kY-YrbegGFVT7NqVaeA4RjXYRVlZiISR?usp=sharing
