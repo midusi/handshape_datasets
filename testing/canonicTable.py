@@ -29,9 +29,9 @@ thisdict =	{
 import xlsxwriter
 
 
-# Create an new Excel file and add a worksheet.
+
 default_folder = Path.home() / 'handshape_datasets'
-path=os.path.join(default_folder,'images1.xlsx')
+path=os.path.join(default_folder,'images.xlsx')
 cache_path=os.path.join(default_folder, 'cache_canonic')
 if not os.path.exists(cache_path):
   logging.info(f"Create folder {cache_path}")
@@ -39,10 +39,10 @@ if not os.path.exists(cache_path):
 workbook = xlsxwriter.Workbook(path)
 worksheet = workbook.add_worksheet()
 
-# Widen the first column to make the text clearer.
+
 worksheet.set_column('A:A', 30)
 
-# Insert an image.
+
 index=-1
 asl_class=1
 
@@ -82,8 +82,24 @@ for i, dataset_id in enumerate(hd.ids()):
     if(flag[clas]==0):
       path_to_save=os.path.join(cache_path,f"{dataset_id}image{h}.png")
 
-      img = Image.fromarray((x[h]).astype(np.uint8))
-      img = img.save(path_to_save)
+      if (dataset_id == "PugeaultASL_B"):
+        img_depth = np.zeros((x[h].shape[0], x[h].shape[1]), dtype='f8')
+        max_z = x[h].max()
+        min_z = x[h].min()
+        max_min_diff_z = max_z - min_z
+        img_depth = x[h]
+
+        def normalize(x):
+          return 255 * (x - min_z) / max_min_diff_z
+
+        normalize = np.vectorize(normalize, otypes=[np.float])
+        img_depth = normalize(img_depth)
+        img_depth_file = Image.fromarray((img_depth).astype(np.uint8),mode = 'RGB')
+        img_depth_file.convert('RGB').save(path_to_save)
+      else:
+        img = Image.fromarray((x[h]).astype(np.uint8))
+        img = img.save(path_to_save)
+
       image= io.imread(path_to_save)
       original_type = image.dtype
       image= transform.resize(
@@ -97,15 +113,6 @@ for i, dataset_id in enumerate(hd.ids()):
 
 
 
-"""
-  # Insert an image offset in the cell.
-  worksheet.write('A12', 'Insert an image with an offset:')
-  worksheet.insert_image('B12', 'python.png', {'x_offset': 15, 'y_offset': 10})
-
-  # Insert an image with scaling.
-  worksheet.write('A23', 'Insert a scaled image:')
-  worksheet.insert_image('B23', 'python.png', {'x_scale': 0.5, 'y_scale': 0.5})
-"""
 workbook.close()
 if (os.path.exists(cache_path)):
   rmtree(cache_path)
