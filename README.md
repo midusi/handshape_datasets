@@ -96,4 +96,4 @@ At last you must to fit the model
     
         handshape_datasets.get_cannonicTable()
     
-    And you should obtain something like this: https://drive.google.com/file/d/1MzUuVAGe8ckAquWn2YiXM-exnGPRw4zo/view?usp=sharing
+   And you should obtain something like [this](https://drive.google.com/file/d/1MzUuVAGe8ckAquWn2YiXM-exnGPRw4zo/view?usp=sharing)
