@@ -94,6 +94,6 @@ At last you must to fit the model
 
     To obtain the Cannonic Table with ASL you may execute the function get_cannonicTable() like this:
     
-        *hd.get_cannonicTable()*
+        handshape_datasets.get_cannonicTable()
     
     And you should obtain something like this: https://drive.google.com/file/d/1MzUuVAGe8ckAquWn2YiXM-exnGPRw4zo/view?usp=sharing
