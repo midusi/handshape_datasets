@@ -90,4 +90,10 @@ At last you must to fit the model
     history = model.fit(X_train, Y_train, batch_size=self.batch_size, epochs=self.epochs,
                                  validation_data=(X_test, Y_test))
 
+## 						How to obtain Cannonic Table?
 
+    To obtain the Cannonic Table with ASL you may execute the function get_cannonicTable() like this:
+    
+        *hd.get_cannonicTable()*
+    
+    And you should obtain something like this: https://drive.google.com/file/d/1MzUuVAGe8ckAquWn2YiXM-exnGPRw4zo/view?usp=sharing
