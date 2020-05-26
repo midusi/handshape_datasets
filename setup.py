@@ -27,7 +27,7 @@ except FileNotFoundError:
     long_description = DESCRIPTION
 
 # Load the package's __version__.py module as a dictionary.
-VERSION = "0.1.2"
+VERSION = "0.1.3"
 
 
 class UploadCommand(Command):
@@ -50,7 +50,7 @@ class UploadCommand(Command):
     def run(self):
         
         dist_path=Path(here)/'dist'
-        if dist_path.exists()
+        if dist_path.exists():
             self.status('Removing previous builds…')
             rmtree(dist_path)
 
