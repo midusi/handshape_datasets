@@ -50,7 +50,7 @@ class UploadCommand(Command):
     def run(self):
         
         dist_path=Path(here)/'dist'
-        if dist_path.exists()
+        if dist_path.exists():
             self.status('Removing previous builds…')
             rmtree(dist_path)
 
