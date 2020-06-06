@@ -136,7 +136,7 @@ class Irish(DatasetLoader):
         subsets_folders = list(
             filter(lambda x: '.zip' not in x,
                    listdir(images_folderpath)))  # Files contains all the folders (Person1, Person2, Person3, Person4, Person5, Person6)
-        files = list(filter(lambda x: 'irish' not in x,
+        files = list(filter(lambda x: 'Irish' not in x,
                     list(subsets_folders)))
         h=0
         for (i, filename) in enumerate(files):  #Counts the amount of images
