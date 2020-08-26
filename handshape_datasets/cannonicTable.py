@@ -28,7 +28,7 @@ thisdict =	{
   "PugeaultASL_B":[14,19,30,41,42,43,17,1,53,12,54,56,58,59,61,54,21,64,76,66,70,71,72,73,75,70],
 }
 
-def get_Cannonic():
+def get_CannonicTable():
 
   default_folder = Path.home() / 'handshape_datasets'
   path=os.path.join(default_folder,'images.xlsx')
