@@ -33,7 +33,7 @@ class Indian_AInfo(ClassificationDatasetInfo):
         return IndianA()
 
 class IndianA(DatasetLoader):
-    def __init__(self,image_size=(32,32)):
+    def __init__(self,image_size=(480,640)):
         super().__init__("indianA")
         assert(len(image_size)==2)
         self.url = 'https://drive.google.com/uc?export=download&id='
@@ -78,7 +78,7 @@ class IndianA(DatasetLoader):
             for (j, filename) in enumerate(files):
                 image_filepath = os.path.join(subject_folderpath, folderName, filename)
                 image = io.imread(image_filepath)
-                image = transform.resize(image, (image_size[0], image_size[1]), preserve_range=True,mode="reflect",anti_aliasing=True)
+                #image = transform.resize(image, (image_size[0], image_size[1]), preserve_range=True,mode="reflect",anti_aliasing=True)
                 # Update the matrix (data and labels)
                 if (filename[text_control+1] == "-"):
                     labels_i = ord(filename[text_control]) - 48-1

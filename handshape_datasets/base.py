@@ -7,6 +7,7 @@ from handshape_datasets.config import options
 from prettytable import PrettyTable
 from .dataset_info import DatasetInfo
 import logging
+from .cannonicTable import get_Cannonic
 default_folder = Path.home() / '.handshape_datasets'
 
 def list_datasets():
@@ -47,6 +48,10 @@ def size_format(download_size, disk_size):
                 disk_size_format = disk_size_format / 1024
                 di_size_format = "Gb"
     return (download_size_format, do_size_format, disk_size_format, di_size_format)
+
+def get_CannonicTable():
+    get_Cannonic()
+    return True
 
 def info(id:str)->DatasetInfo:
     return options[id]
