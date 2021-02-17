@@ -58,18 +58,20 @@ Example:
 
     handshape_datasets.delete_temporary_files("dataset_id") --> Delete the local files if its exist a .npz file
 
-## 						How to use the dataset in keras?
+## Training a handshape classifier with Keras
 
-First, you must to load the dataset
+
+
+Load the dataset:
 
     dataset = handshape_datasets.load(dataset_id, version=ver, delete=supr)
 
-You could have the input_shape and the number of classes
+Get the input_shape and number of classes:
 
     input_shape = self.dataset[0][0].shape
     classes = self.dataset[1]['y'].max() + 1
 
-Then you must to build a model
+Define a model (using a pretrained MobileNet here):
 
     base_model = keras.applications.mobilenet.MobileNet(input_shape=(input_shape[0],self.input_shape[1],3), 
                                                                 weights='imagenet', include_top=False)
@@ -79,17 +81,14 @@ Then you must to build a model
     model = Model(inputs=base_model.input, outputs=output)
     model.compile(optimizer='Adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-Its optional to split the dataset for the validation data when fit the model
+Split the dataset intro train/test sets:
 
     X_train, X_test, Y_train, Y_test = sklearn.model_selection.train_test_split(self.dataset[0], self.dataset[1]['y'],
                                                                                     test_size=test_size,
                                                                                     stratify=self.dataset[1]['y'])
 
-At last you must to fit the model
+Fit the model
 
-    history = model.fit(X_train, Y_train, batch_size=self.batch_size, epochs=self.epochs,
-                                 validation_data=(X_test, Y_test))
+    history = model.fit(X_train, Y_train, batch_size=self.batch_size, epochs=self.epochs, validation_data=(X_test, Y_test))
 
-## 						How to use Handshape-datasets with Google Colab:
-
-   https://colab.research.google.com/drive/1kY-YrbegGFVT7NqVaeA4RjXYRVlZiISR?usp=sharing
+[Full example](https://colab.research.google.com/drive/1kY-YrbegGFVT7NqVaeA4RjXYRVlZiISR?usp=sharing)
