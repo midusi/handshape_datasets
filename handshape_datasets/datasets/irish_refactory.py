@@ -7,7 +7,7 @@ from string import ascii_uppercase
 from .common import *
 import numpy as np
 from .dataset import Dataset
-from handshape_datasets.dataset_loader import DatasetLoader
+
 from .utils import mkdir_unless_exists, download_file, extract_zip
 import logging
 import skimage

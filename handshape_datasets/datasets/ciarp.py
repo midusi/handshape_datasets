@@ -1,7 +1,6 @@
 from prettytable import PrettyTable
 
 from .utils import extract_zip, download_file
-from handshape_datasets.dataset_loader import DatasetLoader
 from skimage import io
 import csv
 import os

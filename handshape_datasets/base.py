@@ -3,11 +3,11 @@ from shutil import rmtree as _rmtree
 import os
 from pathlib import Path
 from logging import warning as warning
-from handshape_datasets.config import options
+from ._config import options
 from prettytable import PrettyTable
-from .dataset_info import DatasetInfo
+from ._dataset_info import DatasetInfo
 import logging
-from .cannonicTable import get_Cannonic
+
 default_folder = Path.home() / '.handshape_datasets'
 
 def list_datasets():
@@ -49,10 +49,6 @@ def size_format(download_size, disk_size):
                 di_size_format = "Gb"
     return (download_size_format, do_size_format, disk_size_format, di_size_format)
 
-def get_CannonicTable():
-    get_Cannonic()
-    return True
-
 def info(id:str)->DatasetInfo:
     return options[id]
 
@@ -69,23 +65,10 @@ def load(id, folderpath:Path=default_folder, **kwargs):
     Returns:
         An Dataset object instance
     """
-    try:
-        if not id in options.keys():
-            class UnAcceptedValueError(Exception):
-                def __init__(self, data):
-                    self.data = data
-
-                def __str__(self):
-                    return repr(self.data)
-
-            raise UnAcceptedValueError(f"Unknown dataset id {id}. Available datasets:\n {list(options.keys())}")
-    except UnAcceptedValueError as e:
-        logging.error(f"Received error:{e.data}")
-        exit()
+    dataset_loader = options[id].get_loader()
     folderpath.mkdir(parents=True,exist_ok=True)
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     # get downloader class for dataset
-    dataset_loader = options[id].get_loader()
     # load and return the dataset
     logging.info(f"Loading {dataset_loader.name}...")
     return dataset_loader.get(folderpath, **kwargs)

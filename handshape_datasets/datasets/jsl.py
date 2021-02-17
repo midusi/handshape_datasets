@@ -1,12 +1,11 @@
 from .utils import mkdir_unless_exists, extract_zip, download_file
 from .dataset import Dataset
-from handshape_datasets.dataset_loader import DatasetLoader
 from skimage import io
 import logging
 from .common import *
 import os
 from pyunpack import Archive
-from handshape_datasets.dataset_loader import DatasetLoader
+
 from . import utils
 
 labels=['a',' i', 'u', 'e', 'o','ka', 'ki','ku','ke','ko',
