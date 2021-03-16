@@ -1,4 +1,4 @@
-from .dataset_loader import DatasetLoader
+from ._dataset_loader import DatasetLoader
 from typing import Dict,Tuple
 import handshape_datasets as hd
 from abc import ABC,abstractmethod

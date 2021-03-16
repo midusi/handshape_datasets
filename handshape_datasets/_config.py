@@ -12,7 +12,7 @@ from handshape_datasets.datasets import (pugeaultASL,
 
 
 from typing import Dict
-from .dataset_info import DatasetInfo
+from ._dataset_info import DatasetInfo
 
 info = [lsa16.LSA16Info(),
         rwth.RWTHInfo(),

@@ -7,7 +7,7 @@ from string import ascii_uppercase
 from .common import *
 import numpy as np
 from .dataset import Dataset
-from handshape_datasets.dataset_loader import DatasetLoader
+
 from .utils import mkdir_unless_exists, download_file, extract_zip
 import logging
 import skimage
@@ -64,7 +64,7 @@ class Irish(DatasetLoader):
         file_exists = self.get_downloaded_flag(zips_path)
         if file_exists is False:
             for filename in urls.keys():  # filename => Person1     f"{filename}.zip" # Person$7
-                filepath = str(zips_path) + f"\{filename}.zip"
+                filepath = os.path.join(zips_path,f"{filename}.zip")
                 download_file(url=urls[filename],
                               filepath=filepath)
             self.set_downloaded(zips_path)
@@ -136,13 +136,13 @@ class Irish(DatasetLoader):
         subsets_folders = list(
             filter(lambda x: '.zip' not in x,
                    listdir(images_folderpath)))  # Files contains all the folders (Person1, Person2, Person3, Person4, Person5, Person6)
-        files = list(filter(lambda x: 'irish' not in x,
+        files = list(filter(lambda x: 'Irish' not in x,
                     list(subsets_folders)))
         h=0
         for (i, filename) in enumerate(files):  #Counts the amount of images
             images = list(
                 filter(lambda x: ".db" not in x,
-                       listdir(str(images_folderpath) + f"\{filename}"))
+                       listdir(os.path.join(images_folderpath,f"{filename}")))
             )
             h = len(images) + h
         if h != dataset_images:

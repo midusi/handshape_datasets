@@ -1,5 +1,5 @@
-from ..dataset_info import DatasetInfo,ClassificationDatasetInfo
-from ..dataset_loader import DatasetLoader
+from .._dataset_info import DatasetInfo,ClassificationDatasetInfo
+from .._dataset_loader import DatasetLoader
 import os
 import logging
 import numpy as np

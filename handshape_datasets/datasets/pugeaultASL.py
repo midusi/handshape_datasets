@@ -1,4 +1,3 @@
-from handshape_datasets.dataset_loader import DatasetLoader
 from .utils import mkdir_unless_exists, extract_tar, download_bigger_file
 import logging
 from .common import *

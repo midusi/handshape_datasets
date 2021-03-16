@@ -21,7 +21,7 @@ class RWTHInfo(ClassificationDatasetInfo):
 class RWTH(DatasetLoader):
     def __init__(self):
         super().__init__("rwth")
-        self.url = 'ftp://wasserstoff.informatik.rwth-aachen.de/pub/rwth-phoenix/2016/ph2014-dev-set-handshape-annotations.tar.gz'
+        self.url = 'https://www-i6.informatik.rwth-aachen.de/ftp/pub/rwth-phoenix/2016/ph2014-dev-set-handshape-annotations.tar.gz'
         self.FILENAME = self.name + '.tar.gz'
         self.npz_filename = "rwth.npz"
 
@@ -30,10 +30,11 @@ class RWTH(DatasetLoader):
 
     def download_dataset(self, folderpath):
         TARFILE_PATH = os.path.join(folderpath, self.FILENAME)
-        download_file_over_ftp(ftp_url='wasserstoff.informatik.rwth-aachen.de',
-                               ftp_relative_file_path='pub/rwth-phoenix/2016',
-                               ftp_filename='ph2014-dev-set-handshape-annotations.tar.gz',
-                               filepath=TARFILE_PATH)
+        download_file(self.url,TARFILE_PATH)
+        # download_file_over_ftp(ftp_url='wasserstoff.informatik.rwth-aachen.de',
+        #                        ftp_relative_file_path='pub/rwth-phoenix/2016',
+        #                        ftp_filename='ph2014-dev-set-handshape-annotations.tar.gz',
+        #                        filepath=TARFILE_PATH)
         # set the success flag
         self.set_downloaded(folderpath)
         

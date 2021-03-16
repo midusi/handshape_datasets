@@ -1,6 +1,4 @@
 import py7zr
-
-from handshape_datasets.dataset_loader import DatasetLoader
 from . import utils
 import patoolib
 from pyunpack import Archive
@@ -16,6 +14,25 @@ from PIL import Image
 import os
 
 labels=["a", "b", "c", "e", "i", "l", "m", "n", "o","p","r","s","t","u","w","y"]
+
+label_dict =	{
+  "a": 0,
+  "b": 1,
+  "c": 2,
+  "e": 3,
+  "i": 4,
+  "l": 5,
+  "m": 6,
+  "n": 7,
+  "o": 8,
+  "p": 9,
+  "r": 10,
+  "s": 11,
+  "t": 12,
+  "u": 13,
+  "w": 14,
+  "y": 15,
+}
 
 class PslInfo(ClassificationDatasetInfo):
     def __init__(self):
@@ -170,10 +187,10 @@ class Psl(DatasetLoader):
                 for sub in subset_folder_folder_img:
                     path_img = os.path.join(subset_path_img, sub)
                     rgb_path_img = list(filter(lambda x: ".pcd" not in x, listdir(path_img)))
+                    label= label_dict[sub]
                     for rgb_image_path in rgb_path_img:
                         path_1_img = os.path.join(path_img, rgb_image_path)
                         image_paths_img = list(filter(lambda x: ".png" in x, listdir(path_1_img)))
-                        label += 1
                         for image in image_paths_img:
                             path_image= os.path.join(path_1_img,image)
                             x[index, :, :, :] = io.imread(path_image)

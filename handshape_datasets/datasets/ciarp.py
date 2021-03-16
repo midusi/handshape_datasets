@@ -1,7 +1,6 @@
 from prettytable import PrettyTable
 
 from .utils import extract_zip, download_file
-from handshape_datasets.dataset_loader import DatasetLoader
 from skimage import io
 import csv
 import os
@@ -67,22 +66,31 @@ class Ciarp(DatasetLoader):
         return x,y
 
     def load(self,folderpath, **kwargs):
-        dataset_folder = os.path.join(folderpath , 'Ciarp')
+        dataset_folder = os.path.join(folderpath , 'ciarp')
         self.folder_image=folderpath
         if 'version' in kwargs:
             options = ['WithGabor', 'WithoutGabor']
             try:
-                assert ((kwargs['version']) == options[0]) or ((kwargs['version']) == options[1])
-                if (kwargs['version'] == options[0]):
-                    logging.info(f"Loading version: {kwargs['version']}")
-                    version_string = 'WithGabor'
+                class UnAcceptedValueError(Exception):
+                    def __init__(self, data):
+                        self.data = data
+
+                    def __str__(self):
+                        return repr(self.data)
+
+                if ((kwargs['version']) != options[0]) and ((kwargs['version']) != options[1]):
+                    raise UnAcceptedValueError(f"Version {kwargs['version']} is not valid. Valid options: {options[1]} , {options[0]}")
                 else:
-                    if (kwargs['version'] == options[1]):
+                    if (kwargs['version'] == options[0]):
                         logging.info(f"Loading version: {kwargs['version']}")
-                        version_string = self.version.value
-            except AssertionError:
-                logging.warning(
-                    f"Version {kwargs['version']} is not valid. Valid options: {options[1]} , {options[0]}")
+                        version_string = 'WithGabor'
+                    else:
+                        if (kwargs['version'] == options[1]):
+                            logging.info(f"Loading version: {kwargs['version']}")
+                            version_string = self.version.value
+
+            except UnAcceptedValueError as e:
+                logging.error(f"Received error:{e.data}")
                 exit()
         else:
             logging.info(f"Loading default version: {self.version.value}")

@@ -3,10 +3,11 @@ from shutil import rmtree as _rmtree
 import os
 from pathlib import Path
 from logging import warning as warning
-from handshape_datasets.config import options
+from ._config import options
 from prettytable import PrettyTable
-from .dataset_info import DatasetInfo
+from ._dataset_info import DatasetInfo
 import logging
+
 default_folder = Path.home() / '.handshape_datasets'
 
 def list_datasets():
@@ -64,13 +65,10 @@ def load(id, folderpath:Path=default_folder, **kwargs):
     Returns:
         An Dataset object instance
     """
-    if not id in options.keys():
-        logging.error(f"Unknown dataset id {id}. Available datasets:\n {list(options.keys())}")
-        exit()
+    dataset_loader = options[id].get_loader()
     folderpath.mkdir(parents=True,exist_ok=True)
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     # get downloader class for dataset
-    dataset_loader = options[id].get_loader()
     # load and return the dataset
     logging.info(f"Loading {dataset_loader.name}...")
     return dataset_loader.get(folderpath, **kwargs)

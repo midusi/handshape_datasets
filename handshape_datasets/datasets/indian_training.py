@@ -33,7 +33,7 @@ class Indian_AInfo(ClassificationDatasetInfo):
         return IndianA()
 
 class IndianA(DatasetLoader):
-    def __init__(self,image_size=(32,32)):
+    def __init__(self,image_size=(480,640)):
         super().__init__("indianA")
         assert(len(image_size)==2)
         self.url = 'https://drive.google.com/uc?export=download&id='
@@ -52,9 +52,9 @@ class IndianA(DatasetLoader):
             # set the exit flag
         for j in range(len(ids_rgb)):
             if(j==0):
-                    download_from_drive(f"{self.urls()}{ids_rgb[j]}", folder_n + "\\" + f"user{j + 1}rgbreshoot.tar.gz")
+                    download_from_drive(f"{self.urls()}{ids_rgb[j]}", os.path.join(folder_n,f"user{j + 1}rgbreshoot.tar.gz"))
             else:
-                    download_from_drive(f"{self.urls()}{ids_rgb[j]}", folder_n + "\\" + f"user{j+1}rgb.tar.gz")
+                    download_from_drive(f"{self.urls()}{ids_rgb[j]}", os.path.join(folder_n,f"user{j+1}rgb.tar.gz"))
         self.set_downloaded(folderpath)
 
     def load(self, folderpath, **kwargs):
@@ -78,7 +78,7 @@ class IndianA(DatasetLoader):
             for (j, filename) in enumerate(files):
                 image_filepath = os.path.join(subject_folderpath, folderName, filename)
                 image = io.imread(image_filepath)
-                image = transform.resize(image, (image_size[0], image_size[1]), preserve_range=True,mode="reflect",anti_aliasing=True)
+                #image = transform.resize(image, (image_size[0], image_size[1]), preserve_range=True,mode="reflect",anti_aliasing=True)
                 # Update the matrix (data and labels)
                 if (filename[text_control+1] == "-"):
                     labels_i = ord(filename[text_control]) - 48-1
@@ -104,9 +104,9 @@ class IndianA(DatasetLoader):
             subject_id=i+1
             logging.info(f"({subject_id}/{n}) Loading images for subject {subject_id}")
             if (i == 0):
-                path_rgb=Path(str(images_folderpath) + "\\" + f"user{i + 1}rgbreshoot")
+                path_rgb=os.path.join(images_folderpath,f"user{i + 1}rgbreshoot")
             else:
-                path_rgb = Path(str(images_folderpath) + "\\" + f"user{i + 1}rgb")
+                path_rgb = os.path.join(images_folderpath,f"user{i + 1}rgb")
             x, y, subject = self.load_subject(path_rgb, subject_id, self.image_size)
             ytot=np.append(ytot, y)
             subjecttot=np.append(subjecttot, subject)
@@ -117,23 +117,24 @@ class IndianA(DatasetLoader):
 
         preprocess_flag = "{}_preprocessed".format(self.name)
         folderpath_act=Path(str(folderpath)+"\\"+self.folder_name)
+        folderpath_act2 = os.path.join(folderpath, self.folder_name)
 
         if self.get_status_flag(folderpath_act, preprocess_flag) is False:
             datasets = list(
                 filter(lambda x: x[-7:] == '.tar.gz', #comprobar el -4
-                       listdir(folderpath_act)))  # i just want the .tar files
+                       listdir(folderpath_act2)))  # i just want the .tar files
             for dataset_file in datasets:
                 dataset_folder_name = dataset_file[:-7]  # until the .tar(excluded) #comprobar el -4
-                dataset_images_path = path.join(folderpath_act, dataset_folder_name)
+                dataset_images_path = path.join(folderpath_act2, dataset_folder_name)
                 mkdir_unless_exists(dataset_images_path)
-                filepath = str(folderpath_act) + f"\{dataset_file}"
+                filepath = os.path.join(folderpath_act2,dataset_file)
                 extract_tar(filepath,
                             extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
                 # remove the zips files
                 os.remove((filepath))
 
         #load images
-        images_folderpath = folderpath_act
+        images_folderpath = folderpath_act2
         x,y,subject=self.load_images(images_folderpath)
         # save to binary
         npz_filepath=os.path.join(folderpath,self.npz_filename)
@@ -190,9 +191,9 @@ class IndianB(DatasetLoader):
         # set the exit flag
         for j in range(len(ids_depth)):
             if (j == 0):
-                download_from_drive(f"{self.urls()}{ids_depth[j]}", folder_n + "\\" + f"user{j + 1}depthreshoot.tar.gz")
+                download_from_drive(f"{self.urls()}{ids_depth[j]}", os.path.join(folder_n,f"user{j + 1}depthreshoot.tar.gz"))
             else:
-                download_from_drive(f"{self.urls()}{ids_depth[j]}", folder_n + "\\" + f"user{j + 1}depth.tar.gz")
+                download_from_drive(f"{self.urls()}{ids_depth[j]}", os.path.join(folder_n,f"user{j + 1}depth.tar.gz"))
         self.set_downloaded(folderpath)
 
     def load(self, folderpath, **kwargs):
@@ -243,9 +244,9 @@ class IndianB(DatasetLoader):
             subject_id=i+1
             logging.info(f"({subject_id}/{n}) Loading images for subject {subject_id}")
             if (i == 0):
-                path_depth=Path(str(images_folderpath) + "\\" + f"user{i + 1}depthreshoot")
+                path_depth=os.path.join(images_folderpath,f"user{i + 1}depthreshoot")
             else:
-                path_depth= Path(str(images_folderpath) + "\\" + f"user{i + 1}depth")
+                path_depth= os.path.join(images_folderpath, f"user{i + 1}depth")
             x, y, subject = self.load_subject(path_depth, subject_id, self.image_size)
             ytot=np.append(ytot, y)
             subjecttot=np.append(subjecttot, subject)
@@ -256,21 +257,22 @@ class IndianB(DatasetLoader):
 
         preprocess_flag = "{}_preprocessed".format(self.name)
         folderpath_act=Path(str(folderpath)+"\\"+self.folder_name)
+        folderpath_act2 = os.path.join(folderpath,self.folder_name)
         if self.get_status_flag(folderpath_act, preprocess_flag) is False:
             datasets = list(
                 filter(lambda x: x[-7:] == '.tar.gz', #comprobar el -4
-                       listdir(folderpath_act)))  # i just want the .tar files
+                       listdir(folderpath_act2)))  # i just want the .tar files
             for dataset_file in datasets:
                 dataset_folder_name = dataset_file[:-7]  # until the .tar(excluded) #comprobar el -4
-                dataset_images_path = path.join(folderpath_act, dataset_folder_name)
+                dataset_images_path = path.join(folderpath_act2, dataset_folder_name)
                 mkdir_unless_exists(dataset_images_path)
-                filepath = str(folderpath_act) + f"\{dataset_file}"
+                filepath = os.path.join(folderpath_act2,dataset_file)
                 extract_tar(filepath,
                             extracted_path=dataset_images_path)  # dataset_file has the format 'Person$.zip'
                 # remove the zips files
                 os.remove((filepath))
         #load images
-        images_folderpath = folderpath_act
+        images_folderpath = folderpath_act2
         x,y,subject=self.load_images(images_folderpath)
         # save to binary
         npz_filepath=os.path.join(folderpath,self.npz_filename)

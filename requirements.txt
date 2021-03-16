@@ -17,9 +17,8 @@ opencv-python
 pyunpack
 py7zr
 
-#psl
-
-
+#cannonicTable
+xlsxwriter
 
 #text format
 PrettyTable
