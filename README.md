@@ -25,7 +25,8 @@ Simply import the module and load a dataset. The following downloads, preprocess
 
     import handshape_datasets as hd
     images,metadata = hd.load("lsa16")
-    
+Afterwards you can, for example, plot the first images of the dataset
+
     import matplotlib.pyplot as plt
     plt.imshow(images[0,:,:,:]) # show the first sample of the dataset
 
@@ -35,13 +36,14 @@ Simply import the module and load a dataset. The following downloads, preprocess
     hd.load("lsa16",version="color",delete=True) # use the color version, delete temporary files
     hd.delete_temporary_files("lsa16")# Delete temporary files  (if any)
     hd.clear("lsa16") # Delete all the local files for dataset LSA16
+    hd.info("lsa16") # Shows detailed info of the dataset, including url, data format, fields, etc.
     
 
 # Supported datasets
 
-+---------------+---------------+--------------+---------+---------+
-|    Dataset    | Download size | Size on disk | Samples | Classes |
-+---------------+---------------+--------------+---------+---------+
+
+|    Dataset id | Download size | Size on disk | Samples | Classes |
+|---------------|---------------|--------------|---------|---------|
 |     lsa16     |    640.6 Kb   |    1.2 Mb    |   800   |    16   |
 |      rwth     |    44.8 Mb    |   206.8 Mb   |   3359  |    45   |
 |     Irish     |    173.4 Mb   |   515.0 Mb   |  58114  |    26   |
@@ -54,24 +56,24 @@ Simply import the module and load a dataset. The following downloads, preprocess
 |      Nus2     |    73.7 Mb    |   106.1 Mb   |   2750  |    10   |
 |      jsl      |     4.5 Mb    |    7.9 Mb    |   8055  |    41   |
 |      psl      |    285.2 Mb   |    1.2 Gb    |   960   |    16   |
-+---------------+---------------+--------------+---------+---------+
+
+
+You can find more information about the datasets in the following [sign language dataset survey](http://facundoq.github.io/unlp/sign_language_datasets/)
 
 ## Training a handshape classifier with Keras
 
-
-
 Load the dataset:
 
-    dataset = handshape_datasets.load(dataset_id, version=ver, delete=supr)
-
+    x,metadata = handshape_datasets.load("lsa16")
+    y = metadata["y"]
 Get the input_shape and number of classes:
 
-    input_shape = self.dataset[0][0].shape
-    classes = self.dataset[1]['y'].max() + 1
+    input_shape = x[0].shape
+    classes = y.max() + 1
 
 Define a model (using a pretrained MobileNet here):
 
-    base_model = keras.applications.mobilenet.MobileNet(input_shape=(input_shape[0],self.input_shape[1],3), 
+    base_model = keras.applications.mobilenet.MobileNet(input_shape=(input_shape[0],input_shape[1],3), 
                                                                 weights='imagenet', include_top=False)
     output = keras.layers.GlobalAveragePooling2D()(base_model.output)
     output = keras.layers.Dense(32, activation='relu')(output)
@@ -81,9 +83,9 @@ Define a model (using a pretrained MobileNet here):
 
 Split the dataset intro train/test sets:
 
-    X_train, X_test, Y_train, Y_test = sklearn.model_selection.train_test_split(self.dataset[0], self.dataset[1]['y'],
-                                                                                    test_size=test_size,
-                                                                                    stratify=self.dataset[1]['y'])
+    X_train, X_test, Y_train, Y_test = sklearn.model_selection.train_test_split(x,y,
+                                                                                    test_size=0.9,
+                                                                                    stratify=y)
 
 Fit the model
 
