@@ -3,15 +3,17 @@ from os import listdir
 from skimage import transform
 labels=["Five","Four","Horns","Curve","Fingers together","Double","Hook","Index","L","Flat Hand","Mitten","Beak","Thumb","Fist","Telephone","V"]
 
+baseurl = "http://facundoq.github.io/datasets/lsa16"
+
 class LSA16Info(ClassificationDatasetInfo):
     def __init__(self):
-        description="""
+        description=f"""
         \n LSA16
         Argentinian Sign Language Handshapes dataset 
-        More details can be found at http://facundoq.github.io/unlp/lsa16/
+        More details can be found at {baseurl}
         \nVersion default : color\nOther version : colorbg
         """
-        url_info = "http://facundoq.github.io/unlp/lsa16/"
+        url_info = baseurl
         download_size = 655994
         disk_size = 1225566
         subject = 800
@@ -25,7 +27,8 @@ class LSA16(DatasetLoader):
         #TODO generate URL from options
         super().__init__("lsa16")
         self.filename =[f"{version}", f"lsa_nr_rgb"]
-        self.url = [f'http://facundoq.github.io/unlp/lsa16/data/{self.filename[0]}.zip', f"http://facundoq.github.io/unlp/lsa16/data/{self.filename[1]}.zip"]
+        self.url = [f'{baseurl}/data/{self.filename[0]}.zip', 
+                    f"{baseurl}/data/{self.filename[1]}.zip"]
         self.shape= (32,32) # TODO get from version
         self.classes = 16
 
