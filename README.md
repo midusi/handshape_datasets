@@ -77,7 +77,7 @@ Define a model (using a pretrained MobileNet here):
                                                                 weights='imagenet', include_top=False)
     output = keras.layers.GlobalAveragePooling2D()(base_model.output)
     output = keras.layers.Dense(32, activation='relu')(output)
-    output = keras.layers.Dense(self.classes, activation='softmax')(output)
+    output = keras.layers.Dense(classes, activation='softmax')(output)
     model = Model(inputs=base_model.input, outputs=output)
     model.compile(optimizer='Adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
