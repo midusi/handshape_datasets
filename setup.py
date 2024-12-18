@@ -27,7 +27,7 @@ except FileNotFoundError:
     long_description = DESCRIPTION
 
 # Load the package's __version__.py module as a dictionary.
-VERSION = "0.1.4"
+VERSION = "0.1.6"
 
 
 class UploadCommand(Command):

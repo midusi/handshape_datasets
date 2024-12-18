@@ -80,16 +80,16 @@ def clear(dataset,
         dataset (str): the dataset id to delete
         path (str, optional): Defaults to $HOME/handshape_datasets
     Raises:
-        FileNotFoundError: The dataset entered doesnt exist or at least in path
+        FileNotFoundError: If the dataset does not exist.
     """
     logging.basicConfig(format='%(levelname)s:%(message)s',level=logging.INFO)
     try:
         logging.info(f"Removing the dataset {dataset}")
         # removes the directory recursively
         _rmtree(folderpath / dataset)
-        logging.info("Success \(•◡•)/")
+        logging.info("Success")
     except FileNotFoundError:
-        warning("""The dataset {} doesn't exist (ಥ﹏ಥ). The options available
+        warning("""The dataset {} does not exist. The options available
                 are: \n {}""".format(dataset, "\n".join(listdir(folderpath))))
 
 def help():
